@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>KA4V12 · 06-03-2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#f4a261;--bg:#f5f2eb;--ink:#1a1814;--muted:#8c8680;--surface:#fff;--border:#e2ddd5}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* TOPBAR */
+.topbar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
+.route-badge{background:var(--c);color:#fff;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
+.topbar-info{flex:1;min-width:0}
+.topbar-info h1{font-family:'Unbounded',sans-serif;font-size:13px;color:#fff;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-info p{font-family:'Space Mono',monospace;font-size:9px;color:#888;margin-top:2px}
+.counter{font-family:'Space Mono',monospace;font-size:11px;color:var(--c);text-align:right;white-space:nowrap}
+.counter span{display:block;font-size:9px;color:#666;margin-top:1px}
+
+/* TABS */
+.tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
+.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.02em}
+.tab.active{color:var(--c);border-bottom-color:var(--c)}
+
+/* MAP */
+#map{flex:1;display:block}
+
+/* LIST VIEW */
+#listView{flex:1;overflow-y:auto;display:none}
+.client-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.client-item:active{background:#ece9e0}
+.client-num{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.client-name{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}
+.client-addr{font-size:12px;color:var(--muted);line-height:1.4}
+.client-actions{display:flex;gap:6px;margin-top:6px}
+.btn-nav{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn-call{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
+.client-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
+
+/* SEARCH */
+.search-wrap{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:none}
+#searchBox{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)}
+#searchBox:focus{border-color:var(--c)}
+
+/* POPUP */
+.lp-inner{padding:14px;min-width:200px;max-width:280px}
+.lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
+.lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
+.lp-addr{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.lp-actions{display:flex;gap:6px;flex-wrap:wrap}
+.lp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
+.lp-btn-nav{background:#f4a261;color:#fff}
+.lp-btn-call{background:#1a1814;color:#fff}
+.lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #f4a261;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
+
+/* LEAFLET */
+.leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
+.leaflet-popup-content{margin:0!important}
+.leaflet-popup-tip-container{display:none}
+.leaflet-control-zoom{border:none!important}
+.leaflet-control-zoom a{background:var(--ink)!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important;font-size:18px!important}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="route-badge">KA4V12</div>
+  <div class="topbar-info">
+    <h1>Mapa del día</h1>
+    <p>VIERNES, 6 DE MARZO DE 2026</p>
+  </div>
+  <div class="counter">79<span>clientes</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" id="tabMap" onclick="showTab('map')">🗺 Mapa</div>
+  <div class="tab" id="tabList" onclick="showTab('list')">📋 Lista</div>
+</div>
+
+<div id="map"></div>
+
+<div id="listView">
+  <div class="search-wrap" id="searchWrap">
+    <input type="text" id="searchBox" placeholder="Buscar cliente o dirección..." oninput="filterList(this.value)">
+  </div>
+  <div id="clientList"></div>
+</div>
+
+<script>
+const ROUTE_COLOR = '#f4a261';
+const DATA = [{lat:1.2082,lng:-77.2815,name:"1224290577",addr:"CR 22 12 44",order:"1",tel:"",notas:""},
+{lat:1.2098,lng:-77.2826,name:"1224237158",addr:"CL 12 22 108",order:"2",tel:"",notas:""},
+{lat:1.2119,lng:-77.2808,name:"1224447997",addr:"CL 15 22B 23 LC CENTRO",order:"3",tel:"",notas:""},
+{lat:1.2115,lng:-77.2808,name:"1224323777",addr:"CR 22B 14 75",order:"4",tel:"",notas:""},
+{lat:1.2112,lng:-77.2805,name:"1205248722",addr:"CL 15 22A 79",order:"5",tel:"",notas:""},
+{lat:1.2112,lng:-77.2805,name:"1210196440",addr:"CR 22B 14 82",order:"6",tel:"",notas:""},
+{lat:1.211,lng:-77.2802,name:"1205247667",addr:"CL 16 22A 06",order:"7",tel:"",notas:""},
+{lat:1.2112,lng:-77.28,name:"1203702071",addr:"CR 22A 15 23",order:"8",tel:"",notas:""},
+{lat:1.2116,lng:-77.2795,name:"1224366576",addr:"CR 22A 15 105",order:"9",tel:"",notas:""},
+{lat:1.2118,lng:-77.2794,name:"1224565447",addr:"CL 16 22A 18 NARI�O PLAZA",order:"10",tel:"",notas:""},
+{lat:1.212,lng:-77.2796,name:"1224379935",addr:"CC ARAZA CL 16 22A 40 LC 111",order:"11",tel:"",notas:""},
+{lat:1.2121,lng:-77.2797,name:"1224344250",addr:"CL 16 22A 76",order:"12",tel:"",notas:""},
+{lat:1.2122,lng:-77.2797,name:"1224358524",addr:"CL 16 22A 77",order:"13",tel:"",notas:""},
+{lat:1.21246,lng:-77.27986,name:"1224695828",addr:"CL 16 23 35 LC 32",order:"14",tel:"",notas:""},
+{lat:1.21224,lng:-77.2803,name:"1224673143",addr:"CR 23 15 53",order:"15",tel:"",notas:""},
+{lat:1.2123,lng:-77.28,name:"1200933682",addr:"CR 23 15 90",order:"16",tel:"",notas:""},
+{lat:1.2128,lng:-77.2801,name:"1224451553",addr:"CC EL DORADO LC 18 CL 16 23 35",order:"17",tel:"",notas:""},
+{lat:1.213,lng:-77.2801,name:"1224366561",addr:"CL 16 23 75",order:"18",tel:"",notas:""},
+{lat:1.2144,lng:-77.2805,name:"1200933807",addr:"CL 16 25 20",order:"19",tel:"",notas:""},
+{lat:1.21495,lng:-77.28094,name:"1224692588",addr:"CR 26  16 31",order:"20",tel:"",notas:""},
+{lat:1.2149,lng:-77.28072,name:"1224777896",addr:"CR 26 16 26",order:"21",tel:"",notas:""},
+{lat:1.216,lng:-77.2786,name:"1200934545",addr:"CR 26 18 80",order:"22",tel:"",notas:""},
+{lat:1.216056,lng:-77.280097,name:"1224656278",addr:"CL 27 26 66",order:"23",tel:"",notas:""},
+{lat:1.2152,lng:-77.2801,name:"1224244891",addr:"CL 17 25 103",order:"24",tel:"",notas:""},
+{lat:1.2151,lng:-77.2801,name:"1210323583",addr:"CR 26 16 26",order:"25",tel:"",notas:""},
+{lat:1.2141,lng:-77.2796,name:"1210201395",addr:"CL 17 N 24 - 61",order:"26",tel:"",notas:""},
+{lat:1.21332,lng:-77.2797,name:"1224690614",addr:"CR 24 16 54 CC PONTE BEDRA ISL",order:"27",tel:"",notas:""},
+{lat:1.2141,lng:-77.2804,name:"1200934146",addr:"CL 16 24 92",order:"28",tel:"",notas:""},
+{lat:1.214,lng:-77.2802,name:"1224399339",addr:"CR 25 16 46 CENTRO",order:"29",tel:"",notas:""},
+{lat:1.2143,lng:-77.2802,name:"1200934424",addr:"CR 25 16 51",order:"30",tel:"",notas:""},
+{lat:1.2145,lng:-77.28,name:"1224365439",addr:"CR 25 16 75",order:"31",tel:"",notas:""},
+{lat:1.2145,lng:-77.2795,name:"1224764125",addr:"CR 25 17 70",order:"32",tel:"",notas:""},
+{lat:1.216,lng:-77.2795,name:"1203702176",addr:"CL 18 26 37",order:"33",tel:"",notas:""},
+{lat:1.2161,lng:-77.2796,name:"1224636412",addr:"CL 18 26 47",order:"34",tel:"",notas:""},
+{lat:1.2175,lng:-77.2826,name:"1224726210",addr:"CL 16 29 30 BR SAN ANDR�S",order:"35",tel:"",notas:""},
+{lat:1.2193,lng:-77.283,name:"1210641726",addr:"CR 31 16A-67",order:"36",tel:"",notas:""},
+{lat:1.223239,lng:-77.281015,name:"1224749602",addr:"CR 40 19B 78",order:"37",tel:"",notas:""},
+{lat:1.222,lng:-77.2801,name:"1200941172",addr:"CL 20 31C 26",order:"38",tel:"",notas:""},
+{lat:1.2194,lng:-77.2788,name:"1224479522",addr:"CL 20 29 34",order:"39",tel:"",notas:""},
+{lat:1.2201,lng:-77.2791,name:"1205247481",addr:"KR 30 20 - 05",order:"40",tel:"",notas:""},
+{lat:1.2198,lng:-77.2798,name:"1224088181",addr:"CR 30 19 37",order:"41",tel:"",notas:""},
+{lat:1.2169,lng:-77.2798,name:"1224059890",addr:"CL 18 27 48",order:"42",tel:"",notas:""},
+{lat:1.2171,lng:-77.2798,name:"1224052654",addr:"CL 18 27 62",order:"43",tel:"",notas:""},
+{lat:1.2163,lng:-77.28,name:"1224134970",addr:"CR 27 17 50",order:"44",tel:"",notas:""},
+{lat:1.2166,lng:-77.2795,name:"1205247618",addr:"CR 27 18 - 46",order:"45",tel:"",notas:""},
+{lat:1.216443,lng:-77.27771,name:"1224275940",addr:"PJ EL LICEO LC 111",order:"46",tel:"",notas:""},
+{lat:1.218121,lng:-77.278733,name:"1224487335",addr:"CR 28 18 64",order:"47",tel:"",notas:""},
+{lat:1.2165,lng:-77.2788,name:"1224352152",addr:"C.C GALERIAS SOTANO",order:"48",tel:"",notas:""},
+{lat:1.21562,lng:-77.27844,name:"1224400007",addr:"CL 18A 25 36",order:"49",tel:"",notas:""},
+{lat:1.215429,lng:-77.278527,name:"1224317210",addr:"CL 18 A 25 38",order:"50",tel:"",notas:""},
+{lat:1.2154,lng:-77.278,name:"1205247658",addr:"KR 25 19 - 45 L 147 B",order:"51",tel:"",notas:""},
+{lat:1.2142,lng:-77.2788,name:"1224317212",addr:"CL 18 24 29 LC 101 CC LOS ANDE",order:"52",tel:"",notas:""},
+{lat:1.215224,lng:-77.278587,name:"1224744652",addr:"CR 25 18 45",order:"53",tel:"",notas:""},
+{lat:1.21384,lng:-77.27751,name:"1224832906",addr:"CL 19 23-37 CENTRO",order:"54",tel:"",notas:""},
+{lat:1.2122,lng:-77.278,name:"1224265475",addr:"CR 22 17 83",order:"55",tel:"",notas:""},
+{lat:1.2122,lng:-77.2782,name:"1200939363",addr:"CR 22 17 87",order:"56",tel:"",notas:""},
+{lat:1.21132,lng:-77.27899,name:"1224831291",addr:"CL 16 22 45",order:"57",tel:"",notas:""},
+{lat:1.210578,lng:-77.278583,name:"1224643970",addr:"CR 21A 16 09",order:"58",tel:"",notas:""},
+{lat:1.2106,lng:-77.2786,name:"1224620413",addr:"CR 21A 16 09",order:"59",tel:"",notas:""},
+{lat:1.2107,lng:-77.27879,name:"1224794174",addr:"CL 16 21A 34 CEN",order:"60",tel:"",notas:""},
+{lat:1.211,lng:-77.2787,name:"1224394192",addr:"CC AMOREL",order:"61",tel:"",notas:""},
+{lat:1.20854,lng:-77.28011,name:"1224707359",addr:"CR 21 13A 22",order:"62",tel:"",notas:""},
+{lat:1.2104,lng:-77.2804,name:"1200938321",addr:"CR 22A 14 95",order:"63",tel:"",notas:""},
+{lat:1.210778,lng:-77.27847,name:"1224400676",addr:"CL 17 21A 19 AMOREL LC 214",order:"64",tel:"",notas:""},
+{lat:1.210865,lng:-77.278562,name:"1224776551",addr:"CR 21A 16 09",order:"65",tel:"",notas:""},
+{lat:1.2133,lng:-77.2792,name:"1224577130",addr:"CL 17 23 54",order:"66",tel:"",notas:""},
+{lat:1.2121,lng:-77.2788,name:"1210745621",addr:"CL 17 22 83 2DO P",order:"67",tel:"",notas:""},
+{lat:1.21193,lng:-77.27887,name:"1224785982",addr:"CL 17 22 19",order:"68",tel:"",notas:""},
+{lat:1.211185,lng:-77.278502,name:"1205247573",addr:"CL 17 21A 05 CC AMOREL",order:"69",tel:"",notas:""},
+{lat:1.2111,lng:-77.2784,name:"1210438520",addr:"CL 16 21A- 05 2DO P",order:"70",tel:"",notas:""},
+{lat:1.2111,lng:-77.2784,name:"1224204637",addr:"CR 22 15 58",order:"71",tel:"",notas:""},
+{lat:1.21099,lng:-77.27826,name:"1224681130",addr:"CL 17 21A 05",order:"72",tel:"",notas:""},
+{lat:1.211078,lng:-77.277313,name:"1224357498",addr:"CL 18 21 07",order:"73",tel:"",notas:""},
+{lat:1.2116,lng:-77.2775,name:"1224357384",addr:"CL 18 21A 33",order:"74",tel:"",notas:""},
+{lat:1.211746,lng:-77.277738,name:"1224828995",addr:"CL 18 21B 11",order:"75",tel:"",notas:""},
+{lat:1.2088,lng:-77.2743,name:"1224300208",addr:"CR 18 21 09",order:"76",tel:"",notas:""},
+{lat:1.2075,lng:-77.2772,name:"1224824841",addr:"CR 18 16 26",order:"77",tel:"",notas:""},
+{lat:1.2048,lng:-77.278,name:"1200931137",addr:"CL 14 16 27",order:"78",tel:"",notas:""},
+{lat:1.2025,lng:-77.2796,name:"1224247288",addr:"CL 12 13A 27",order:"79",tel:"",notas:""}];
+
+// ── MAP ──
+const map = L.map('map',{zoomControl:false}).setView([1.2133411645569623,-77.2794054050633],13);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+
+function makeIcon(order){
+  const n=order||'';
+  const fs=String(n).length>2?8:10;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="${ROUTE_COLOR}" filter="drop-shadow(0 2px 4px rgba(0,0,0,.3))"/>
+    <circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/>
+    <text x="16" y="20.5" text-anchor="middle" font-size="${fs}" font-family="monospace" font-weight="700" fill="#fff">${n}</text>
+  </svg>`;
+  return L.divIcon({html:'<div>'+svg+'</div>',iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-42],className:''});
+}
+
+const markers=[];
+DATA.forEach(c=>{
+  const m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
+  m.bindPopup(()=>`
+    <div class="lp-inner">
+      <div class="lp-badge">Parada ${c.order||'—'}</div>
+      <div class="lp-name">${c.name}</div>
+      <div class="lp-addr">${c.addr||''}</div>
+      <div class="lp-actions">
+        <a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
+        ${c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':''}
+      </div>
+      ${c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':''}
+    </div>`);
+  m.addTo(map);
+  markers.push({marker:m,...c});
+});
+
+// fit bounds
+if(DATA.length){
+  const lats=DATA.map(c=>c.lat),lngs=DATA.map(c=>c.lng);
+  map.fitBounds([[Math.min(...lats),Math.min(...lngs)],[Math.max(...lats),Math.max(...lngs)]],{padding:[40,40]});
+}
+
+// ── LIST ──
+function renderList(items){
+  document.getElementById('clientList').innerHTML=items.map(c=>`
+    <div class="client-item" onclick="focusMarker(${c.lat},${c.lng})">
+      <div class="client-num">${c.order||'?'}</div>
+      <div style="flex:1;min-width:0">
+        <div class="client-name">${c.name}</div>
+        <div class="client-addr">${c.addr||''}</div>
+        <div class="client-actions">
+          <a class="btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
+          ${c.tel?'<a class="btn-call" href="tel:'+c.tel+'">📞 '+c.tel+'</a>':''}
+        </div>
+        ${c.notas?'<div class="client-notas">📝 '+c.notas+'</div>':''}
+      </div>
+    </div>`).join('');
+}
+renderList(DATA);
+
+function filterList(q){
+  const f=q.toLowerCase();
+  renderList(DATA.filter(c=>(c.name||'').toLowerCase().includes(f)||(c.addr||'').toLowerCase().includes(f)));
+}
+
+function focusMarker(lat,lng){
+  showTab('map');
+  map.setView([lat,lng],17);
+  const m=markers.find(x=>x.lat===lat&&x.lng===lng);
+  if(m)m.marker.openPopup();
+}
+
+// ── TABS ──
+function showTab(tab){
+  const isMap=tab==='map';
+  document.getElementById('map').style.display=isMap?'block':'none';
+  document.getElementById('listView').style.display=isMap?'none':'flex';
+  document.getElementById('searchWrap').style.display=isMap?'none':'block';
+  document.getElementById('tabMap').classList.toggle('active',isMap);
+  document.getElementById('tabList').classList.toggle('active',!isMap);
+  if(isMap)setTimeout(()=>map.invalidateSize(),50);
+  else document.getElementById('listView').style.flexDirection='column';
+}
+</script>
+</body>
+</html>

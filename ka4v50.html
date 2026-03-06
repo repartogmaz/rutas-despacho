@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>KA4V50 · 06-03-2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#457b9d;--bg:#f5f2eb;--ink:#1a1814;--muted:#8c8680;--surface:#fff;--border:#e2ddd5}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* TOPBAR */
+.topbar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
+.route-badge{background:var(--c);color:#fff;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
+.topbar-info{flex:1;min-width:0}
+.topbar-info h1{font-family:'Unbounded',sans-serif;font-size:13px;color:#fff;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-info p{font-family:'Space Mono',monospace;font-size:9px;color:#888;margin-top:2px}
+.counter{font-family:'Space Mono',monospace;font-size:11px;color:var(--c);text-align:right;white-space:nowrap}
+.counter span{display:block;font-size:9px;color:#666;margin-top:1px}
+
+/* TABS */
+.tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
+.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.02em}
+.tab.active{color:var(--c);border-bottom-color:var(--c)}
+
+/* MAP */
+#map{flex:1;display:block}
+
+/* LIST VIEW */
+#listView{flex:1;overflow-y:auto;display:none}
+.client-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.client-item:active{background:#ece9e0}
+.client-num{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.client-name{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}
+.client-addr{font-size:12px;color:var(--muted);line-height:1.4}
+.client-actions{display:flex;gap:6px;margin-top:6px}
+.btn-nav{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn-call{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
+.client-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
+
+/* SEARCH */
+.search-wrap{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:none}
+#searchBox{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)}
+#searchBox:focus{border-color:var(--c)}
+
+/* POPUP */
+.lp-inner{padding:14px;min-width:200px;max-width:280px}
+.lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
+.lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
+.lp-addr{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.lp-actions{display:flex;gap:6px;flex-wrap:wrap}
+.lp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
+.lp-btn-nav{background:#457b9d;color:#fff}
+.lp-btn-call{background:#1a1814;color:#fff}
+.lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #457b9d;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
+
+/* LEAFLET */
+.leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
+.leaflet-popup-content{margin:0!important}
+.leaflet-popup-tip-container{display:none}
+.leaflet-control-zoom{border:none!important}
+.leaflet-control-zoom a{background:var(--ink)!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important;font-size:18px!important}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="route-badge">KA4V50</div>
+  <div class="topbar-info">
+    <h1>Mapa del día</h1>
+    <p>VIERNES, 6 DE MARZO DE 2026</p>
+  </div>
+  <div class="counter">42<span>clientes</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" id="tabMap" onclick="showTab('map')">🗺 Mapa</div>
+  <div class="tab" id="tabList" onclick="showTab('list')">📋 Lista</div>
+</div>
+
+<div id="map"></div>
+
+<div id="listView">
+  <div class="search-wrap" id="searchWrap">
+    <input type="text" id="searchBox" placeholder="Buscar cliente o dirección..." oninput="filterList(this.value)">
+  </div>
+  <div id="clientList"></div>
+</div>
+
+<script>
+const ROUTE_COLOR = '#457b9d';
+const DATA = [{lat:1.206241,lng:-77.286077,name:"1210471313",addr:"�XITO PANAMERICANA",order:"1",tel:"",notas:""},
+{lat:1.2087,lng:-77.2855,name:"1224189760",addr:"CL 8 22D 58",order:"2",tel:"",notas:""},
+{lat:1.21056,lng:-77.28636,name:"1224765672",addr:"CR 24 8 03",order:"3",tel:"",notas:""},
+{lat:1.215985,lng:-77.285646,name:"1224033133",addr:"CR 30A 13 09",order:"4",tel:"",notas:""},
+{lat:1.2172,lng:-77.2866,name:"1224284947",addr:"CR 33 12A 44",order:"5",tel:"",notas:""},
+{lat:1.2176,lng:-77.2879,name:"1224724995",addr:"CL 12A 35 20",order:"6",tel:"",notas:""},
+{lat:1.2178,lng:-77.288,name:"1210672713",addr:"CRA 35 12 A -09",order:"7",tel:"",notas:""},
+{lat:1.216553,lng:-77.28857,name:"1224848152",addr:"CL 11 N 34-78",order:"8",tel:"",notas:""},
+{lat:1.216449,lng:-77.287946,name:"1206290714",addr:"CL 11 NO. 34-78 AV PANAMERICAN",order:"9",tel:"",notas:""},
+{lat:1.2162,lng:-77.2881,name:"1224589441",addr:"CC UNICENTRO PASTO CL 11 34 78",order:"10",tel:"",notas:""},
+{lat:1.214882,lng:-77.288965,name:"1224505469",addr:"CL 10 24 27",order:"11",tel:"",notas:""},
+{lat:1.219275,lng:-77.287698,name:"1224237652",addr:"CL 14 35 42",order:"12",tel:"",notas:""},
+{lat:1.217589,lng:-77.28916,name:"1210518829",addr:"CRA 36 12 14",order:"13",tel:"",notas:""},
+{lat:1.2184,lng:-77.2893,name:"1224389579",addr:"CL 13A 36 41",order:"14",tel:"",notas:""},
+{lat:1.2193,lng:-77.2891,name:"1224294270",addr:"CL 14 37 20",order:"15",tel:"",notas:""},
+{lat:1.2205,lng:-77.2906,name:"1224296306",addr:"CL 13A 40 10",order:"16",tel:"",notas:""},
+{lat:1.2207,lng:-77.291,name:"1200941464",addr:"CL 13A 40B 36",order:"17",tel:"",notas:""},
+{lat:1.2213,lng:-77.2937,name:"1224681493",addr:"CR 42 7 197 LC 2",order:"18",tel:"",notas:""},
+{lat:1.2212,lng:-77.293,name:"1210613384",addr:"KRR 42 7 145 TORRE MARILUZ",order:"19",tel:"",notas:""},
+{lat:1.2212,lng:-77.2945,name:"1224014649",addr:"TORRES DE MARILUZ LC 2",order:"20",tel:"",notas:""},
+{lat:1.2215,lng:-77.2918,name:"1224196133",addr:"CR 42 13 67",order:"21",tel:"",notas:""},
+{lat:1.2203,lng:-77.2919,name:"1224491783",addr:"CL 12 41 10",order:"22",tel:"",notas:""},
+{lat:1.2206,lng:-77.2896,name:"1203700785",addr:"CL 14 39 54",order:"23",tel:"",notas:""},
+{lat:1.2207,lng:-77.2895,name:"1210701872",addr:"CL 14 40-08",order:"24",tel:"",notas:""},
+{lat:1.218617,lng:-77.288732,name:"1210445148",addr:"CLL 13A 36 -27",order:"25",tel:"",notas:""},
+{lat:1.219505,lng:-77.290144,name:"1200941988",addr:"CL 13 39 30 BALCONES DE PUBENZ",order:"26",tel:"",notas:""},
+{lat:1.2183,lng:-77.2922,name:"1224661921",addr:"CL 10 39 17",order:"27",tel:"",notas:""},
+{lat:1.2189,lng:-77.2928,name:"1200941953",addr:"CL 9 40 04",order:"28",tel:"",notas:""},
+{lat:1.2191,lng:-77.2934,name:"1205247858",addr:"KR 40 A 7 - 53",order:"29",tel:"",notas:""},
+{lat:1.2186,lng:-77.2909,name:"1205247856",addr:"CL 12 39 - 09",order:"30",tel:"",notas:""},
+{lat:1.218707,lng:-77.28944,name:"1224841231",addr:"CL 12 36.32",order:"31",tel:"",notas:""},
+{lat:1.218562,lng:-77.289264,name:"1224768781",addr:"CL 13 39 30 LC 3",order:"32",tel:"",notas:""},
+{lat:1.2185,lng:-77.2892,name:"1203702225",addr:"CL 13 36 35",order:"33",tel:"",notas:""},
+{lat:1.218451,lng:-77.289082,name:"1200933614",addr:"CR 36 13 19",order:"34",tel:"",notas:""},
+{lat:1.2181,lng:-77.289,name:"1210472241",addr:"CR 36 12-97",order:"35",tel:"",notas:""},
+{lat:1.215405,lng:-77.291639,name:"1224777919",addr:"CR 34 7 59",order:"36",tel:"",notas:""},
+{lat:1.21645,lng:-77.29349,name:"1224791473",addr:"CL 5 36 75",order:"37",tel:"",notas:""},
+{lat:1.217,lng:-77.2939,name:"1224294025",addr:"CL 5 36 75",order:"38",tel:"",notas:""},
+{lat:1.2154,lng:-77.2965,name:"1205248629",addr:"CL 4 O 37 MZ L CS 24",order:"39",tel:"",notas:""},
+{lat:1.214157,lng:-77.30046,name:"1224835577",addr:"CR 36 NO 4. 25",order:"40",tel:"",notas:""},
+{lat:1.2122,lng:-77.2985,name:"1224746074",addr:"CR 36 5 OESTE 152",order:"41",tel:"",notas:""},
+{lat:1.2115,lng:-77.2925,name:"1203700995",addr:"MANZANA 14 CASA 2",order:"42",tel:"",notas:""}];
+
+// ── MAP ──
+const map = L.map('map',{zoomControl:false}).setView([1.2173378095238097,-77.29051602380953],13);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+
+function makeIcon(order){
+  const n=order||'';
+  const fs=String(n).length>2?8:10;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="${ROUTE_COLOR}" filter="drop-shadow(0 2px 4px rgba(0,0,0,.3))"/>
+    <circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/>
+    <text x="16" y="20.5" text-anchor="middle" font-size="${fs}" font-family="monospace" font-weight="700" fill="#fff">${n}</text>
+  </svg>`;
+  return L.divIcon({html:'<div>'+svg+'</div>',iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-42],className:''});
+}
+
+const markers=[];
+DATA.forEach(c=>{
+  const m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
+  m.bindPopup(()=>`
+    <div class="lp-inner">
+      <div class="lp-badge">Parada ${c.order||'—'}</div>
+      <div class="lp-name">${c.name}</div>
+      <div class="lp-addr">${c.addr||''}</div>
+      <div class="lp-actions">
+        <a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
+        ${c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':''}
+      </div>
+      ${c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':''}
+    </div>`);
+  m.addTo(map);
+  markers.push({marker:m,...c});
+});
+
+// fit bounds
+if(DATA.length){
+  const lats=DATA.map(c=>c.lat),lngs=DATA.map(c=>c.lng);
+  map.fitBounds([[Math.min(...lats),Math.min(...lngs)],[Math.max(...lats),Math.max(...lngs)]],{padding:[40,40]});
+}
+
+// ── LIST ──
+function renderList(items){
+  document.getElementById('clientList').innerHTML=items.map(c=>`
+    <div class="client-item" onclick="focusMarker(${c.lat},${c.lng})">
+      <div class="client-num">${c.order||'?'}</div>
+      <div style="flex:1;min-width:0">
+        <div class="client-name">${c.name}</div>
+        <div class="client-addr">${c.addr||''}</div>
+        <div class="client-actions">
+          <a class="btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
+          ${c.tel?'<a class="btn-call" href="tel:'+c.tel+'">📞 '+c.tel+'</a>':''}
+        </div>
+        ${c.notas?'<div class="client-notas">📝 '+c.notas+'</div>':''}
+      </div>
+    </div>`).join('');
+}
+renderList(DATA);
+
+function filterList(q){
+  const f=q.toLowerCase();
+  renderList(DATA.filter(c=>(c.name||'').toLowerCase().includes(f)||(c.addr||'').toLowerCase().includes(f)));
+}
+
+function focusMarker(lat,lng){
+  showTab('map');
+  map.setView([lat,lng],17);
+  const m=markers.find(x=>x.lat===lat&&x.lng===lng);
+  if(m)m.marker.openPopup();
+}
+
+// ── TABS ──
+function showTab(tab){
+  const isMap=tab==='map';
+  document.getElementById('map').style.display=isMap?'block':'none';
+  document.getElementById('listView').style.display=isMap?'none':'flex';
+  document.getElementById('searchWrap').style.display=isMap?'none':'block';
+  document.getElementById('tabMap').classList.toggle('active',isMap);
+  document.getElementById('tabList').classList.toggle('active',!isMap);
+  if(isMap)setTimeout(()=>map.invalidateSize(),50);
+  else document.getElementById('listView').style.flexDirection='column';
+}
+</script>
+</body>
+</html>

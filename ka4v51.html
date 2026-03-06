@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>KA4V51 · 06-03-2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#9b5de5;--bg:#f5f2eb;--ink:#1a1814;--muted:#8c8680;--surface:#fff;--border:#e2ddd5}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* TOPBAR */
+.topbar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
+.route-badge{background:var(--c);color:#fff;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
+.topbar-info{flex:1;min-width:0}
+.topbar-info h1{font-family:'Unbounded',sans-serif;font-size:13px;color:#fff;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-info p{font-family:'Space Mono',monospace;font-size:9px;color:#888;margin-top:2px}
+.counter{font-family:'Space Mono',monospace;font-size:11px;color:var(--c);text-align:right;white-space:nowrap}
+.counter span{display:block;font-size:9px;color:#666;margin-top:1px}
+
+/* TABS */
+.tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
+.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.02em}
+.tab.active{color:var(--c);border-bottom-color:var(--c)}
+
+/* MAP */
+#map{flex:1;display:block}
+
+/* LIST VIEW */
+#listView{flex:1;overflow-y:auto;display:none}
+.client-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.client-item:active{background:#ece9e0}
+.client-num{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.client-name{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}
+.client-addr{font-size:12px;color:var(--muted);line-height:1.4}
+.client-actions{display:flex;gap:6px;margin-top:6px}
+.btn-nav{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn-call{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
+.client-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
+
+/* SEARCH */
+.search-wrap{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:none}
+#searchBox{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)}
+#searchBox:focus{border-color:var(--c)}
+
+/* POPUP */
+.lp-inner{padding:14px;min-width:200px;max-width:280px}
+.lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
+.lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
+.lp-addr{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.lp-actions{display:flex;gap:6px;flex-wrap:wrap}
+.lp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
+.lp-btn-nav{background:#9b5de5;color:#fff}
+.lp-btn-call{background:#1a1814;color:#fff}
+.lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #9b5de5;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
+
+/* LEAFLET */
+.leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
+.leaflet-popup-content{margin:0!important}
+.leaflet-popup-tip-container{display:none}
+.leaflet-control-zoom{border:none!important}
+.leaflet-control-zoom a{background:var(--ink)!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important;font-size:18px!important}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="route-badge">KA4V51</div>
+  <div class="topbar-info">
+    <h1>Mapa del día</h1>
+    <p>VIERNES, 6 DE MARZO DE 2026</p>
+  </div>
+  <div class="counter">74<span>clientes</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" id="tabMap" onclick="showTab('map')">🗺 Mapa</div>
+  <div class="tab" id="tabList" onclick="showTab('list')">📋 Lista</div>
+</div>
+
+<div id="map"></div>
+
+<div id="listView">
+  <div class="search-wrap" id="searchWrap">
+    <input type="text" id="searchBox" placeholder="Buscar cliente o dirección..." oninput="filterList(this.value)">
+  </div>
+  <div id="clientList"></div>
+</div>
+
+<script>
+const ROUTE_COLOR = '#9b5de5';
+const DATA = [{lat:1.20192,lng:-77.29835,name:"1224815535",addr:"MZ 51 CA 11",order:"1",tel:"",notas:""},
+{lat:1.204736,lng:-77.2955,name:"1224826070",addr:"CL 21 14 56",order:"2",tel:"",notas:""},
+{lat:1.204732,lng:-77.29537,name:"1224826067",addr:"CL 16 37-24",order:"3",tel:"",notas:""},
+{lat:1.204964,lng:-77.29511,name:"1224826061",addr:"CL 21 14",order:"4",tel:"",notas:""},
+{lat:1.2042,lng:-77.2944,name:"1224226118",addr:"MZ 9A CA 1 TAMASAGRA 1",order:"5",tel:"",notas:""},
+{lat:1.2034,lng:-77.2928,name:"1224568642",addr:"CL 6 SUR 23B 52",order:"6",tel:"",notas:""},
+{lat:1.2004,lng:-77.293,name:"1224816974",addr:"MZ 9 A CA 1",order:"7",tel:"",notas:""},
+{lat:1.2009,lng:-77.2929,name:"1200931056",addr:"MZ 41 CASA 1",order:"8",tel:"",notas:""},
+{lat:1.2015,lng:-77.2917,name:"1224580996",addr:"TV 22D SUR 8 28",order:"9",tel:"",notas:""},
+{lat:1.2016,lng:-77.2915,name:"1224297081",addr:"MZ 53 CAC 5 16 DGA DROGAS LA R",order:"10",tel:"",notas:""},
+{lat:1.202177,lng:-77.291216,name:"1224744256",addr:"MZ 6 CA 1",order:"11",tel:"",notas:""},
+{lat:1.2026,lng:-77.2916,name:"1210129953",addr:"MZ 10 C 1",order:"12",tel:"",notas:""},
+{lat:1.202875,lng:-77.291691,name:"1224145368",addr:"MZ 13 CA 10 TAMASAGRA 2",order:"13",tel:"",notas:""},
+{lat:1.203,lng:-77.2919,name:"1224724719",addr:"MZ 46 CA 13",order:"14",tel:"",notas:""},
+{lat:1.2032,lng:-77.2918,name:"1224371016",addr:"MZ 14 CA 2 TAMASAGRA 2",order:"15",tel:"",notas:""},
+{lat:1.203211,lng:-77.291834,name:"1224549517",addr:"MZ 12 CA 12",order:"16",tel:"",notas:""},
+{lat:1.2034,lng:-77.2916,name:"1224289657",addr:"MZ 13 CA 18 TAMASAGRA 2",order:"17",tel:"",notas:""},
+{lat:1.204338,lng:-77.290702,name:"1224115135",addr:"CL 4 SUR 23A 5",order:"18",tel:"",notas:""},
+{lat:1.2028,lng:-77.2906,name:"1200941863",addr:"MZ 7 CA 1 TAMASAGRA 2",order:"19",tel:"",notas:""},
+{lat:1.2024,lng:-77.2902,name:"1224816675",addr:"MZ 4 CA 5",order:"20",tel:"",notas:""},
+{lat:1.202891,lng:-77.289372,name:"1210722270",addr:"CR 22C 4 SUR 09",order:"21",tel:"",notas:""},
+{lat:1.201178,lng:-77.290278,name:"1205248178",addr:"MZ 1 CS 3",order:"22",tel:"",notas:""},
+{lat:1.2016,lng:-77.2908,name:"1224290377",addr:"MZ 3 CA 1 TAMASAGRA",order:"23",tel:"",notas:""},
+{lat:1.201469,lng:-77.290058,name:"1224290709",addr:"MZ 1 CA 10 TAMASAGRA LL",order:"24",tel:"",notas:""},
+{lat:1.2015,lng:-77.2899,name:"1205248130",addr:"MZ 1 CS 12",order:"25",tel:"",notas:""},
+{lat:1.201608,lng:-77.289449,name:"1224741197",addr:"CR 22B 5 SUR 21 LC 106",order:"26",tel:"",notas:""},
+{lat:1.20171,lng:-77.28949,name:"1203700948",addr:"CR 26 SUR 3 46",order:"27",tel:"",notas:""},
+{lat:1.201727,lng:-77.289452,name:"1224679154",addr:"CR 22B 5 SUR 21 BALCONES DE SA",order:"28",tel:"",notas:""},
+{lat:1.2021,lng:-77.2897,name:"1224048110",addr:"CR 22B 4 SUR 87",order:"29",tel:"",notas:""},
+{lat:1.203125,lng:-77.288002,name:"1205248138",addr:"MZ 1 CS 13",order:"30",tel:"",notas:""},
+{lat:1.1978,lng:-77.2802,name:"1224215458",addr:"MZ B CA 3 TZ DE CHAPAL",order:"31",tel:"",notas:""},
+{lat:1.197991,lng:-77.279632,name:"1224791578",addr:"MZ A CA 2 TERRAZAS DE CHAPAL",order:"32",tel:"",notas:""},
+{lat:1.19691,lng:-77.27922,name:"1224702054",addr:"CR 7 11 39",order:"33",tel:"",notas:""},
+{lat:1.1978,lng:-77.2836,name:"1200932731",addr:"MZ I CASA 5",order:"34",tel:"",notas:""},
+{lat:1.197814,lng:-77.28422,name:"1224846864",addr:"CL 3 N 16",order:"35",tel:"",notas:""},
+{lat:1.195021,lng:-77.286414,name:"1224472419",addr:"MZ C CA 69 QUILLACINGA",order:"36",tel:"",notas:""},
+{lat:1.1989,lng:-77.2828,name:"1205248075",addr:"CR 14 4 39",order:"37",tel:"",notas:""},
+{lat:1.199474,lng:-77.2823,name:"1224573426",addr:"CL 5A 13 02",order:"38",tel:"",notas:""},
+{lat:1.1994,lng:-77.2832,name:"1224028122",addr:"CR 13 4 49",order:"39",tel:"",notas:""},
+{lat:1.1994,lng:-77.2833,name:"1224153400",addr:"CR 13 5 11",order:"40",tel:"",notas:""},
+{lat:1.199104,lng:-77.284364,name:"1224830026",addr:"MZ J CASA 21",order:"41",tel:"",notas:""},
+{lat:1.19931,lng:-77.28407,name:"1224677684",addr:"CL 3 13 39",order:"42",tel:"",notas:""},
+{lat:1.2004,lng:-77.2831,name:"1224182973",addr:"CL 15 14 41",order:"43",tel:"",notas:""},
+{lat:1.1999,lng:-77.2829,name:"1205248405",addr:"CL 5 13A 28",order:"44",tel:"",notas:""},
+{lat:1.2003,lng:-77.2832,name:"1224415825",addr:"CL 5 14 69 CAICEDO ALTO",order:"45",tel:"",notas:""},
+{lat:1.2002,lng:-77.2832,name:"1224080477",addr:"CR 14 4 13",order:"46",tel:"",notas:""},
+{lat:1.2001,lng:-77.2834,name:"1224196837",addr:"CR 15 2B 8",order:"47",tel:"",notas:""},
+{lat:1.19995,lng:-77.28402,name:"1224785130",addr:"CR 14 2B 18",order:"48",tel:"",notas:""},
+{lat:1.2006,lng:-77.2841,name:"1224295929",addr:"CR 15 2 22",order:"49",tel:"",notas:""},
+{lat:1.2008,lng:-77.2846,name:"1224386813",addr:"CL 2 15 19 CAICEDO ALTO",order:"50",tel:"",notas:""},
+{lat:1.2009,lng:-77.28389,name:"1224791584",addr:"CR 15 3 20",order:"51",tel:"",notas:""},
+{lat:1.2011,lng:-77.2835,name:"1224280137",addr:"CL 5 14A 12 CAICEDO ALTO",order:"52",tel:"",notas:""},
+{lat:1.2006,lng:-77.2851,name:"1210631241",addr:"CR 15 1B-04",order:"53",tel:"",notas:""},
+{lat:1.1998,lng:-77.2851,name:"1224292410",addr:"MZ J CA 25",order:"54",tel:"",notas:""},
+{lat:1.19973,lng:-77.28498,name:"1224810955",addr:"CL 1B 14 04 CAICEDO BAJO",order:"55",tel:"",notas:""},
+{lat:1.198685,lng:-77.285002,name:"1224292447",addr:"MZ G CA 10 QUITO LOPEZ 3",order:"56",tel:"",notas:""},
+{lat:1.1988,lng:-77.2861,name:"1224401729",addr:"CL 1B 14 4 DIV 1",order:"57",tel:"",notas:""},
+{lat:1.1987,lng:-77.2859,name:"1224323049",addr:"CR 14 1B 18",order:"58",tel:"",notas:""},
+{lat:1.202874,lng:-77.287134,name:"1224293109",addr:"MZ 2 CA 12",order:"59",tel:"",notas:""},
+{lat:1.202,lng:-77.2878,name:"1224365843",addr:"MZ 10 CA 42 AGUALONGO",order:"60",tel:"",notas:""},
+{lat:1.200947,lng:-77.288922,name:"1224363162",addr:"MZ 11A CA 10",order:"61",tel:"",notas:""},
+{lat:1.2019,lng:-77.2883,name:"1205248110",addr:"MZ 13 CS 17",order:"62",tel:"",notas:""},
+{lat:1.2023,lng:-77.2881,name:"1210645841",addr:"MANZANA 12 CASA 1",order:"63",tel:"",notas:""},
+{lat:1.2023,lng:-77.2881,name:"1200930905",addr:"MZ 12 CASA 2",order:"64",tel:"",notas:""},
+{lat:1.2023,lng:-77.2877,name:"1224365923",addr:"MZ 4 CA 8 AGUALONGO",order:"65",tel:"",notas:""},
+{lat:1.2038,lng:-77.2895,name:"1224501721",addr:"CR 22E 3 SUR 10",order:"66",tel:"",notas:""},
+{lat:1.2035,lng:-77.2911,name:"1224769016",addr:"CL 5 SUR 23 4",order:"67",tel:"",notas:""},
+{lat:1.20468,lng:-77.29203,name:"1224682784",addr:"CR 24 5 SUR 06",order:"68",tel:"",notas:""},
+{lat:1.20545,lng:-77.29345,name:"1224759893",addr:"CL 6 SUR 25A 22",order:"69",tel:"",notas:""},
+{lat:1.20532,lng:-77.29367,name:"1224692587",addr:"CL 6 SUR   25 12",order:"70",tel:"",notas:""},
+{lat:1.2055,lng:-77.2947,name:"1224299563",addr:"MZ A C A6 NIZA",order:"71",tel:"",notas:""},
+{lat:1.205441,lng:-77.2949,name:"1224754626",addr:"CR 3 21A 64",order:"72",tel:"",notas:""},
+{lat:1.205404,lng:-77.29521,name:"1224812781",addr:"KM 7 VIA SUR BOTANILLA RESPALD",order:"73",tel:"",notas:""},
+{lat:1.20551,lng:-77.295385,name:"1224829505",addr:"CR 17 B 21 12",order:"74",tel:"",notas:""}];
+
+// ── MAP ──
+const map = L.map('map',{zoomControl:false}).setView([1.201567243243243,-77.28848225675677],13);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+
+function makeIcon(order){
+  const n=order||'';
+  const fs=String(n).length>2?8:10;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="${ROUTE_COLOR}" filter="drop-shadow(0 2px 4px rgba(0,0,0,.3))"/>
+    <circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/>
+    <text x="16" y="20.5" text-anchor="middle" font-size="${fs}" font-family="monospace" font-weight="700" fill="#fff">${n}</text>
+  </svg>`;
+  return L.divIcon({html:'<div>'+svg+'</div>',iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-42],className:''});
+}
+
+const markers=[];
+DATA.forEach(c=>{
+  const m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
+  m.bindPopup(()=>`
+    <div class="lp-inner">
+      <div class="lp-badge">Parada ${c.order||'—'}</div>
+      <div class="lp-name">${c.name}</div>
+      <div class="lp-addr">${c.addr||''}</div>
+      <div class="lp-actions">
+        <a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
+        ${c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':''}
+      </div>
+      ${c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':''}
+    </div>`);
+  m.addTo(map);
+  markers.push({marker:m,...c});
+});
+
+// fit bounds
+if(DATA.length){
+  const lats=DATA.map(c=>c.lat),lngs=DATA.map(c=>c.lng);
+  map.fitBounds([[Math.min(...lats),Math.min(...lngs)],[Math.max(...lats),Math.max(...lngs)]],{padding:[40,40]});
+}
+
+// ── LIST ──
+function renderList(items){
+  document.getElementById('clientList').innerHTML=items.map(c=>`
+    <div class="client-item" onclick="focusMarker(${c.lat},${c.lng})">
+      <div class="client-num">${c.order||'?'}</div>
+      <div style="flex:1;min-width:0">
+        <div class="client-name">${c.name}</div>
+        <div class="client-addr">${c.addr||''}</div>
+        <div class="client-actions">
+          <a class="btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
+          ${c.tel?'<a class="btn-call" href="tel:'+c.tel+'">📞 '+c.tel+'</a>':''}
+        </div>
+        ${c.notas?'<div class="client-notas">📝 '+c.notas+'</div>':''}
+      </div>
+    </div>`).join('');
+}
+renderList(DATA);
+
+function filterList(q){
+  const f=q.toLowerCase();
+  renderList(DATA.filter(c=>(c.name||'').toLowerCase().includes(f)||(c.addr||'').toLowerCase().includes(f)));
+}
+
+function focusMarker(lat,lng){
+  showTab('map');
+  map.setView([lat,lng],17);
+  const m=markers.find(x=>x.lat===lat&&x.lng===lng);
+  if(m)m.marker.openPopup();
+}
+
+// ── TABS ──
+function showTab(tab){
+  const isMap=tab==='map';
+  document.getElementById('map').style.display=isMap?'block':'none';
+  document.getElementById('listView').style.display=isMap?'none':'flex';
+  document.getElementById('searchWrap').style.display=isMap?'none':'block';
+  document.getElementById('tabMap').classList.toggle('active',isMap);
+  document.getElementById('tabList').classList.toggle('active',!isMap);
+  if(isMap)setTimeout(()=>map.invalidateSize(),50);
+  else document.getElementById('listView').style.flexDirection='column';
+}
+</script>
+</body>
+</html>

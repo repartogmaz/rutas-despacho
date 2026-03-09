@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>KA4V01 · 06-03-2026</title>
+<title>KA4V01 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -72,9 +72,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
   <div class="route-badge">KA4V01</div>
   <div class="topbar-info">
     <h1>Mapa del día</h1>
-    <p>VIERNES, 6 DE MARZO DE 2026</p>
+    <p>LUNES, 9 DE MARZO DE 2026</p>
   </div>
-  <div class="counter">7<span>clientes</span></div>
+  <div class="counter">11<span>clientes</span></div>
 </div>
 
 <div class="tabs">
@@ -93,16 +93,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#e63946';
-const DATA = [{lat:1.227685,lng:-77.28624,name:"1200933721",addr:"CR 42 18A 54 CC VALLE DE ATRIZ",order:"1",tel:"",notas:""},
-{lat:1.234135,lng:-77.28694,name:"1200930371",addr:"CR 44 B 19 56",order:"2",tel:"",notas:""},
-{lat:1.2298,lng:-77.2839,name:"1224458896",addr:"AV PANAMERICANA 11 50",order:"3",tel:"",notas:""},
-{lat:1.215304,lng:-77.28017,name:"1224426685",addr:"CR 25 17 64",order:"4",tel:"",notas:""},
-{lat:1.21626,lng:-77.27949,name:"1224426686",addr:"CL 18 26 60",order:"5",tel:"",notas:""},
-{lat:1.210139,lng:-77.27794,name:"1200938455",addr:"CL 17 20 69",order:"6",tel:"",notas:""},
-{lat:1.2059,lng:-77.265,name:"1210425530",addr:"CL 22 6 61 C.C UNICO",order:"7",tel:"",notas:""}];
+const DATA = [{lat:1.20928,lng:-77.28981,name:"DOLLARCITY MIJITAYO",addr:"CR 26 241",order:"1",tel:"1234567890",notas:""},
+{lat:1.2062,lng:-77.2859,name:"CAFETERIA EXITO PASTO PANAMERI",addr:"CR 22B 2 57",order:"2",tel:"0",notas:""},
+{lat:1.211175,lng:-77.28303,name:"AUTOSERVICIO TIGRE SANTIAGO",addr:"KR 23 12 25 PARQUE SANTIAGO",order:"3",tel:"0",notas:""},
+{lat:1.2046,lng:-77.2752,name:"SUPERMERCADOS TIGRE DE LA REBA",addr:"CL 18 14 28",order:"4",tel:"3173484177",notas:""},
+{lat:1.2059,lng:-77.265,name:"METRO PASTO UNICO",addr:"CL 22 6 61 C.C UNICO",order:"5",tel:"0",notas:""},
+{lat:1.20567,lng:-77.26051,name:"DOLLARCITY UNICO PASTO",addr:"CL 22 661 CC UNICO",order:"6",tel:"1234567890",notas:""},
+{lat:1.212369,lng:-77.27746,name:"DOLLARCITY PASTO CENTRO",addr:"CL 18 21B 40",order:"7",tel:"1234567890",notas:""},
+{lat:1.216894,lng:-77.27764,name:"LA ECONOMIA DROGUERIA 10232 PA",addr:"CL 20 26 40 LC 1",order:"8",tel:"3173373867",notas:""},
+{lat:1.234135,lng:-77.28694,name:"RESTAURANTE MISTER POLLO",addr:"CR 44 B 19 56",order:"9",tel:"3104947167",notas:""},
+{lat:1.2169,lng:-77.2894,name:"JUMBO PASTO UNICENTRO",addr:"AV PANAMERICANA ENTRE CL 11 12",order:"10",tel:"0",notas:""},
+{lat:1.21651,lng:-77.28858,name:"5135 VZ UNIPASTO CUEROS VELEZ",addr:"CL 11 34 78 CC UNICENTRO LC 2",order:"11",tel:"3103653539",notas:""}];
 
 // ── MAP ──
-const map = L.map('map',{zoomControl:false}).setView([1.219889,-77.2799542857143],13);
+const map = L.map('map',{zoomControl:false}).setView([1.2126939090909092,-77.27995181818181],13);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
 

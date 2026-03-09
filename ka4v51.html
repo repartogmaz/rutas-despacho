@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>KA4V51 · 06-03-2026</title>
+<title>KA4V51 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -72,9 +72,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
   <div class="route-badge">KA4V51</div>
   <div class="topbar-info">
     <h1>Mapa del día</h1>
-    <p>VIERNES, 6 DE MARZO DE 2026</p>
+    <p>LUNES, 9 DE MARZO DE 2026</p>
   </div>
-  <div class="counter">74<span>clientes</span></div>
+  <div class="counter">52<span>clientes</span></div>
 </div>
 
 <div class="tabs">
@@ -93,83 +93,61 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#9b5de5';
-const DATA = [{lat:1.20192,lng:-77.29835,name:"1224815535",addr:"MZ 51 CA 11",order:"1",tel:"",notas:""},
-{lat:1.204736,lng:-77.2955,name:"1224826070",addr:"CL 21 14 56",order:"2",tel:"",notas:""},
-{lat:1.204732,lng:-77.29537,name:"1224826067",addr:"CL 16 37-24",order:"3",tel:"",notas:""},
-{lat:1.204964,lng:-77.29511,name:"1224826061",addr:"CL 21 14",order:"4",tel:"",notas:""},
-{lat:1.2042,lng:-77.2944,name:"1224226118",addr:"MZ 9A CA 1 TAMASAGRA 1",order:"5",tel:"",notas:""},
-{lat:1.2034,lng:-77.2928,name:"1224568642",addr:"CL 6 SUR 23B 52",order:"6",tel:"",notas:""},
-{lat:1.2004,lng:-77.293,name:"1224816974",addr:"MZ 9 A CA 1",order:"7",tel:"",notas:""},
-{lat:1.2009,lng:-77.2929,name:"1200931056",addr:"MZ 41 CASA 1",order:"8",tel:"",notas:""},
-{lat:1.2015,lng:-77.2917,name:"1224580996",addr:"TV 22D SUR 8 28",order:"9",tel:"",notas:""},
-{lat:1.2016,lng:-77.2915,name:"1224297081",addr:"MZ 53 CAC 5 16 DGA DROGAS LA R",order:"10",tel:"",notas:""},
-{lat:1.202177,lng:-77.291216,name:"1224744256",addr:"MZ 6 CA 1",order:"11",tel:"",notas:""},
-{lat:1.2026,lng:-77.2916,name:"1210129953",addr:"MZ 10 C 1",order:"12",tel:"",notas:""},
-{lat:1.202875,lng:-77.291691,name:"1224145368",addr:"MZ 13 CA 10 TAMASAGRA 2",order:"13",tel:"",notas:""},
-{lat:1.203,lng:-77.2919,name:"1224724719",addr:"MZ 46 CA 13",order:"14",tel:"",notas:""},
-{lat:1.2032,lng:-77.2918,name:"1224371016",addr:"MZ 14 CA 2 TAMASAGRA 2",order:"15",tel:"",notas:""},
-{lat:1.203211,lng:-77.291834,name:"1224549517",addr:"MZ 12 CA 12",order:"16",tel:"",notas:""},
-{lat:1.2034,lng:-77.2916,name:"1224289657",addr:"MZ 13 CA 18 TAMASAGRA 2",order:"17",tel:"",notas:""},
-{lat:1.204338,lng:-77.290702,name:"1224115135",addr:"CL 4 SUR 23A 5",order:"18",tel:"",notas:""},
-{lat:1.2028,lng:-77.2906,name:"1200941863",addr:"MZ 7 CA 1 TAMASAGRA 2",order:"19",tel:"",notas:""},
-{lat:1.2024,lng:-77.2902,name:"1224816675",addr:"MZ 4 CA 5",order:"20",tel:"",notas:""},
-{lat:1.202891,lng:-77.289372,name:"1210722270",addr:"CR 22C 4 SUR 09",order:"21",tel:"",notas:""},
-{lat:1.201178,lng:-77.290278,name:"1205248178",addr:"MZ 1 CS 3",order:"22",tel:"",notas:""},
-{lat:1.2016,lng:-77.2908,name:"1224290377",addr:"MZ 3 CA 1 TAMASAGRA",order:"23",tel:"",notas:""},
-{lat:1.201469,lng:-77.290058,name:"1224290709",addr:"MZ 1 CA 10 TAMASAGRA LL",order:"24",tel:"",notas:""},
-{lat:1.2015,lng:-77.2899,name:"1205248130",addr:"MZ 1 CS 12",order:"25",tel:"",notas:""},
-{lat:1.201608,lng:-77.289449,name:"1224741197",addr:"CR 22B 5 SUR 21 LC 106",order:"26",tel:"",notas:""},
-{lat:1.20171,lng:-77.28949,name:"1203700948",addr:"CR 26 SUR 3 46",order:"27",tel:"",notas:""},
-{lat:1.201727,lng:-77.289452,name:"1224679154",addr:"CR 22B 5 SUR 21 BALCONES DE SA",order:"28",tel:"",notas:""},
-{lat:1.2021,lng:-77.2897,name:"1224048110",addr:"CR 22B 4 SUR 87",order:"29",tel:"",notas:""},
-{lat:1.203125,lng:-77.288002,name:"1205248138",addr:"MZ 1 CS 13",order:"30",tel:"",notas:""},
-{lat:1.1978,lng:-77.2802,name:"1224215458",addr:"MZ B CA 3 TZ DE CHAPAL",order:"31",tel:"",notas:""},
-{lat:1.197991,lng:-77.279632,name:"1224791578",addr:"MZ A CA 2 TERRAZAS DE CHAPAL",order:"32",tel:"",notas:""},
-{lat:1.19691,lng:-77.27922,name:"1224702054",addr:"CR 7 11 39",order:"33",tel:"",notas:""},
-{lat:1.1978,lng:-77.2836,name:"1200932731",addr:"MZ I CASA 5",order:"34",tel:"",notas:""},
-{lat:1.197814,lng:-77.28422,name:"1224846864",addr:"CL 3 N 16",order:"35",tel:"",notas:""},
-{lat:1.195021,lng:-77.286414,name:"1224472419",addr:"MZ C CA 69 QUILLACINGA",order:"36",tel:"",notas:""},
-{lat:1.1989,lng:-77.2828,name:"1205248075",addr:"CR 14 4 39",order:"37",tel:"",notas:""},
-{lat:1.199474,lng:-77.2823,name:"1224573426",addr:"CL 5A 13 02",order:"38",tel:"",notas:""},
-{lat:1.1994,lng:-77.2832,name:"1224028122",addr:"CR 13 4 49",order:"39",tel:"",notas:""},
-{lat:1.1994,lng:-77.2833,name:"1224153400",addr:"CR 13 5 11",order:"40",tel:"",notas:""},
-{lat:1.199104,lng:-77.284364,name:"1224830026",addr:"MZ J CASA 21",order:"41",tel:"",notas:""},
-{lat:1.19931,lng:-77.28407,name:"1224677684",addr:"CL 3 13 39",order:"42",tel:"",notas:""},
-{lat:1.2004,lng:-77.2831,name:"1224182973",addr:"CL 15 14 41",order:"43",tel:"",notas:""},
-{lat:1.1999,lng:-77.2829,name:"1205248405",addr:"CL 5 13A 28",order:"44",tel:"",notas:""},
-{lat:1.2003,lng:-77.2832,name:"1224415825",addr:"CL 5 14 69 CAICEDO ALTO",order:"45",tel:"",notas:""},
-{lat:1.2002,lng:-77.2832,name:"1224080477",addr:"CR 14 4 13",order:"46",tel:"",notas:""},
-{lat:1.2001,lng:-77.2834,name:"1224196837",addr:"CR 15 2B 8",order:"47",tel:"",notas:""},
-{lat:1.19995,lng:-77.28402,name:"1224785130",addr:"CR 14 2B 18",order:"48",tel:"",notas:""},
-{lat:1.2006,lng:-77.2841,name:"1224295929",addr:"CR 15 2 22",order:"49",tel:"",notas:""},
-{lat:1.2008,lng:-77.2846,name:"1224386813",addr:"CL 2 15 19 CAICEDO ALTO",order:"50",tel:"",notas:""},
-{lat:1.2009,lng:-77.28389,name:"1224791584",addr:"CR 15 3 20",order:"51",tel:"",notas:""},
-{lat:1.2011,lng:-77.2835,name:"1224280137",addr:"CL 5 14A 12 CAICEDO ALTO",order:"52",tel:"",notas:""},
-{lat:1.2006,lng:-77.2851,name:"1210631241",addr:"CR 15 1B-04",order:"53",tel:"",notas:""},
-{lat:1.1998,lng:-77.2851,name:"1224292410",addr:"MZ J CA 25",order:"54",tel:"",notas:""},
-{lat:1.19973,lng:-77.28498,name:"1224810955",addr:"CL 1B 14 04 CAICEDO BAJO",order:"55",tel:"",notas:""},
-{lat:1.198685,lng:-77.285002,name:"1224292447",addr:"MZ G CA 10 QUITO LOPEZ 3",order:"56",tel:"",notas:""},
-{lat:1.1988,lng:-77.2861,name:"1224401729",addr:"CL 1B 14 4 DIV 1",order:"57",tel:"",notas:""},
-{lat:1.1987,lng:-77.2859,name:"1224323049",addr:"CR 14 1B 18",order:"58",tel:"",notas:""},
-{lat:1.202874,lng:-77.287134,name:"1224293109",addr:"MZ 2 CA 12",order:"59",tel:"",notas:""},
-{lat:1.202,lng:-77.2878,name:"1224365843",addr:"MZ 10 CA 42 AGUALONGO",order:"60",tel:"",notas:""},
-{lat:1.200947,lng:-77.288922,name:"1224363162",addr:"MZ 11A CA 10",order:"61",tel:"",notas:""},
-{lat:1.2019,lng:-77.2883,name:"1205248110",addr:"MZ 13 CS 17",order:"62",tel:"",notas:""},
-{lat:1.2023,lng:-77.2881,name:"1210645841",addr:"MANZANA 12 CASA 1",order:"63",tel:"",notas:""},
-{lat:1.2023,lng:-77.2881,name:"1200930905",addr:"MZ 12 CASA 2",order:"64",tel:"",notas:""},
-{lat:1.2023,lng:-77.2877,name:"1224365923",addr:"MZ 4 CA 8 AGUALONGO",order:"65",tel:"",notas:""},
-{lat:1.2038,lng:-77.2895,name:"1224501721",addr:"CR 22E 3 SUR 10",order:"66",tel:"",notas:""},
-{lat:1.2035,lng:-77.2911,name:"1224769016",addr:"CL 5 SUR 23 4",order:"67",tel:"",notas:""},
-{lat:1.20468,lng:-77.29203,name:"1224682784",addr:"CR 24 5 SUR 06",order:"68",tel:"",notas:""},
-{lat:1.20545,lng:-77.29345,name:"1224759893",addr:"CL 6 SUR 25A 22",order:"69",tel:"",notas:""},
-{lat:1.20532,lng:-77.29367,name:"1224692587",addr:"CL 6 SUR   25 12",order:"70",tel:"",notas:""},
-{lat:1.2055,lng:-77.2947,name:"1224299563",addr:"MZ A C A6 NIZA",order:"71",tel:"",notas:""},
-{lat:1.205441,lng:-77.2949,name:"1224754626",addr:"CR 3 21A 64",order:"72",tel:"",notas:""},
-{lat:1.205404,lng:-77.29521,name:"1224812781",addr:"KM 7 VIA SUR BOTANILLA RESPALD",order:"73",tel:"",notas:""},
-{lat:1.20551,lng:-77.295385,name:"1224829505",addr:"CR 17 B 21 12",order:"74",tel:"",notas:""}];
+const DATA = [{lat:1.20522,lng:-77.29535,name:"DONDE TO�A",addr:"MZ C CA 3",order:"1",tel:"0",notas:""},
+{lat:1.204598,lng:-77.296003,name:"Q HORNADO",addr:"CL 19 34 A 34",order:"2",tel:"0",notas:""},
+{lat:1.2022,lng:-77.2996,name:"TIENDA MABEL",addr:"CR 26 SUR 105 FRENTE A EMPOPAS",order:"3",tel:"3176864120",notas:""},
+{lat:1.2027,lng:-77.2994,name:"TIENDA ARISTY",addr:"CR 26 13 SUR 41 FRENTE A EMPOP",order:"4",tel:"3117069119",notas:""},
+{lat:1.20249,lng:-77.29985,name:"CAFETERIA PLANTA MIJITALLO",addr:"KM 1 VIA OBONUCO",order:"5",tel:"3114633216",notas:""},
+{lat:1.202,lng:-77.2978,name:"TIENDA LILIANA",addr:"MZ J CA 14 VILLA DE LOS RIOS",order:"6",tel:"0",notas:""},
+{lat:1.2019,lng:-77.2976,name:"MATAMBRE BBQ",addr:"MZ L CA 16",order:"7",tel:"3188017424",notas:""},
+{lat:1.2012,lng:-77.2983,name:"TIENDA ALEJANDRA",addr:"MZ E CA 5",order:"8",tel:"3168348272",notas:""},
+{lat:1.2017,lng:-77.2975,name:"TIENDA BURBANO",addr:"MZ M CA 16",order:"9",tel:"3145801335",notas:""},
+{lat:1.2008,lng:-77.297,name:"TIENDA LA ESQUINA",addr:"MZ N CA 1",order:"10",tel:"3124256930",notas:""},
+{lat:1.2009,lng:-77.2966,name:"SU TIENDA MERKA FATIMA",addr:"MANZANA 0 CASA 4",order:"11",tel:"3158242652",notas:""},
+{lat:1.200287,lng:-77.296701,name:"TIENDA EXPRESS",addr:"CL 12 SUR 23 34",order:"12",tel:"3180174664",notas:""},
+{lat:1.199569,lng:-77.29623,name:"MERCADITO",addr:"CL 12 SUR 24 A 136",order:"13",tel:"0",notas:""},
+{lat:1.19918,lng:-77.29599,name:"TIENDA GEORGE",addr:"MZ 2 CA 6 ALTAMIRA",order:"14",tel:"3168466040",notas:""},
+{lat:1.1985,lng:-77.2957,name:"SUPERTDA J.M.",addr:"MZ 7 CASA 11",order:"15",tel:"0",notas:""},
+{lat:1.198154,lng:-77.294188,name:"TIENDA URVANIZACION LA MERCED",addr:"MZ C CS 3",order:"16",tel:"3117903251",notas:""},
+{lat:1.19858,lng:-77.29396,name:"EASY MARKET 1",addr:"CR 22A 10 SUR 21 ALTAMIRA",order:"17",tel:"3002480566",notas:""},
+{lat:1.19923,lng:-77.29525,name:"TIENDA MARIA PAULA",addr:"CR 23 11 SUR 30 TO 2 AP 1401",order:"18",tel:"3167127636",notas:""},
+{lat:1.1989,lng:-77.295,name:"MIJITAYO EXPRESS",addr:"CR 22B 11 SUR 140",order:"19",tel:"3188937296",notas:""},
+{lat:1.1999,lng:-77.2952,name:"TIENDA MARIA PAULA",addr:"CR 23 11 SUR 30 AP 1401",order:"20",tel:"3167128666",notas:""},
+{lat:1.2033,lng:-77.2945,name:"PAN DE CADA DIA",addr:"MZ 8 CA 13",order:"21",tel:"3108896810",notas:""},
+{lat:1.204736,lng:-77.2955,name:"BLANCA ROSERO",addr:"CL 21 14 56",order:"22",tel:"0",notas:""},
+{lat:1.204732,lng:-77.29537,name:"PAN Y BONO",addr:"CL 16 37-24",order:"23",tel:"0",notas:""},
+{lat:1.204964,lng:-77.29511,name:"BLANCA ROSERO",addr:"CL 21 14",order:"24",tel:"0",notas:""},
+{lat:1.194361,lng:-77.306366,name:"ABARROTES Y NOVEDADES",addr:"CS 10 SEC SAN SEBASTIA",order:"25",tel:"0",notas:""},
+{lat:1.1932,lng:-77.306,name:"TIENDA BLANQUITA",addr:"CS 276 ESQ DEL PARQUE",order:"26",tel:"3184708943",notas:""},
+{lat:1.192538,lng:-77.30819,name:"URKUNINA CUY",addr:"SEC LA PLAYA",order:"27",tel:"3014690078",notas:""},
+{lat:1.193004,lng:-77.306636,name:"PANADERIA WIPHALA",addr:"CA 129 SEC JESUS NAZARENO OBON",order:"28",tel:"3157878455",notas:""},
+{lat:1.192978,lng:-77.306229,name:"EL PARQUE MINISUPER",addr:"CR 23 118 01 SEC OBONUCO",order:"29",tel:"3014481274",notas:""},
+{lat:1.189102,lng:-77.31126,name:"TIENDA NUBI",addr:"SEC LA PLAYA CS 181",order:"30",tel:"3102320671",notas:""},
+{lat:1.188233,lng:-77.30736,name:"RESTAURANTE ELIANA",addr:"SECTOR MOSQUER",order:"31",tel:"3175127956",notas:""},
+{lat:1.189149,lng:-77.304427,name:"TIENDA DO�A MERCEDES",addr:"CS 3 SECTOR SAN FRANCISCO",order:"32",tel:"3175568339",notas:""},
+{lat:1.188475,lng:-77.302482,name:"SUPER TIENDA",addr:"AV SANTANDER CA 223 B",order:"33",tel:"3152407203",notas:""},
+{lat:1.191138,lng:-77.305137,name:"YESICA",addr:"CA 238 SEC SANTANDER",order:"34",tel:"3001296911",notas:""},
+{lat:1.191975,lng:-77.305389,name:"MERCA RAPIDO",addr:"SEC SAN JOSE CA 56 OBONUCO",order:"35",tel:"3184044755",notas:""},
+{lat:1.192811,lng:-77.305723,name:"CASA BONITA",addr:"CL 3 PRINCIPAL CR 3 SUR OBONUC",order:"36",tel:"3186080984",notas:""},
+{lat:1.193,lng:-77.3056,name:"LICORES 24 7",addr:"CL 3 2 174",order:"37",tel:"0",notas:""},
+{lat:1.193546,lng:-77.3039,name:"FRUVER YDEBERES ONIX",addr:"CL 3 123",order:"38",tel:"0",notas:""},
+{lat:1.193515,lng:-77.303928,name:"GASTRO BAR LA 32",addr:"OBONUCO SEC SAN SEBASTIAN",order:"39",tel:"3152407203",notas:""},
+{lat:1.193646,lng:-77.30368,name:"DONDE ANIBALL",addr:"CR 4 2 25",order:"40",tel:"0",notas:""},
+{lat:1.196153,lng:-77.298623,name:"KCO COCA COLA LA PASTUSIDAD",addr:"PATINODROMO LA PASTUSIDAD",order:"41",tel:"3175939258",notas:""},
+{lat:1.196069,lng:-77.298648,name:"LA PASTUSIDAD CARPA ESTADIO",addr:"CASA 15",order:"42",tel:"3113894794",notas:""},
+{lat:1.1972,lng:-77.2952,name:"TIENDA NUBIA ESTACIO",addr:"MZ 10 CS 4 ALTAMIRA",order:"43",tel:"3173413141",notas:""},
+{lat:1.196787,lng:-77.293415,name:"TIENDA MANUEL",addr:"MZ H CASA 5",order:"44",tel:"3145100585",notas:""},
+{lat:1.201036,lng:-77.291489,name:"PIZZA PARRILLA LA ESQUINA DEL",addr:"OBONUCO SEC SAN JOSE",order:"45",tel:"3014481274",notas:""},
+{lat:1.204,lng:-77.2918,name:"TIENDA JOSE",addr:"MZ 19 CA 1 TAMASAGRA 2",order:"46",tel:"0",notas:""},
+{lat:1.20433,lng:-77.29238,name:"SUPERMERCADO TITAN TAMASAGRA S",addr:"CRA 24 5 SUR 35",order:"47",tel:"3122153291",notas:""},
+{lat:1.21415,lng:-77.290643,name:"MARIA SOLEDAD SANTACRUZ",addr:"CR 33 5 121 UNINARI�O SEDE VIP",order:"48",tel:"3117067647",notas:""},
+{lat:1.2107,lng:-77.2923,name:"GRUPO MACADAMIA SAS",addr:"CR 33 2 50",order:"49",tel:"0",notas:""},
+{lat:1.2055,lng:-77.2947,name:"DEPOCITO LUCIO",addr:"MZ A C A6 NIZA",order:"50",tel:"3102319905",notas:""},
+{lat:1.205441,lng:-77.2949,name:"DISTRIASOCIADOS SAS LA UNION",addr:"CR 3 21A 64",order:"51",tel:"3147313945",notas:""},
+{lat:1.205376,lng:-77.295335,name:"MINIMARKET LA CAMPI�A DEL ORIE",addr:"CR 33A 20 30",order:"52",tel:"3102320571",notas:""}];
 
 // ── MAP ──
-const map = L.map('map',{zoomControl:false}).setView([1.201567243243243,-77.28848225675677],13);
+const map = L.map('map',{zoomControl:false}).setView([1.1989067884615385,-77.29875849999998],13);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
 

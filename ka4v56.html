@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>KA4V56 · 06-03-2026</title>
+<title>KA4V56 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -72,9 +72,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
   <div class="route-badge">KA4V56</div>
   <div class="topbar-info">
     <h1>Mapa del día</h1>
-    <p>VIERNES, 6 DE MARZO DE 2026</p>
+    <p>LUNES, 9 DE MARZO DE 2026</p>
   </div>
-  <div class="counter">72<span>clientes</span></div>
+  <div class="counter">4<span>clientes</span></div>
 </div>
 
 <div class="tabs">
@@ -93,81 +93,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#023e8a';
-const DATA = [{lat:1.2437,lng:-77.2952,name:"1224775859",addr:"SERVICENTRO PINAZACO",order:"1",tel:"",notas:""},
-{lat:1.2438,lng:-77.2957,name:"1210744951",addr:"KILOMETRO 3 VIA PANAMERICANA D",order:"2",tel:"",notas:""},
-{lat:1.2444,lng:-77.2967,name:"1224487346",addr:"PINASACO CA 13",order:"3",tel:"",notas:""},
-{lat:1.309664,lng:-77.27107,name:"1224842877",addr:"AER LC 119 AER ANTONIO NARI�O",order:"4",tel:"",notas:""},
-{lat:1.3116,lng:-77.273,name:"1200938860",addr:"KM 20 VIA CHACHAGUI",order:"5",tel:"",notas:""},
-{lat:1.3376,lng:-77.2767,name:"1224106744",addr:"KM 24 VIA CHACHAWI",order:"6",tel:"",notas:""},
-{lat:1.337656,lng:-77.27705,name:"1210591448",addr:"KM 24 VIA CHACHAGUI",order:"7",tel:"",notas:""},
-{lat:1.3402,lng:-77.2788,name:"1224697917",addr:"KM 24 ATO VIEJO",order:"8",tel:"",notas:""},
-{lat:1.3492,lng:-77.285,name:"1203705125",addr:"KM 28 VIA CHACHAGUI EL HATILLO",order:"9",tel:"",notas:""},
-{lat:1.3504,lng:-77.2843,name:"1224580116",addr:"VIA PANAMERICANA",order:"10",tel:"",notas:""},
-{lat:1.360224,lng:-77.2853,name:"1224809097",addr:"CL 2 8A 32",order:"11",tel:"",notas:""},
-{lat:1.3603,lng:-77.2852,name:"1224657644",addr:"CR 9 2 18",order:"12",tel:"",notas:""},
-{lat:1.360311,lng:-77.28523,name:"1224196813",addr:"CR 9 2 16",order:"13",tel:"",notas:""},
-{lat:1.3605,lng:-77.285,name:"1224106742",addr:"CR 9 2 60",order:"14",tel:"",notas:""},
-{lat:1.360543,lng:-77.28506,name:"1224825106",addr:"KM 35 CANO BAJO",order:"15",tel:"",notas:""},
-{lat:1.3606,lng:-77.285,name:"1200938693",addr:"KR 9 2 80 PANAMERICANO",order:"16",tel:"",notas:""},
-{lat:1.3604,lng:-77.2847,name:"1224430930",addr:"CL 3 8 42",order:"17",tel:"",notas:""},
-{lat:1.360422,lng:-77.2847,name:"1224475002",addr:"CL 3 8A 19",order:"18",tel:"",notas:""},
-{lat:1.3601,lng:-77.2843,name:"1210709820",addr:"ALADO CENTRO DE SALUD CHACHAGU",order:"19",tel:"",notas:""},
-{lat:1.36,lng:-77.2842,name:"1224401078",addr:"CL 3 7 67B DEPORTIVO",order:"20",tel:"",notas:""},
-{lat:1.3593,lng:-77.2834,name:"1200938644",addr:"CL 3 6 40 CENTRO",order:"21",tel:"",notas:""},
-{lat:1.35853,lng:-77.28167,name:"1224796660",addr:"CL 4 4 27 BRR OFICIAL",order:"22",tel:"",notas:""},
-{lat:1.35995,lng:-77.28284,name:"1224805864",addr:"FRENTE AL PAR",order:"23",tel:"",notas:""},
-{lat:1.36,lng:-77.2833,name:"1224455698",addr:"CR 7 3 57",order:"24",tel:"",notas:""},
-{lat:1.3598,lng:-77.2835,name:"1205249744",addr:"KR 7 3 - 21",order:"25",tel:"",notas:""},
-{lat:1.360522,lng:-77.28343,name:"1210367809",addr:"CL 4 7 43 FATIMA",order:"26",tel:"",notas:""},
-{lat:1.3612,lng:-77.2842,name:"1224476681",addr:"CL 4 8 45 CARROS VERDES",order:"27",tel:"",notas:""},
-{lat:1.3612,lng:-77.2843,name:"1200930280",addr:"KR 4 NO 8 - 69 PANAMERICANO",order:"28",tel:"",notas:""},
-{lat:1.3744,lng:-77.2843,name:"1224700376",addr:"CHORRILLO",order:"29",tel:"",notas:""},
-{lat:1.3769,lng:-77.2839,name:"1224741017",addr:"VIA PANAMERICANA CHORRILLO",order:"30",tel:"",notas:""},
-{lat:1.3774,lng:-77.2842,name:"1224409808",addr:"CA 74 CHORRILLO",order:"31",tel:"",notas:""},
-{lat:1.388,lng:-77.2838,name:"1224409825",addr:"GUAIRABAMBA CA 12 E",order:"32",tel:"",notas:""},
-{lat:1.3967,lng:-77.287,name:"1224822137",addr:"KM 33 EN AL AER",order:"33",tel:"",notas:""},
-{lat:1.39702,lng:-77.28665,name:"1224770066",addr:"KM 32 ESTACION DE SERVICIO CHA",order:"34",tel:"",notas:""},
-{lat:1.60385,lng:-77.13064,name:"1224772061",addr:"URB VILLA MERCEDES LT 3 4 AV L",order:"35",tel:"",notas:""},
-{lat:1.398222,lng:-77.2863,name:"1210520256",addr:"KM 32 ENTRADA AEROPUERTO",order:"36",tel:"",notas:""},
-{lat:1.3976,lng:-77.2866,name:"1205250523",addr:"KM 33 VIA PANAMERICANA",order:"37",tel:"",notas:""},
-{lat:1.397,lng:-77.287,name:"1205249938",addr:"AEROPUERTO ANTONIO NARINO",order:"38",tel:"",notas:""},
-{lat:1.3966,lng:-77.287,name:"1203705144",addr:"VIA PANAMERICANA AEROPUERTO",order:"39",tel:"",notas:""},
-{lat:1.3959,lng:-77.2867,name:"1210303427",addr:"KM 32 COCHACANO",order:"40",tel:"",notas:""},
-{lat:1.3958,lng:-77.2867,name:"1224431101",addr:"KM 32 SD AER AV PANAMERICANA",order:"41",tel:"",notas:""},
-{lat:1.397,lng:-77.2876,name:"1224401140",addr:"EN AER",order:"42",tel:"",notas:""},
-{lat:1.3971,lng:-77.2879,name:"1224439123",addr:"FRENTE URB EL CONDOR",order:"43",tel:"",notas:""},
-{lat:1.3958,lng:-77.2895,name:"1224741457",addr:"AER ANTONIO NARI�O",order:"44",tel:"",notas:""},
-{lat:1.3958,lng:-77.2896,name:"1224401143",addr:"LC 100 AER",order:"45",tel:"",notas:""},
-{lat:1.3957,lng:-77.2894,name:"1224720736",addr:"AER ANTONIO NARI�O",order:"46",tel:"",notas:""},
-{lat:1.3957,lng:-77.2896,name:"1224401054",addr:"AEROPUERTO",order:"47",tel:"",notas:""},
-{lat:1.3955,lng:-77.2895,name:"1224105546",addr:"AEROPURTO ANTONIO NARI�O",order:"48",tel:"",notas:""},
-{lat:1.3966,lng:-77.2878,name:"1224803408",addr:"ENTRADA AEROPUERTO",order:"49",tel:"",notas:""},
-{lat:1.3964,lng:-77.2878,name:"1210394272",addr:"KM 33 ENTRADA AEROPUERTO",order:"50",tel:"",notas:""},
-{lat:1.3845,lng:-77.2874,name:"1224217199",addr:"SAN FRANCISCO LA Y CHORRILLO",order:"51",tel:"",notas:""},
-{lat:1.3841,lng:-77.2857,name:"1224412421",addr:"KM 24",order:"52",tel:"",notas:""},
-{lat:1.3833,lng:-77.2852,name:"1224461614",addr:"KM 31",order:"53",tel:"",notas:""},
-{lat:1.3739,lng:-77.2843,name:"1224426438",addr:"CR 9 CA 39 CHORRILLO",order:"54",tel:"",notas:""},
-{lat:1.3728,lng:-77.2846,name:"1224682817",addr:"CS 28",order:"55",tel:"",notas:""},
-{lat:1.37269,lng:-77.2845,name:"1224815737",addr:"CA 8 BRR CHORRILLO",order:"56",tel:"",notas:""},
-{lat:1.3646,lng:-77.2841,name:"1224751275",addr:"CR 9 VIA PANAMERICANA",order:"57",tel:"",notas:""},
-{lat:1.361384,lng:-77.28418,name:"1210170992",addr:"CRA 9 3 -74",order:"58",tel:"",notas:""},
-{lat:1.36116,lng:-77.28441,name:"1224734361",addr:"CR 9 3 74",order:"59",tel:"",notas:""},
-{lat:1.360875,lng:-77.28463,name:"1224371887",addr:"CR 9 3 28",order:"60",tel:"",notas:""},
-{lat:1.3609,lng:-77.2846,name:"1224426427",addr:"CR 9 3 40",order:"61",tel:"",notas:""},
-{lat:1.2653,lng:-77.2763,name:"1205251815",addr:"KM 7 CASA 11 DAZA VIA CHACHAGU",order:"62",tel:"",notas:""},
-{lat:1.2661,lng:-77.2775,name:"1224426415",addr:"DAZA CASA 6 EN MORASURSCO",order:"63",tel:"",notas:""},
-{lat:1.2691,lng:-77.3356,name:"1224196932",addr:"VRD VILLA MARIA",order:"64",tel:"",notas:""},
-{lat:1.2692,lng:-77.3339,name:"1224287276",addr:"CASTILLO LOMA CA 55",order:"65",tel:"",notas:""},
-{lat:1.2695,lng:-77.3372,name:"1205250521",addr:"CENTRO - CS 33",order:"66",tel:"",notas:""},
-{lat:1.287884,lng:-77.35719,name:"1224820225",addr:"CA 41A CHORRILLO NARINO",order:"67",tel:"",notas:""},
-{lat:1.2884,lng:-77.3568,name:"1224492964",addr:"CL 6 2 02",order:"68",tel:"",notas:""},
-{lat:1.2898,lng:-77.3586,name:"1224494345",addr:"CL 5 5 40 BRR ROMBOY",order:"69",tel:"",notas:""},
-{lat:1.2866,lng:-77.47,name:"1205251493",addr:"CL 5 3 - 64",order:"70",tel:"",notas:""},
-{lat:1.2851,lng:-77.472,name:"1205251362",addr:"CRA 5 5-51 SANDONA",order:"71",tel:"",notas:""},
-{lat:1.2679,lng:-77.3363,name:"1224401126",addr:"KM 4 VIA OCCIDENTE",order:"72",tel:"",notas:""}];
+const DATA = [{lat:1.165373,lng:-77.29318,name:"PUNTO DEL AHORRO",addr:"CL PRINCIPAL CATAMBUCO",order:"1",tel:"3102265319",notas:""},
+{lat:1.166705,lng:-77.29981,name:"RESTAURANTE CON 2",addr:"CL 4 5 36",order:"2",tel:"3166263455",notas:""},
+{lat:1.3234,lng:-77.1995,name:"TIENDA TIA MAGOLA",addr:"CA 10 AV PRINCIPAL VILLA MOREN",order:"3",tel:"3234853556",notas:""},
+{lat:1.358627,lng:-77.28258,name:"BAN AGRARIO CHACHAGUI",addr:"CL 3 4 71",order:"4",tel:"3152438149",notas:""}];
 
 // ── MAP ──
-const map = L.map('map',{zoomControl:false}).setView([1.3546973194444445,-77.29379652777774],13);
+const map = L.map('map',{zoomControl:false}).setView([1.25352625,-77.2687675],13);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
 

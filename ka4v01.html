@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V01 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -110,6 +113,16 @@ const DATA = [{lat:1.20928,lng:-77.28981,name:"DOLLARCITY MIJITAYO",addr:"CR 26 
 {lat:1.234135,lng:-77.28694,name:"RESTAURANTE MISTER POLLO",addr:"CR 44 B 19 56",order:"9",tel:"3104947167",notas:"",horario:"",codigo:"1200930371",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V56"}},
 {lat:1.2169,lng:-77.2894,name:"JUMBO PASTO UNICENTRO",addr:"AV PANAMERICANA ENTRE CL 11 12",order:"10",tel:"0",notas:"",horario:"",codigo:"1210425523",extras:{"Preventa":"KA4V01","Reparto Antiguo":"KA4V01"}},
 {lat:1.21651,lng:-77.28858,name:"5135 VZ UNIPASTO CUEROS VELEZ",addr:"CL 11 34 78 CC UNICENTRO LC 2",order:"11",tel:"3103653539",notas:"",horario:"",codigo:"1224728543",extras:{"Preventa":"KA4V77","Reparto Antiguo":"KA4V50"}}];
+const BUILD_TS = '1773094150480'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v01');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v01', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v01', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.2126939090909092,-77.27995181818181],13);

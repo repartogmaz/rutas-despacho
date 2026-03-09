@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V56 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -103,6 +106,16 @@ const DATA = [{lat:1.165373,lng:-77.29318,name:"PUNTO DEL AHORRO",addr:"CL PRINC
 {lat:1.166705,lng:-77.29981,name:"RESTAURANTE CON 2",addr:"CL 4 5 36",order:"2",tel:"3166263455",notas:"",horario:"",codigo:"1224820739",extras:{"Preventa":"KA4V04","Reparto Antiguo":"KA4V01"}},
 {lat:1.3234,lng:-77.1995,name:"TIENDA TIA MAGOLA",addr:"CA 10 AV PRINCIPAL VILLA MOREN",order:"3",tel:"3234853556",notas:"",horario:"",codigo:"1224377769",extras:{"Preventa":"KA4V03","Reparto Antiguo":"KA4V01"}},
 {lat:1.358627,lng:-77.28258,name:"BAN AGRARIO CHACHAGUI",addr:"CL 3 4 71",order:"4",tel:"3152438149",notas:"",horario:"",codigo:"1224804649",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V56"}}];
+const BUILD_TS = '1773094150494'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v56');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v56', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v56', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.25352625,-77.2687675],13);

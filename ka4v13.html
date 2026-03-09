@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V13 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -198,6 +201,16 @@ const DATA = [{lat:1.2225,lng:-77.2863,name:"PORTERIA LOS NOGALES",addr:"CL 16 3
 {lat:1.227128,lng:-77.2928,name:"SUPER MERA",addr:"DG 16 46B 114 FIGUEROA",order:"97",tel:"3004652335",notas:"",horario:"",codigo:"1224384651",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
 {lat:1.226452,lng:-77.29207,name:"PANADERIA ANDRO",addr:"EL REMANSO DEL NORTE MZ A CA 5",order:"98",tel:"3107376179",notas:"",horario:"",codigo:"1224527825",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
 {lat:1.225859,lng:-77.28916,name:"OBOTICARIO PICON",addr:"CL 17 43 06",order:"99",tel:"0",notas:"",horario:"",codigo:"1224836474",extras:{"Preventa":"KA4V25","Reparto Antiguo":"KA4V13"}}];
+const BUILD_TS = '1773094150484'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v13');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v13', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v13', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.225478525252525,-77.28862663636362],13);

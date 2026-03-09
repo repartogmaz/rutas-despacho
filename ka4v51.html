@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V51 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -151,6 +154,16 @@ const DATA = [{lat:1.20522,lng:-77.29535,name:"DONDE TO�A",addr:"MZ C CA 3",or
 {lat:1.2055,lng:-77.2947,name:"DEPOCITO LUCIO",addr:"MZ A C A6 NIZA",order:"50",tel:"3102319905",notas:"",horario:"",codigo:"1224299563",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V51"}},
 {lat:1.205441,lng:-77.2949,name:"DISTRIASOCIADOS SAS LA UNION",addr:"CR 3 21A 64",order:"51",tel:"3147313945",notas:"",horario:"",codigo:"1224754626",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V56"}},
 {lat:1.205376,lng:-77.295335,name:"MINIMARKET LA CAMPI�A DEL ORIE",addr:"CR 33A 20 30",order:"52",tel:"3102320571",notas:"",horario:"",codigo:"1224828001",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}}];
+const BUILD_TS = '1773094150488'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v51');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v51', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v51', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.1989067884615385,-77.29875849999998],13);

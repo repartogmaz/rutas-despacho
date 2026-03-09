@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V54 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -177,6 +180,16 @@ const DATA = [{lat:1.2038,lng:-77.2548,name:"MISCELANEA LOLI",addr:"MZ E - CS 44
 {lat:1.1945,lng:-77.2658,name:"METROPOL",addr:"DG 17 2E 26",order:"76",tel:"3202619853",notas:"",horario:"",codigo:"1224734247",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53"}},
 {lat:1.1955,lng:-77.2658,name:"GRANERO ALCARABAN",addr:"CL 16 1E 32",order:"77",tel:"3016937753",notas:"",horario:"",codigo:"1200930385",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53"}},
 {lat:1.19878,lng:-77.26552,name:"INVERSYCON SAS",addr:"CL 18A 1-32",order:"78",tel:"0",notas:"",horario:"",codigo:"1210344667",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V53"}}];
+const BUILD_TS = '1773094150491'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v54');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v54', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v54', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.1995439358974356,-77.25691165384616],13);

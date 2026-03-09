@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V12 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -174,6 +177,16 @@ const DATA = [{lat:1.2064,lng:-77.2818,name:"TIENDA CHARMS",addr:"CR 19 11 42",o
 {lat:1.207,lng:-77.2804,name:"BISTRO COFFE MARKET",addr:"CR 19 13 59",order:"73",tel:"3162324926",notas:"",horario:"",codigo:"1224117128",extras:{"Preventa":"KA4V29","Reparto Antiguo":"KA4V12"}},
 {lat:1.2098,lng:-77.2826,name:"BRASA ROJA",addr:"CL 12 22 108",order:"74",tel:"3187085209",notas:"",horario:"",codigo:"1224237158",extras:{"Preventa":"KA4V29","Reparto Antiguo":"KA4V11"}},
 {lat:1.2104,lng:-77.2825,name:"CAFETERIA SAN FRANCISCO",addr:"CL 12 NUMERO 22F 16",order:"75",tel:"3133314639",notas:"",horario:"",codigo:"1210728687",extras:{"Preventa":"KA4V29","Reparto Antiguo":"KA4V11"}}];
+const BUILD_TS = '1773094150482'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v12');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v12', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v12', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.2055885466666667,-77.27852418666667],13);

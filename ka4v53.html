@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V53 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -192,6 +195,16 @@ const DATA = [{lat:1.201005,lng:-77.2798,name:"TIENDA TRUJILLANO",addr:"CR 7 18B
 {lat:1.20181,lng:-77.27726,name:"SUPERTIENDA LAS VIOLETAS",addr:"CR 13 13B 63",order:"91",tel:"3167646649",notas:"",horario:"",codigo:"1224759069",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52"}},
 {lat:1.202931,lng:-77.277349,name:"TIENSA JENYS 2",addr:"CR 13C 13A 53",order:"92",tel:"0",notas:"",horario:"",codigo:"1224339694",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52"}},
 {lat:1.2035,lng:-77.2775,name:"LA VINA PANIFICADORA",addr:"CR 14 14 61A",order:"93",tel:"0",notas:"",horario:"",codigo:"1200930683",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V12"}}];
+const BUILD_TS = '1773094150490'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v53');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v53', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v53', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.1973863225806458,-77.27398297849462],13);

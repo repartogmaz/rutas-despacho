@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>KA4V55 · 09-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -172,6 +175,16 @@ const DATA = [{lat:1.2154,lng:-77.278,name:"FRUTERA DEL SUR",addr:"KR 25 19 - 45
 {lat:1.2182,lng:-77.2785,name:"TIENDA MARCELITA",addr:"CL 20 28 05",order:"71",tel:"3216991906",notas:"",horario:"",codigo:"1224316747",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11"}},
 {lat:1.218121,lng:-77.278733,name:"RESTAURANTE CAFETERIA JUALIANA",addr:"CR 28 18 64",order:"72",tel:"0",notas:"",horario:"",codigo:"1224487335",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11"}},
 {lat:1.2181,lng:-77.2787,name:"EMPANADITAS LA 28",addr:"CARRERA 28 19-69",order:"73",tel:"3163011420",notas:"",horario:"",codigo:"1210688356",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11"}}];
+const BUILD_TS = '1773094150492'; // fuerza recarga al cambiar contenido
+
+// Forzar recarga si el contenido cambió
+const stored = sessionStorage.getItem('map_ts_ka4v55');
+if (stored && stored !== BUILD_TS) {
+  sessionStorage.setItem('map_ts_ka4v55', BUILD_TS);
+  location.reload(true);
+} else {
+  sessionStorage.setItem('map_ts_ka4v55', BUILD_TS);
+}
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.2205187808219173,-77.27276875342466],13);

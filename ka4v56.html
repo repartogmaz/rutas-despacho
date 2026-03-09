@@ -48,15 +48,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 #searchBox:focus{border-color:var(--c)}
 
 /* POPUP */
-.lp-inner{padding:14px;min-width:200px;max-width:280px}
+.lp-inner{padding:14px;min-width:200px;max-width:290px}
 .lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
+.lp-codigo{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px;letter-spacing:.04em}
 .lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
-.lp-addr{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.lp-addr{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4}
+.lp-horario{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
 .lp-actions{display:flex;gap:6px;flex-wrap:wrap}
 .lp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
 .lp-btn-nav{background:#023e8a;color:#fff}
 .lp-btn-call{background:#1a1814;color:#fff}
 .lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #023e8a;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
+.lp-extras{margin-top:8px;border-top:1px solid #eee;padding-top:8px;display:flex;flex-direction:column;gap:4px}
+.lp-extra-row{display:flex;gap:6px;font-size:11px;line-height:1.4}
+.lp-extra-label{font-family:'Space Mono',monospace;font-size:9px;color:#888;min-width:70px;padding-top:1px;text-transform:uppercase;letter-spacing:.03em}
+.lp-extra-val{font-weight:600;color:#1a1814;flex:1}
 
 /* LEAFLET */
 .leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
@@ -93,10 +99,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#023e8a';
-const DATA = [{lat:1.165373,lng:-77.29318,name:"PUNTO DEL AHORRO",addr:"CL PRINCIPAL CATAMBUCO",order:"1",tel:"3102265319",notas:""},
-{lat:1.166705,lng:-77.29981,name:"RESTAURANTE CON 2",addr:"CL 4 5 36",order:"2",tel:"3166263455",notas:""},
-{lat:1.3234,lng:-77.1995,name:"TIENDA TIA MAGOLA",addr:"CA 10 AV PRINCIPAL VILLA MOREN",order:"3",tel:"3234853556",notas:""},
-{lat:1.358627,lng:-77.28258,name:"BAN AGRARIO CHACHAGUI",addr:"CL 3 4 71",order:"4",tel:"3152438149",notas:""}];
+const DATA = [{lat:1.165373,lng:-77.29318,name:"PUNTO DEL AHORRO",addr:"CL PRINCIPAL CATAMBUCO",order:"1",tel:"3102265319",notas:"",horario:"",codigo:"1224461531",extras:{"Preventa":"KA4V04","Reparto Antiguo":"KA4V01"}},
+{lat:1.166705,lng:-77.29981,name:"RESTAURANTE CON 2",addr:"CL 4 5 36",order:"2",tel:"3166263455",notas:"",horario:"",codigo:"1224820739",extras:{"Preventa":"KA4V04","Reparto Antiguo":"KA4V01"}},
+{lat:1.3234,lng:-77.1995,name:"TIENDA TIA MAGOLA",addr:"CA 10 AV PRINCIPAL VILLA MOREN",order:"3",tel:"3234853556",notas:"",horario:"",codigo:"1224377769",extras:{"Preventa":"KA4V03","Reparto Antiguo":"KA4V01"}},
+{lat:1.358627,lng:-77.28258,name:"BAN AGRARIO CHACHAGUI",addr:"CL 3 4 71",order:"4",tel:"3152438149",notas:"",horario:"",codigo:"1224804649",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V56"}}];
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.25352625,-77.2687675],13);
@@ -117,17 +123,26 @@ function makeIcon(order){
 const markers=[];
 DATA.forEach(c=>{
   const m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
-  m.bindPopup(()=>`
-    <div class="lp-inner">
-      <div class="lp-badge">Parada ${c.order||'—'}</div>
+  m.bindPopup(()=>{
+    const extraRows = c.extras && Object.keys(c.extras).length
+      ? '<div class="lp-extras">'+Object.entries(c.extras).map(([k,v])=>'<div class="lp-extra-row"><span class="lp-extra-label">'+k+'</span><span class="lp-extra-val">'+v+'</span></div>').join('')+'</div>'
+      : '';
+    return `<div class="lp-inner">
+      <div>
+        <span class="lp-badge">Parada ${c.order||'—'}</span>
+        ${c.codigo?'<span class="lp-codigo">COD: '+c.codigo+'</span>':''}
+      </div>
       <div class="lp-name">${c.name}</div>
       <div class="lp-addr">${c.addr||''}</div>
+      ${c.horario?'<div class="lp-horario">🕐 '+c.horario+'</div>':''}
       <div class="lp-actions">
         <a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
         ${c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':''}
       </div>
       ${c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':''}
-    </div>`);
+      ${extraRows}
+    </div>`;
+  });
   m.addTo(map);
   markers.push({marker:m,...c});
 });

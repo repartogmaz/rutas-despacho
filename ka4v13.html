@@ -48,15 +48,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 #searchBox:focus{border-color:var(--c)}
 
 /* POPUP */
-.lp-inner{padding:14px;min-width:200px;max-width:280px}
+.lp-inner{padding:14px;min-width:200px;max-width:290px}
 .lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
+.lp-codigo{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px;letter-spacing:.04em}
 .lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
-.lp-addr{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.lp-addr{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4}
+.lp-horario{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
 .lp-actions{display:flex;gap:6px;flex-wrap:wrap}
 .lp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
 .lp-btn-nav{background:#2a9d8f;color:#fff}
 .lp-btn-call{background:#1a1814;color:#fff}
 .lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #2a9d8f;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
+.lp-extras{margin-top:8px;border-top:1px solid #eee;padding-top:8px;display:flex;flex-direction:column;gap:4px}
+.lp-extra-row{display:flex;gap:6px;font-size:11px;line-height:1.4}
+.lp-extra-label{font-family:'Space Mono',monospace;font-size:9px;color:#888;min-width:70px;padding-top:1px;text-transform:uppercase;letter-spacing:.03em}
+.lp-extra-val{font-weight:600;color:#1a1814;flex:1}
 
 /* LEAFLET */
 .leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
@@ -93,105 +99,105 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#2a9d8f';
-const DATA = [{lat:1.2225,lng:-77.2863,name:"PORTERIA LOS NOGALES",addr:"CL 16 35 10",order:"1",tel:"0",notas:""},
-{lat:1.229617,lng:-77.28925,name:"TIENDA UNIVERSITARIA",addr:"CR 44A 18A-06",order:"2",tel:"3116096254",notas:""},
-{lat:1.22992,lng:-77.28907,name:"TIENDA YULIET 2",addr:"CR 44A 18B 158",order:"3",tel:"3114122575",notas:""},
-{lat:1.229973,lng:-77.28843,name:"TIENDA XIOMI",addr:"CL 18B 44 10",order:"4",tel:"3115891268",notas:""},
-{lat:1.230483,lng:-77.28801,name:"TIENDA ANDRES PUNTO 34",addr:"CL 19 43 55",order:"5",tel:"3203386600",notas:""},
-{lat:1.230453,lng:-77.28806,name:"ESTEBAN BARBERIA",addr:"CR 44 18A 90",order:"6",tel:"3105434415",notas:""},
-{lat:1.231747,lng:-77.28745,name:"FELIX LICORES",addr:"CR 44 19B 45",order:"7",tel:"3226546733",notas:""},
-{lat:1.227457,lng:-77.286293,name:"ROYAL FILMS PASTO CINEMAS OT S",addr:"CC VALLE DE ATRIZ P 3",order:"8",tel:"0",notas:""},
-{lat:1.232563,lng:-77.2959,name:"CLUB PLAZA COLORADO",addr:"CL 18 53 58 LC 1",order:"9",tel:"3113237655",notas:""},
-{lat:1.231561,lng:-77.29579,name:"LAVA AUTOS EL CUSCUNGO",addr:"CL 18 49 411",order:"10",tel:"3017548436",notas:""},
-{lat:1.2297,lng:-77.2916,name:"VARIEDADES EL UNIVERSITARIO",addr:"CL 18 46 61 LC 2",order:"11",tel:"3012703040",notas:""},
-{lat:1.2248,lng:-77.2831,name:"MISCELANEA LA 34",addr:"CL 19 34A 24",order:"12",tel:"3123456789",notas:""},
-{lat:1.2239,lng:-77.2831,name:"MARIA PLAZA",addr:"CL 18 34 104 KIOSKO UNV MARIAN",order:"13",tel:"3206846632",notas:""},
-{lat:1.224477,lng:-77.282333,name:"FRUTAS Y VERDURAS LA 34",addr:"CR 34 19 19",order:"14",tel:"0",notas:""},
-{lat:1.224085,lng:-77.281303,name:"CARLOS DANIEL ENRIQUEZ SAS",addr:"CL 20 33A 25",order:"15",tel:"3113153227",notas:""},
-{lat:1.223239,lng:-77.281015,name:"MAL VICIO",addr:"CR 40 19B 78",order:"16",tel:"0",notas:""},
-{lat:1.222,lng:-77.2805,name:"MERCATODO YULIVEN",addr:"CL 19A 31C 66",order:"17",tel:"3136961464",notas:""},
-{lat:1.222,lng:-77.2808,name:"MERCA AHORRO LA 32",addr:"CR 32 19 48",order:"18",tel:"3212124072",notas:""},
-{lat:1.2219,lng:-77.2799,name:"TIENDA EMANUEL",addr:"CR 31C 20 14",order:"19",tel:"3175040224",notas:""},
-{lat:1.2213,lng:-77.2799,name:"QBANITOS",addr:"CL 20 31B 25",order:"20",tel:"3116247755",notas:""},
-{lat:1.22163,lng:-77.27987,name:"LA TABLA FOOD AND DRINKS SAS",addr:"CL 20 31C 26",order:"21",tel:"3154096630",notas:""},
-{lat:1.22187,lng:-77.27999,name:"ONCE 11",addr:"CL 20 31 C 18",order:"22",tel:"3205757652",notas:""},
-{lat:1.2223,lng:-77.28,name:"ALBA LUCIA PAGUATIA MORENO",addr:"CL 20 31C 38",order:"23",tel:"3235073227",notas:""},
-{lat:1.2223,lng:-77.2802,name:"DELI EMPANADA 2",addr:"CL 20 31C 48",order:"24",tel:"3223930580",notas:""},
-{lat:1.2259,lng:-77.282,name:"PARCAR",addr:"CL 20 35 05",order:"25",tel:"3127893917",notas:""},
-{lat:1.227217,lng:-77.282121,name:"CEDENAR CAFETERIA",addr:"CR 37 20 52",order:"26",tel:"3182344755",notas:""},
-{lat:1.22799,lng:-77.28204,name:"POLS TIENDA",addr:"CR 37 20 52",order:"27",tel:"3104240357",notas:""},
-{lat:1.22866,lng:-77.28171,name:"TOKIO LATINO",addr:"CL 22 38 09",order:"28",tel:"3002790848",notas:""},
-{lat:1.22587,lng:-77.28219,name:"WOW STORE PASTO",addr:"CL 20 35 35",order:"29",tel:"3154917194",notas:""},
-{lat:1.225532,lng:-77.28212,name:"JENNY VILLOTA",addr:"CR 35 19 102",order:"30",tel:"3150552727",notas:""},
-{lat:1.22547,lng:-77.28202,name:"ENDORFINA",addr:"CL 20 35 47",order:"31",tel:"3156715536",notas:""},
-{lat:1.22493,lng:-77.28274,name:"LA TABLA VERSALLES",addr:"CR 35 19 92",order:"32",tel:"3183715284",notas:""},
-{lat:1.22445,lng:-77.28144,name:"MAMA JUANA",addr:"CR 33A 20 49",order:"33",tel:"3185712851",notas:""},
-{lat:1.2237,lng:-77.2842,name:"DISE�O.COM",addr:"CL 18 54A 53",order:"34",tel:"3154640871",notas:""},
-{lat:1.22323,lng:-77.283821,name:"TIENDA FRUTAS Y VERDURAS VERSA",addr:"CR 34 19 21",order:"35",tel:"3166292464",notas:""},
-{lat:1.22323,lng:-77.283821,name:"BUEN PROVECHO",addr:"CR 34 19 31",order:"36",tel:"3172877841",notas:""},
-{lat:1.22294,lng:-77.28361,name:"TIENDA SAN SEBASTIAN",addr:"CL 18 34 45",order:"37",tel:"3126025803",notas:""},
-{lat:1.2229,lng:-77.2839,name:"MINIMARKET 23",addr:"CR 34 17 51",order:"38",tel:"3173529069",notas:""},
-{lat:1.22275,lng:-77.28372,name:"COFFE TIME MARIANA",addr:"CL 18 34 1",order:"39",tel:"3128440224",notas:""},
-{lat:1.222576,lng:-77.283919,name:"MINIMARKET 23",addr:"CR 34 17 51",order:"40",tel:"0",notas:""},
-{lat:1.222546,lng:-77.283911,name:"MINIMARKET 23 P",addr:"CR 34 17 51",order:"41",tel:"0",notas:""},
-{lat:1.2238,lng:-77.2834,name:"EL RINCONCITO",addr:"CL 18 34 104 UNIV MARIANA",order:"42",tel:"3216256571",notas:""},
-{lat:1.2238,lng:-77.2844,name:"MAKARI RESTAURANTE",addr:"CR 35 18 06",order:"43",tel:"3022220085",notas:""},
-{lat:1.2232,lng:-77.2849,name:"BUNKER",addr:"CL 18 36 47",order:"44",tel:"3173795360",notas:""},
-{lat:1.2229,lng:-77.2851,name:"TIENDA ALTOS DE PARANA",addr:"CR 35 16B 75",order:"45",tel:"3178421746",notas:""},
-{lat:1.2213,lng:-77.2846,name:"TIENDA PARANA",addr:"CL 16B 34 25",order:"46",tel:"3105142038",notas:""},
-{lat:1.2212,lng:-77.2844,name:"MARYDIAZ J Y J",addr:"CL 16B 33A 26",order:"47",tel:"7359579",notas:""},
-{lat:1.2223,lng:-77.2842,name:"TIENDA LA 34 DEL PARQUE",addr:"CL 17 34 10",order:"48",tel:"0",notas:""},
-{lat:1.222417,lng:-77.28424,name:"TIENDA LA 34 DEL PARQUE 2",addr:"CL 17 34 10",order:"49",tel:"0",notas:""},
-{lat:1.2229,lng:-77.2844,name:"TIENDA EL PARQUE",addr:"CR 34A 17 33",order:"50",tel:"3126958127",notas:""},
-{lat:1.2228,lng:-77.2843,name:"TIENDA WISTON",addr:"CR 34 A 17 33",order:"51",tel:"3126958127",notas:""},
-{lat:1.2228,lng:-77.2841,name:"PAPEROS STREET FOOD SAS",addr:"CR 34A 17 54",order:"52",tel:"3044317200",notas:""},
-{lat:1.2233,lng:-77.284,name:"TIENDA LA 34 A",addr:"CR 34A 17 81",order:"53",tel:"3017604280",notas:""},
-{lat:1.2233,lng:-77.2841,name:"PAPITAS MARIDIAZ 34A",addr:"CR 34A 17 81",order:"54",tel:"3184266934",notas:""},
-{lat:1.22329,lng:-77.28403,name:"TIENDA LA 34 A",addr:"CR 34A 17 81",order:"55",tel:"3047629392",notas:""},
-{lat:1.2249,lng:-77.2846,name:"DISTRITO GASTRONOMICO SAS",addr:"CR 36 18 43",order:"56",tel:"0",notas:""},
-{lat:1.222115,lng:-77.28683,name:"FANNY LU LU",addr:"CL 16 C 39 11",order:"57",tel:"0",notas:""},
-{lat:1.2222,lng:-77.2877,name:"GRANERO SURTIMAX",addr:"CL 16A 40 09",order:"58",tel:"0",notas:""},
-{lat:1.223831,lng:-77.29019,name:"LA TIENDITA DE ANTONIA",addr:"DG 14 38 145 LA COLINA",order:"59",tel:"3013156310",notas:""},
-{lat:1.22412,lng:-77.29028,name:"DIEZ FOOD AND ROCK",addr:"DG 16 38 190 LA COLINA",order:"60",tel:"3217013228",notas:""},
-{lat:1.226536,lng:-77.29147,name:"SURTITIENDA",addr:"CR 46 16 54 CALATRABA",order:"61",tel:"3153765180",notas:""},
-{lat:1.226232,lng:-77.29323,name:"TIENDA MANZANARES",addr:"CL 15B 46A 28 REMANSO DEL NORT",order:"62",tel:"0",notas:""},
-{lat:1.227071,lng:-77.29608,name:"SURTIDOLAR",addr:"MZ 13 CA 15",order:"63",tel:"3015581227",notas:""},
-{lat:1.227607,lng:-77.29546,name:"TIENDA LA NUEVA 14",addr:"MZ 16 CA 10",order:"64",tel:"3117336394",notas:""},
-{lat:1.228599,lng:-77.29537,name:"TIENDA CLAUDIA",addr:"MZ 25 CA 10",order:"65",tel:"3116158226",notas:""},
-{lat:1.228554,lng:-77.29535,name:"TIENDA LORENA HERRERA",addr:"MZ 16 CA 6",order:"66",tel:"3214986274",notas:""},
-{lat:1.228673,lng:-77.29489,name:"TIENDA COLEGIO  AURELIO ARTURO",addr:"QUINTAS DE SAN PEDRO",order:"67",tel:"3164822596",notas:""},
-{lat:1.228564,lng:-77.29462,name:"TIENDA ANGIE",addr:"MZ 13 CA 13",order:"68",tel:"3126711408",notas:""},
-{lat:1.228392,lng:-77.29502,name:"TIENDA IVAN",addr:"MZ 20 CABRERA 4",order:"69",tel:"0",notas:""},
-{lat:1.227345,lng:-77.295,name:"FRUTAS Y VERDURAS 2",addr:"MZ 18 CA 3",order:"70",tel:"3116719944",notas:""},
-{lat:1.226882,lng:-77.29471,name:"TIENDA ALICE 40",addr:"MZ 9 CA 5",order:"71",tel:"3014725960",notas:""},
-{lat:1.226318,lng:-77.29543,name:"BROSTER DC DELIHT KRISPI",addr:"MZ 44 CA 7 ALTOS DE LA COLINA",order:"72",tel:"3162339549",notas:""},
-{lat:1.226119,lng:-77.29542,name:"NOAH TIENDA Y VARIEDADES",addr:"MZ 3 CA 8",order:"73",tel:"3168135538",notas:""},
-{lat:1.22611,lng:-77.29541,name:"BODEGA LA COLINA ALEX",addr:"MZ 44 CA 10",order:"74",tel:"3156696704",notas:""},
-{lat:1.225466,lng:-77.2968,name:"FRUVER SANTAMARIA",addr:"MZ 6 CA 6 LOS LAURELES",order:"75",tel:"3164822596",notas:""},
-{lat:1.225605,lng:-77.2972,name:"TIENDA BALCONES DE LA PRADERA",addr:"CL 11A 47 54 BALCONES DE LA PR",order:"76",tel:"3103123982",notas:""},
-{lat:1.224751,lng:-77.29966,name:"SU TIENDA A LA MANO 2",addr:"CR 47 11 71 BOS COLINA 3",order:"77",tel:"3153013333",notas:""},
-{lat:1.2249,lng:-77.298,name:"AZOTEA",addr:"TORRES GIRASOL",order:"78",tel:"3054147711",notas:""},
-{lat:1.224885,lng:-77.29795,name:"DISTRIBUIDORA 338",addr:"CR 47 12 69 LC 103 TR DE GIRAS",order:"79",tel:"3003547130",notas:""},
-{lat:1.224835,lng:-77.29811,name:"MINIMERCADO GIRASOL 2",addr:"CR 47 12 69 LC 102",order:"80",tel:"3107064617",notas:""},
-{lat:1.226366,lng:-77.29775,name:"BOCCATA",addr:"CR 44 11 70 BOSQUES DE LA COLI",order:"81",tel:"3165587778",notas:""},
-{lat:1.226326,lng:-77.29775,name:"TIENDA TIENDA RINCON DEL BOSQU",addr:"CR 48 12A 55 BOSQUES DE LA COL",order:"82",tel:"3116231812",notas:""},
-{lat:1.225225,lng:-77.29653,name:"PANADERIA SAN GABRIEL",addr:"MZ 1 CA 16 ALTOS DE LA COLINA",order:"83",tel:"3164822596",notas:""},
-{lat:1.225139,lng:-77.29651,name:"LA CANASTA EXPRESS",addr:"CL 13 46 05 LC 15",order:"84",tel:"3188230001",notas:""},
-{lat:1.225786,lng:-77.29547,name:"FRUTAS Y VERDURAS ALTOS COLINA",addr:"MZ 46 CA 9",order:"85",tel:"3163206959",notas:""},
-{lat:1.226205,lng:-77.29476,name:"TIENDA NOHAT 2",addr:"MZ 43 CA 8",order:"86",tel:"3178577585",notas:""},
-{lat:1.226689,lng:-77.29517,name:"PANADERIA MONACO",addr:"MZ 42 CA 7 ALTOS DE LA COLONIA",order:"87",tel:"3113414759",notas:""},
-{lat:1.22666,lng:-77.29508,name:"SEI TIENDA",addr:"MZ 40 C 17",order:"88",tel:"3147894218",notas:""},
-{lat:1.226841,lng:-77.29454,name:"DIANA SOFIA",addr:"MZ 39 CA 07",order:"89",tel:"0",notas:""},
-{lat:1.227195,lng:-77.29432,name:"VIVERES Y ABARROTES SEGUITAS",addr:"MZ 9 CA 24",order:"90",tel:"3117896531",notas:""},
-{lat:1.22769,lng:-77.29396,name:"TIENDA GLORIA",addr:"MZ 8 CA 11",order:"91",tel:"3127017547",notas:""},
-{lat:1.227508,lng:-77.29329,name:"TIENDA J S",addr:"MZ 2 CA 10",order:"92",tel:"3173942815",notas:""},
-{lat:1.228458,lng:-77.29351,name:"TIENDA MARILUZ",addr:"DG 16C 49 123 CA 1",order:"93",tel:"3136282180",notas:""},
-{lat:1.228407,lng:-77.29338,name:"TIENDA ELI",addr:"MZ 5 CS 4",order:"94",tel:"3165707754",notas:""},
-{lat:1.228436,lng:-77.29278,name:"TIENDA DILAN",addr:"DG 16 46 39",order:"95",tel:"3136956021",notas:""},
-{lat:1.228421,lng:-77.29281,name:"VIVERES Y ABARROTES MI RANCHO",addr:"DG 16 47 31",order:"96",tel:"3185071908",notas:""},
-{lat:1.227128,lng:-77.2928,name:"SUPER MERA",addr:"DG 16 46B 114 FIGUEROA",order:"97",tel:"3004652335",notas:""},
-{lat:1.226452,lng:-77.29207,name:"PANADERIA ANDRO",addr:"EL REMANSO DEL NORTE MZ A CA 5",order:"98",tel:"3107376179",notas:""},
-{lat:1.225859,lng:-77.28916,name:"OBOTICARIO PICON",addr:"CL 17 43 06",order:"99",tel:"0",notas:""}];
+const DATA = [{lat:1.2225,lng:-77.2863,name:"PORTERIA LOS NOGALES",addr:"CL 16 35 10",order:"1",tel:"0",notas:"",horario:"",codigo:"1210280401",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.229617,lng:-77.28925,name:"TIENDA UNIVERSITARIA",addr:"CR 44A 18A-06",order:"2",tel:"3116096254",notas:"",horario:"",codigo:"1210413864",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.22992,lng:-77.28907,name:"TIENDA YULIET 2",addr:"CR 44A 18B 158",order:"3",tel:"3114122575",notas:"",horario:"",codigo:"1224831297",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.229973,lng:-77.28843,name:"TIENDA XIOMI",addr:"CL 18B 44 10",order:"4",tel:"3115891268",notas:"",horario:"",codigo:"1224301574",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.230483,lng:-77.28801,name:"TIENDA ANDRES PUNTO 34",addr:"CL 19 43 55",order:"5",tel:"3203386600",notas:"",horario:"",codigo:"1224140442",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.230453,lng:-77.28806,name:"ESTEBAN BARBERIA",addr:"CR 44 18A 90",order:"6",tel:"3105434415",notas:"",horario:"",codigo:"1224327705",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.231747,lng:-77.28745,name:"FELIX LICORES",addr:"CR 44 19B 45",order:"7",tel:"3226546733",notas:"",horario:"",codigo:"1205247394",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.227457,lng:-77.286293,name:"ROYAL FILMS PASTO CINEMAS OT S",addr:"CC VALLE DE ATRIZ P 3",order:"8",tel:"0",notas:"",horario:"",codigo:"1224320599",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.232563,lng:-77.2959,name:"CLUB PLAZA COLORADO",addr:"CL 18 53 58 LC 1",order:"9",tel:"3113237655",notas:"",horario:"",codigo:"1224483626",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.231561,lng:-77.29579,name:"LAVA AUTOS EL CUSCUNGO",addr:"CL 18 49 411",order:"10",tel:"3017548436",notas:"",horario:"",codigo:"1224469030",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.2297,lng:-77.2916,name:"VARIEDADES EL UNIVERSITARIO",addr:"CL 18 46 61 LC 2",order:"11",tel:"3012703040",notas:"",horario:"",codigo:"1224726695",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.2248,lng:-77.2831,name:"MISCELANEA LA 34",addr:"CL 19 34A 24",order:"12",tel:"3123456789",notas:"",horario:"",codigo:"1224377616",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2239,lng:-77.2831,name:"MARIA PLAZA",addr:"CL 18 34 104 KIOSKO UNV MARIAN",order:"13",tel:"3206846632",notas:"",horario:"",codigo:"1224437661",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.224477,lng:-77.282333,name:"FRUTAS Y VERDURAS LA 34",addr:"CR 34 19 19",order:"14",tel:"0",notas:"",horario:"",codigo:"1224829597",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.224085,lng:-77.281303,name:"CARLOS DANIEL ENRIQUEZ SAS",addr:"CL 20 33A 25",order:"15",tel:"3113153227",notas:"",horario:"",codigo:"1224795803",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.223239,lng:-77.281015,name:"MAL VICIO",addr:"CR 40 19B 78",order:"16",tel:"0",notas:"",horario:"",codigo:"1224749602",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.222,lng:-77.2805,name:"MERCATODO YULIVEN",addr:"CL 19A 31C 66",order:"17",tel:"3136961464",notas:"",horario:"",codigo:"1200941087",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.222,lng:-77.2808,name:"MERCA AHORRO LA 32",addr:"CR 32 19 48",order:"18",tel:"3212124072",notas:"",horario:"",codigo:"1210318698",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2219,lng:-77.2799,name:"TIENDA EMANUEL",addr:"CR 31C 20 14",order:"19",tel:"3175040224",notas:"",horario:"",codigo:"1210112982",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2213,lng:-77.2799,name:"QBANITOS",addr:"CL 20 31B 25",order:"20",tel:"3116247755",notas:"",horario:"",codigo:"1224247242",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V13"}},
+{lat:1.22163,lng:-77.27987,name:"LA TABLA FOOD AND DRINKS SAS",addr:"CL 20 31C 26",order:"21",tel:"3154096630",notas:"",horario:"",codigo:"1224772509",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V13"}},
+{lat:1.22187,lng:-77.27999,name:"ONCE 11",addr:"CL 20 31 C 18",order:"22",tel:"3205757652",notas:"",horario:"",codigo:"1224566629",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2223,lng:-77.28,name:"ALBA LUCIA PAGUATIA MORENO",addr:"CL 20 31C 38",order:"23",tel:"3235073227",notas:"",horario:"",codigo:"1224397761",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2223,lng:-77.2802,name:"DELI EMPANADA 2",addr:"CL 20 31C 48",order:"24",tel:"3223930580",notas:"",horario:"",codigo:"1224664130",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2259,lng:-77.282,name:"PARCAR",addr:"CL 20 35 05",order:"25",tel:"3127893917",notas:"",horario:"",codigo:"1224323912",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.227217,lng:-77.282121,name:"CEDENAR CAFETERIA",addr:"CR 37 20 52",order:"26",tel:"3182344755",notas:"",horario:"",codigo:"1224666230",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22799,lng:-77.28204,name:"POLS TIENDA",addr:"CR 37 20 52",order:"27",tel:"3104240357",notas:"",horario:"",codigo:"1224794671",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22866,lng:-77.28171,name:"TOKIO LATINO",addr:"CL 22 38 09",order:"28",tel:"3002790848",notas:"",horario:"",codigo:"1224702601",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22587,lng:-77.28219,name:"WOW STORE PASTO",addr:"CL 20 35 35",order:"29",tel:"3154917194",notas:"",horario:"",codigo:"1224801158",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.225532,lng:-77.28212,name:"JENNY VILLOTA",addr:"CR 35 19 102",order:"30",tel:"3150552727",notas:"",horario:"",codigo:"1224821283",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.22547,lng:-77.28202,name:"ENDORFINA",addr:"CL 20 35 47",order:"31",tel:"3156715536",notas:"",horario:"",codigo:"1224791281",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22493,lng:-77.28274,name:"LA TABLA VERSALLES",addr:"CR 35 19 92",order:"32",tel:"3183715284",notas:"",horario:"",codigo:"1224785844",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22445,lng:-77.28144,name:"MAMA JUANA",addr:"CR 33A 20 49",order:"33",tel:"3185712851",notas:"",horario:"",codigo:"1224812022",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2237,lng:-77.2842,name:"DISE�O.COM",addr:"CL 18 54A 53",order:"34",tel:"3154640871",notas:"",horario:"",codigo:"1224350801",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V11"}},
+{lat:1.22323,lng:-77.283821,name:"TIENDA FRUTAS Y VERDURAS VERSA",addr:"CR 34 19 21",order:"35",tel:"3166292464",notas:"",horario:"",codigo:"1224738595",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22323,lng:-77.283821,name:"BUEN PROVECHO",addr:"CR 34 19 31",order:"36",tel:"3172877841",notas:"",horario:"",codigo:"1224516027",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22294,lng:-77.28361,name:"TIENDA SAN SEBASTIAN",addr:"CL 18 34 45",order:"37",tel:"3126025803",notas:"",horario:"",codigo:"1224775420",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2229,lng:-77.2839,name:"MINIMARKET 23",addr:"CR 34 17 51",order:"38",tel:"3173529069",notas:"",horario:"",codigo:"1224449885",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22275,lng:-77.28372,name:"COFFE TIME MARIANA",addr:"CL 18 34 1",order:"39",tel:"3128440224",notas:"",horario:"",codigo:"1224758071",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.222576,lng:-77.283919,name:"MINIMARKET 23",addr:"CR 34 17 51",order:"40",tel:"0",notas:"",horario:"",codigo:"1224768706",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.222546,lng:-77.283911,name:"MINIMARKET 23 P",addr:"CR 34 17 51",order:"41",tel:"0",notas:"",horario:"",codigo:"1224829531",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2238,lng:-77.2834,name:"EL RINCONCITO",addr:"CL 18 34 104 UNIV MARIANA",order:"42",tel:"3216256571",notas:"",horario:"",codigo:"1224431133",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2238,lng:-77.2844,name:"MAKARI RESTAURANTE",addr:"CR 35 18 06",order:"43",tel:"3022220085",notas:"",horario:"",codigo:"1224769343",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.2232,lng:-77.2849,name:"BUNKER",addr:"CL 18 36 47",order:"44",tel:"3173795360",notas:"",horario:"",codigo:"1210736000",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V11"}},
+{lat:1.2229,lng:-77.2851,name:"TIENDA ALTOS DE PARANA",addr:"CR 35 16B 75",order:"45",tel:"3178421746",notas:"",horario:"",codigo:"1224489768",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.2213,lng:-77.2846,name:"TIENDA PARANA",addr:"CL 16B 34 25",order:"46",tel:"3105142038",notas:"",horario:"",codigo:"1210323298",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2212,lng:-77.2844,name:"MARYDIAZ J Y J",addr:"CL 16B 33A 26",order:"47",tel:"7359579",notas:"",horario:"",codigo:"1224147078",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.2223,lng:-77.2842,name:"TIENDA LA 34 DEL PARQUE",addr:"CL 17 34 10",order:"48",tel:"0",notas:"",horario:"",codigo:"1210440068",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.222417,lng:-77.28424,name:"TIENDA LA 34 DEL PARQUE 2",addr:"CL 17 34 10",order:"49",tel:"0",notas:"",horario:"",codigo:"1224838566",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.2229,lng:-77.2844,name:"TIENDA EL PARQUE",addr:"CR 34A 17 33",order:"50",tel:"3126958127",notas:"",horario:"",codigo:"1224489763",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V50"}},
+{lat:1.2228,lng:-77.2843,name:"TIENDA WISTON",addr:"CR 34 A 17 33",order:"51",tel:"3126958127",notas:"",horario:"",codigo:"1224742022",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2228,lng:-77.2841,name:"PAPEROS STREET FOOD SAS",addr:"CR 34A 17 54",order:"52",tel:"3044317200",notas:"",horario:"",codigo:"1224642143",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2233,lng:-77.284,name:"TIENDA LA 34 A",addr:"CR 34A 17 81",order:"53",tel:"3017604280",notas:"",horario:"",codigo:"1210448459",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2233,lng:-77.2841,name:"PAPITAS MARIDIAZ 34A",addr:"CR 34A 17 81",order:"54",tel:"3184266934",notas:"",horario:"",codigo:"1224401736",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.22329,lng:-77.28403,name:"TIENDA LA 34 A",addr:"CR 34A 17 81",order:"55",tel:"3047629392",notas:"",horario:"",codigo:"1224773079",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13"}},
+{lat:1.2249,lng:-77.2846,name:"DISTRITO GASTRONOMICO SAS",addr:"CR 36 18 43",order:"56",tel:"0",notas:"",horario:"",codigo:"1224343323",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V11"}},
+{lat:1.222115,lng:-77.28683,name:"FANNY LU LU",addr:"CL 16 C 39 11",order:"57",tel:"0",notas:"",horario:"",codigo:"1224834632",extras:{"Preventa":"KA4V25","Reparto Antiguo":"KA4V50"}},
+{lat:1.2222,lng:-77.2877,name:"GRANERO SURTIMAX",addr:"CL 16A 40 09",order:"58",tel:"0",notas:"",horario:"",codigo:"1224486580",extras:{"Preventa":"KA4V25","Reparto Antiguo":"KA4V50"}},
+{lat:1.223831,lng:-77.29019,name:"LA TIENDITA DE ANTONIA",addr:"DG 14 38 145 LA COLINA",order:"59",tel:"3013156310",notas:"",horario:"",codigo:"1224804072",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.22412,lng:-77.29028,name:"DIEZ FOOD AND ROCK",addr:"DG 16 38 190 LA COLINA",order:"60",tel:"3217013228",notas:"",horario:"",codigo:"1224796657",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226536,lng:-77.29147,name:"SURTITIENDA",addr:"CR 46 16 54 CALATRABA",order:"61",tel:"3153765180",notas:"",horario:"",codigo:"1205248552",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226232,lng:-77.29323,name:"TIENDA MANZANARES",addr:"CL 15B 46A 28 REMANSO DEL NORT",order:"62",tel:"0",notas:"",horario:"",codigo:"1224292139",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.227071,lng:-77.29608,name:"SURTIDOLAR",addr:"MZ 13 CA 15",order:"63",tel:"3015581227",notas:"",horario:"",codigo:"1224686295",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.227607,lng:-77.29546,name:"TIENDA LA NUEVA 14",addr:"MZ 16 CA 10",order:"64",tel:"3117336394",notas:"",horario:"",codigo:"1210028264",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228599,lng:-77.29537,name:"TIENDA CLAUDIA",addr:"MZ 25 CA 10",order:"65",tel:"3116158226",notas:"",horario:"",codigo:"1224318351",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228554,lng:-77.29535,name:"TIENDA LORENA HERRERA",addr:"MZ 16 CA 6",order:"66",tel:"3214986274",notas:"",horario:"",codigo:"1205250429",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228673,lng:-77.29489,name:"TIENDA COLEGIO  AURELIO ARTURO",addr:"QUINTAS DE SAN PEDRO",order:"67",tel:"3164822596",notas:"",horario:"",codigo:"1224760616",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228564,lng:-77.29462,name:"TIENDA ANGIE",addr:"MZ 13 CA 13",order:"68",tel:"3126711408",notas:"",horario:"",codigo:"1224608551",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228392,lng:-77.29502,name:"TIENDA IVAN",addr:"MZ 20 CABRERA 4",order:"69",tel:"0",notas:"",horario:"",codigo:"1224849529",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.227345,lng:-77.295,name:"FRUTAS Y VERDURAS 2",addr:"MZ 18 CA 3",order:"70",tel:"3116719944",notas:"",horario:"",codigo:"1224743634",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226882,lng:-77.29471,name:"TIENDA ALICE 40",addr:"MZ 9 CA 5",order:"71",tel:"3014725960",notas:"",horario:"",codigo:"1224704679",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226318,lng:-77.29543,name:"BROSTER DC DELIHT KRISPI",addr:"MZ 44 CA 7 ALTOS DE LA COLINA",order:"72",tel:"3162339549",notas:"",horario:"",codigo:"1224780110",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226119,lng:-77.29542,name:"NOAH TIENDA Y VARIEDADES",addr:"MZ 3 CA 8",order:"73",tel:"3168135538",notas:"",horario:"",codigo:"1224697022",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.22611,lng:-77.29541,name:"BODEGA LA COLINA ALEX",addr:"MZ 44 CA 10",order:"74",tel:"3156696704",notas:"",horario:"",codigo:"1224817035",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.225466,lng:-77.2968,name:"FRUVER SANTAMARIA",addr:"MZ 6 CA 6 LOS LAURELES",order:"75",tel:"3164822596",notas:"",horario:"",codigo:"1224294012",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.225605,lng:-77.2972,name:"TIENDA BALCONES DE LA PRADERA",addr:"CL 11A 47 54 BALCONES DE LA PR",order:"76",tel:"3103123982",notas:"",horario:"",codigo:"1224294285",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.224751,lng:-77.29966,name:"SU TIENDA A LA MANO 2",addr:"CR 47 11 71 BOS COLINA 3",order:"77",tel:"3153013333",notas:"",horario:"",codigo:"1224610296",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.2249,lng:-77.298,name:"AZOTEA",addr:"TORRES GIRASOL",order:"78",tel:"3054147711",notas:"",horario:"",codigo:"1224814966",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.224885,lng:-77.29795,name:"DISTRIBUIDORA 338",addr:"CR 47 12 69 LC 103 TR DE GIRAS",order:"79",tel:"3003547130",notas:"",horario:"",codigo:"1224580105",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.224835,lng:-77.29811,name:"MINIMERCADO GIRASOL 2",addr:"CR 47 12 69 LC 102",order:"80",tel:"3107064617",notas:"",horario:"",codigo:"1224791290",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226366,lng:-77.29775,name:"BOCCATA",addr:"CR 44 11 70 BOSQUES DE LA COLI",order:"81",tel:"3165587778",notas:"",horario:"",codigo:"1224641089",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226326,lng:-77.29775,name:"TIENDA TIENDA RINCON DEL BOSQU",addr:"CR 48 12A 55 BOSQUES DE LA COL",order:"82",tel:"3116231812",notas:"",horario:"",codigo:"1224810357",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.225225,lng:-77.29653,name:"PANADERIA SAN GABRIEL",addr:"MZ 1 CA 16 ALTOS DE LA COLINA",order:"83",tel:"3164822596",notas:"",horario:"",codigo:"1224294188",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.225139,lng:-77.29651,name:"LA CANASTA EXPRESS",addr:"CL 13 46 05 LC 15",order:"84",tel:"3188230001",notas:"",horario:"",codigo:"1224451574",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.225786,lng:-77.29547,name:"FRUTAS Y VERDURAS ALTOS COLINA",addr:"MZ 46 CA 9",order:"85",tel:"3163206959",notas:"",horario:"",codigo:"1200931155",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226205,lng:-77.29476,name:"TIENDA NOHAT 2",addr:"MZ 43 CA 8",order:"86",tel:"3178577585",notas:"",horario:"",codigo:"1224785064",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226689,lng:-77.29517,name:"PANADERIA MONACO",addr:"MZ 42 CA 7 ALTOS DE LA COLONIA",order:"87",tel:"3113414759",notas:"",horario:"",codigo:"1224763652",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.22666,lng:-77.29508,name:"SEI TIENDA",addr:"MZ 40 C 17",order:"88",tel:"3147894218",notas:"",horario:"",codigo:"1205248606",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226841,lng:-77.29454,name:"DIANA SOFIA",addr:"MZ 39 CA 07",order:"89",tel:"0",notas:"",horario:"",codigo:"1205248604",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.227195,lng:-77.29432,name:"VIVERES Y ABARROTES SEGUITAS",addr:"MZ 9 CA 24",order:"90",tel:"3117896531",notas:"",horario:"",codigo:"1224797041",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.22769,lng:-77.29396,name:"TIENDA GLORIA",addr:"MZ 8 CA 11",order:"91",tel:"3127017547",notas:"",horario:"",codigo:"1224296834",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.227508,lng:-77.29329,name:"TIENDA J S",addr:"MZ 2 CA 10",order:"92",tel:"3173942815",notas:"",horario:"",codigo:"1224289932",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228458,lng:-77.29351,name:"TIENDA MARILUZ",addr:"DG 16C 49 123 CA 1",order:"93",tel:"3136282180",notas:"",horario:"",codigo:"1210597519",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228407,lng:-77.29338,name:"TIENDA ELI",addr:"MZ 5 CS 4",order:"94",tel:"3165707754",notas:"",horario:"",codigo:"1205250468",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228436,lng:-77.29278,name:"TIENDA DILAN",addr:"DG 16 46 39",order:"95",tel:"3136956021",notas:"",horario:"",codigo:"1224398558",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.228421,lng:-77.29281,name:"VIVERES Y ABARROTES MI RANCHO",addr:"DG 16 47 31",order:"96",tel:"3185071908",notas:"",horario:"",codigo:"1224742678",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.227128,lng:-77.2928,name:"SUPER MERA",addr:"DG 16 46B 114 FIGUEROA",order:"97",tel:"3004652335",notas:"",horario:"",codigo:"1224384651",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.226452,lng:-77.29207,name:"PANADERIA ANDRO",addr:"EL REMANSO DEL NORTE MZ A CA 5",order:"98",tel:"3107376179",notas:"",horario:"",codigo:"1224527825",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V13"}},
+{lat:1.225859,lng:-77.28916,name:"OBOTICARIO PICON",addr:"CL 17 43 06",order:"99",tel:"0",notas:"",horario:"",codigo:"1224836474",extras:{"Preventa":"KA4V25","Reparto Antiguo":"KA4V13"}}];
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.225478525252525,-77.28862663636362],13);
@@ -212,17 +218,26 @@ function makeIcon(order){
 const markers=[];
 DATA.forEach(c=>{
   const m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
-  m.bindPopup(()=>`
-    <div class="lp-inner">
-      <div class="lp-badge">Parada ${c.order||'—'}</div>
+  m.bindPopup(()=>{
+    const extraRows = c.extras && Object.keys(c.extras).length
+      ? '<div class="lp-extras">'+Object.entries(c.extras).map(([k,v])=>'<div class="lp-extra-row"><span class="lp-extra-label">'+k+'</span><span class="lp-extra-val">'+v+'</span></div>').join('')+'</div>'
+      : '';
+    return `<div class="lp-inner">
+      <div>
+        <span class="lp-badge">Parada ${c.order||'—'}</span>
+        ${c.codigo?'<span class="lp-codigo">COD: '+c.codigo+'</span>':''}
+      </div>
       <div class="lp-name">${c.name}</div>
       <div class="lp-addr">${c.addr||''}</div>
+      ${c.horario?'<div class="lp-horario">🕐 '+c.horario+'</div>':''}
       <div class="lp-actions">
         <a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
         ${c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':''}
       </div>
       ${c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':''}
-    </div>`);
+      ${extraRows}
+    </div>`;
+  });
   m.addTo(map);
   markers.push({marker:m,...c});
 });

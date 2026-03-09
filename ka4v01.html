@@ -48,15 +48,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 #searchBox:focus{border-color:var(--c)}
 
 /* POPUP */
-.lp-inner{padding:14px;min-width:200px;max-width:280px}
+.lp-inner{padding:14px;min-width:200px;max-width:290px}
 .lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
+.lp-codigo{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px;letter-spacing:.04em}
 .lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
-.lp-addr{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+.lp-addr{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4}
+.lp-horario{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
 .lp-actions{display:flex;gap:6px;flex-wrap:wrap}
 .lp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
 .lp-btn-nav{background:#e63946;color:#fff}
 .lp-btn-call{background:#1a1814;color:#fff}
 .lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #e63946;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
+.lp-extras{margin-top:8px;border-top:1px solid #eee;padding-top:8px;display:flex;flex-direction:column;gap:4px}
+.lp-extra-row{display:flex;gap:6px;font-size:11px;line-height:1.4}
+.lp-extra-label{font-family:'Space Mono',monospace;font-size:9px;color:#888;min-width:70px;padding-top:1px;text-transform:uppercase;letter-spacing:.03em}
+.lp-extra-val{font-weight:600;color:#1a1814;flex:1}
 
 /* LEAFLET */
 .leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
@@ -93,17 +99,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#e63946';
-const DATA = [{lat:1.20928,lng:-77.28981,name:"DOLLARCITY MIJITAYO",addr:"CR 26 241",order:"1",tel:"1234567890",notas:""},
-{lat:1.2062,lng:-77.2859,name:"CAFETERIA EXITO PASTO PANAMERI",addr:"CR 22B 2 57",order:"2",tel:"0",notas:""},
-{lat:1.211175,lng:-77.28303,name:"AUTOSERVICIO TIGRE SANTIAGO",addr:"KR 23 12 25 PARQUE SANTIAGO",order:"3",tel:"0",notas:""},
-{lat:1.2046,lng:-77.2752,name:"SUPERMERCADOS TIGRE DE LA REBA",addr:"CL 18 14 28",order:"4",tel:"3173484177",notas:""},
-{lat:1.2059,lng:-77.265,name:"METRO PASTO UNICO",addr:"CL 22 6 61 C.C UNICO",order:"5",tel:"0",notas:""},
-{lat:1.20567,lng:-77.26051,name:"DOLLARCITY UNICO PASTO",addr:"CL 22 661 CC UNICO",order:"6",tel:"1234567890",notas:""},
-{lat:1.212369,lng:-77.27746,name:"DOLLARCITY PASTO CENTRO",addr:"CL 18 21B 40",order:"7",tel:"1234567890",notas:""},
-{lat:1.216894,lng:-77.27764,name:"LA ECONOMIA DROGUERIA 10232 PA",addr:"CL 20 26 40 LC 1",order:"8",tel:"3173373867",notas:""},
-{lat:1.234135,lng:-77.28694,name:"RESTAURANTE MISTER POLLO",addr:"CR 44 B 19 56",order:"9",tel:"3104947167",notas:""},
-{lat:1.2169,lng:-77.2894,name:"JUMBO PASTO UNICENTRO",addr:"AV PANAMERICANA ENTRE CL 11 12",order:"10",tel:"0",notas:""},
-{lat:1.21651,lng:-77.28858,name:"5135 VZ UNIPASTO CUEROS VELEZ",addr:"CL 11 34 78 CC UNICENTRO LC 2",order:"11",tel:"3103653539",notas:""}];
+const DATA = [{lat:1.20928,lng:-77.28981,name:"DOLLARCITY MIJITAYO",addr:"CR 26 241",order:"1",tel:"1234567890",notas:"",horario:"",codigo:"1224090921",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V50"}},
+{lat:1.2062,lng:-77.2859,name:"CAFETERIA EXITO PASTO PANAMERI",addr:"CR 22B 2 57",order:"2",tel:"0",notas:"",horario:"",codigo:"1203704384",extras:{"Preventa":"KA4V01","Reparto Antiguo":"KA4V01"}},
+{lat:1.211175,lng:-77.28303,name:"AUTOSERVICIO TIGRE SANTIAGO",addr:"KR 23 12 25 PARQUE SANTIAGO",order:"3",tel:"0",notas:"",horario:"",codigo:"1210276003",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V11"}},
+{lat:1.2046,lng:-77.2752,name:"SUPERMERCADOS TIGRE DE LA REBA",addr:"CL 18 14 28",order:"4",tel:"3173484177",notas:"",horario:"",codigo:"1224557074",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V12"}},
+{lat:1.2059,lng:-77.265,name:"METRO PASTO UNICO",addr:"CL 22 6 61 C.C UNICO",order:"5",tel:"0",notas:"",horario:"",codigo:"1210425530",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V01"}},
+{lat:1.20567,lng:-77.26051,name:"DOLLARCITY UNICO PASTO",addr:"CL 22 661 CC UNICO",order:"6",tel:"1234567890",notas:"",horario:"",codigo:"1224090920",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V54"}},
+{lat:1.212369,lng:-77.27746,name:"DOLLARCITY PASTO CENTRO",addr:"CL 18 21B 40",order:"7",tel:"1234567890",notas:"",horario:"",codigo:"1224090922",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V11"}},
+{lat:1.216894,lng:-77.27764,name:"LA ECONOMIA DROGUERIA 10232 PA",addr:"CL 20 26 40 LC 1",order:"8",tel:"3173373867",notas:"",horario:"",codigo:"1224820515",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11"}},
+{lat:1.234135,lng:-77.28694,name:"RESTAURANTE MISTER POLLO",addr:"CR 44 B 19 56",order:"9",tel:"3104947167",notas:"",horario:"",codigo:"1200930371",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V56"}},
+{lat:1.2169,lng:-77.2894,name:"JUMBO PASTO UNICENTRO",addr:"AV PANAMERICANA ENTRE CL 11 12",order:"10",tel:"0",notas:"",horario:"",codigo:"1210425523",extras:{"Preventa":"KA4V01","Reparto Antiguo":"KA4V01"}},
+{lat:1.21651,lng:-77.28858,name:"5135 VZ UNIPASTO CUEROS VELEZ",addr:"CL 11 34 78 CC UNICENTRO LC 2",order:"11",tel:"3103653539",notas:"",horario:"",codigo:"1224728543",extras:{"Preventa":"KA4V77","Reparto Antiguo":"KA4V50"}}];
 
 // ── MAP ──
 const map = L.map('map',{zoomControl:false}).setView([1.2126939090909092,-77.27995181818181],13);
@@ -124,17 +130,26 @@ function makeIcon(order){
 const markers=[];
 DATA.forEach(c=>{
   const m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
-  m.bindPopup(()=>`
-    <div class="lp-inner">
-      <div class="lp-badge">Parada ${c.order||'—'}</div>
+  m.bindPopup(()=>{
+    const extraRows = c.extras && Object.keys(c.extras).length
+      ? '<div class="lp-extras">'+Object.entries(c.extras).map(([k,v])=>'<div class="lp-extra-row"><span class="lp-extra-label">'+k+'</span><span class="lp-extra-val">'+v+'</span></div>').join('')+'</div>'
+      : '';
+    return `<div class="lp-inner">
+      <div>
+        <span class="lp-badge">Parada ${c.order||'—'}</span>
+        ${c.codigo?'<span class="lp-codigo">COD: '+c.codigo+'</span>':''}
+      </div>
       <div class="lp-name">${c.name}</div>
       <div class="lp-addr">${c.addr||''}</div>
+      ${c.horario?'<div class="lp-horario">🕐 '+c.horario+'</div>':''}
       <div class="lp-actions">
         <a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
         ${c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':''}
       </div>
       ${c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':''}
-    </div>`);
+      ${extraRows}
+    </div>`;
+  });
   m.addTo(map);
   markers.push({marker:m,...c});
 });

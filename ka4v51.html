@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -15,45 +14,34 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--c:#9b5de5;--bg:#f5f2eb;--ink:#1a1814;--muted:#8c8680;--surface:#fff;--border:#e2ddd5}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
-
-/* TOPBAR */
 .topbar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
 .route-badge{background:var(--c);color:#fff;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
 .topbar-info{flex:1;min-width:0}
-.topbar-info h1{font-family:'Unbounded',sans-serif;font-size:13px;color:#fff;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-info h1{font-family:'Unbounded',sans-serif;font-size:13px;color:#fff;font-weight:700;line-height:1.2}
 .topbar-info p{font-family:'Space Mono',monospace;font-size:9px;color:#888;margin-top:2px}
 .counter{font-family:'Space Mono',monospace;font-size:11px;color:var(--c);text-align:right;white-space:nowrap}
 .counter span{display:block;font-size:9px;color:#666;margin-top:1px}
-
-/* TABS */
+.btn-enrutar{background:var(--c);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
 .tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
-.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.02em}
+.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
 .tab.active{color:var(--c);border-bottom-color:var(--c)}
-
-/* MAP */
 #map{flex:1;display:block}
-
-/* LIST VIEW */
-#listView{flex:1;overflow-y:auto;display:none}
-.client-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+#listView{flex:1;overflow-y:auto;display:none;flex-direction:column}
+.search-wrap{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:none}
+#searchBox{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)}
+#searchBox:focus{border-color:var(--c)}
+.client-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer}
 .client-item:active{background:#ece9e0}
 .client-num{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .client-name{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}
 .client-addr{font-size:12px;color:var(--muted);line-height:1.4}
-.client-actions{display:flex;gap:6px;margin-top:6px}
+.client-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 .btn-nav{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
-.btn-call{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn-call{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
 .client-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
-
-/* SEARCH */
-.search-wrap{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:none}
-#searchBox{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)}
-#searchBox:focus{border-color:var(--c)}
-
-/* POPUP */
 .lp-inner{padding:14px;min-width:200px;max-width:290px}
 .lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
-.lp-codigo{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px;letter-spacing:.04em}
+.lp-codigo{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px}
 .lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
 .lp-addr{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4}
 .lp-horario{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
@@ -63,20 +51,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 .lp-btn-call{background:#1a1814;color:#fff}
 .lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #9b5de5;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
 .lp-extras{margin-top:8px;border-top:1px solid #eee;padding-top:8px;display:flex;flex-direction:column;gap:4px}
-.lp-extra-row{display:flex;gap:6px;font-size:11px;line-height:1.4}
-.lp-extra-label{font-family:'Space Mono',monospace;font-size:9px;color:#888;min-width:70px;padding-top:1px;text-transform:uppercase;letter-spacing:.03em}
+.lp-extra-row{display:flex;gap:6px;font-size:11px}
+.lp-extra-label{font-family:'Space Mono',monospace;font-size:9px;color:#888;min-width:70px;text-transform:uppercase}
 .lp-extra-val{font-weight:600;color:#1a1814;flex:1}
-
-/* ENRUTAR BTN */
-.btn-enrutar{background:var(--c);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;letter-spacing:.02em}
-.btn-enrutar:active{opacity:.8}
-
-/* LEAFLET */
 .leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
 .leaflet-popup-content{margin:0!important}
 .leaflet-popup-tip-container{display:none}
-.leaflet-control-zoom{border:none!important}
-.leaflet-control-zoom a{background:var(--ink)!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important;font-size:18px!important}
+.leaflet-control-zoom a{background:var(--ink)!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important}
 </style>
 </head>
 <body>
@@ -101,9 +82,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
         <div style="font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700">Enrutar en Google Maps</div>
         <div style="font-size:11px;color:#888;margin-top:3px;font-family:'Space Mono',monospace">Navegar de cliente en cliente</div>
       </div>
-      <button onclick="closeEnrutar()" style="background:#f0f0f0;border:none;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      <button onclick="closeEnrutar()" style="background:#f0f0f0;border:none;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
     </div>
-
     <div style="margin-bottom:16px">
       <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-family:'Space Mono',monospace">Punto de inicio</div>
       <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:2px solid var(--c);border-radius:10px;cursor:pointer;margin-bottom:6px;font-size:13px;font-weight:600;background:#fff8f5">
@@ -113,16 +93,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
         <input type="radio" name="startOpt" value="first" style="accent-color:var(--c);width:16px;height:16px"> 🏁 Primera parada de la ruta
       </label>
     </div>
-
-    <div style="margin-bottom:18px">
-      <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-family:'Space Mono',monospace">Paradas incluidas</div>
-      <div style="font-size:12px;color:#555;line-height:1.6;background:#f8f8f8;border-radius:8px;padding:10px 12px" id="enrutarPreview">—</div>
-      <div style="font-size:10px;color:#aaa;margin-top:6px;font-family:'Space Mono',monospace">⚠ Google Maps permite máx. 10 paradas. Se tomarán las primeras 10 en orden.</div>
+    <div style="margin-bottom:4px">
+      <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-family:'Space Mono',monospace">Bloques de ruta — toca cada uno en orden</div>
+      <div id="enrutarPreview" style="max-height:50vh;overflow-y:auto">—</div>
+      <div style="font-size:10px;color:#aaa;margin-top:8px;font-family:monospace;line-height:1.5">Cada bloque tiene hasta 9 paradas. Termina uno y abre el siguiente.</div>
     </div>
-
-    <button onclick="launchRoute()" style="width:100%;padding:14px;background:var(--c);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.02em">
-      🚀 Abrir en Google Maps
-    </button>
   </div>
 </div>
 
@@ -130,9 +105,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
   <div class="tab active" id="tabMap" onclick="showTab('map')">🗺 Mapa</div>
   <div class="tab" id="tabList" onclick="showTab('list')">📋 Lista</div>
 </div>
-
 <div id="map"></div>
-
 <div id="listView">
   <div class="search-wrap" id="searchWrap">
     <input type="text" id="searchBox" placeholder="🔍 Buscar por cualquier campo..." oninput="filterList(this.value)">
@@ -141,8 +114,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 </div>
 
 <script>
-const ROUTE_COLOR = '#9b5de5';
-const DATA = [{lat:1.20522,lng:-77.29535,name:"DONDE TO�A",addr:"MZ C CA 3",order:"1",tel:"0",notas:"",horario:"",codigo:"1224825342",extras:{"Preventa":"KA4V26","Reparto Antiguo":"KA4V51","Barrio":"ALTAMIRA"}},
+const ROUTE_COLOR='#9b5de5';
+const DATA=[{lat:1.20522,lng:-77.29535,name:"DONDE TO�A",addr:"MZ C CA 3",order:"1",tel:"0",notas:"",horario:"",codigo:"1224825342",extras:{"Preventa":"KA4V26","Reparto Antiguo":"KA4V51","Barrio":"ALTAMIRA"}},
 {lat:1.204598,lng:-77.296003,name:"Q HORNADO",addr:"CL 19 34 A 34",order:"2",tel:"0",notas:"",horario:"",codigo:"1224831767",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V51","Barrio":"VERSALLES"}},
 {lat:1.2022,lng:-77.2996,name:"TIENDA MABEL",addr:"CR 26 SUR 105 FRENTE A EMPOPAS",order:"3",tel:"3176864120",notas:"",horario:"",codigo:"1224167488",extras:{"Preventa":"KA4V26","Reparto Antiguo":"KA4V51","Barrio":"URBANIZACION VILLA DE LOS RIOS"}},
 {lat:1.2027,lng:-77.2994,name:"TIENDA ARISTY",addr:"CR 26 13 SUR 41 FRENTE A EMPOP",order:"4",tel:"3117069119",notas:"",horario:"",codigo:"1224323346",extras:{"Preventa":"KA4V26","Reparto Antiguo":"KA4V51","Barrio":"AVENIDA MIJITAYO"}},
@@ -194,93 +167,71 @@ const DATA = [{lat:1.20522,lng:-77.29535,name:"DONDE TO�A",addr:"MZ C CA 3",or
 {lat:1.2055,lng:-77.2947,name:"DEPOCITO LUCIO",addr:"MZ A C A6 NIZA",order:"50",tel:"3102319905",notas:"",horario:"",codigo:"1224299563",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V51","Barrio":"OTROS"}},
 {lat:1.205441,lng:-77.2949,name:"DISTRIASOCIADOS SAS LA UNION",addr:"CR 3 21A 64",order:"51",tel:"3147313945",notas:"",horario:"",codigo:"1224754626",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V56","Barrio":"CENTRO"}},
 {lat:1.205376,lng:-77.295335,name:"MINIMARKET LA CAMPI�A DEL ORIE",addr:"CR 33A 20 30",order:"52",tel:"3102320571",notas:"",horario:"",codigo:"1224828001",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13","Barrio":"AV LOS ESTUDIANTES"}}];
-const BUILD_TS = '1773168155879'; // fuerza recarga al cambiar contenido
+const BUILD_TS='1773174855245';
+const stored=sessionStorage.getItem('map_ts_ka4v51');
+if(stored && stored!==BUILD_TS){ sessionStorage.setItem('map_ts_ka4v51',BUILD_TS); location.reload(true); }
+else{ sessionStorage.setItem('map_ts_ka4v51',BUILD_TS); }
 
-// Forzar recarga si el contenido cambió
-const stored = sessionStorage.getItem('map_ts_ka4v51');
-if (stored && stored !== BUILD_TS) {
-  sessionStorage.setItem('map_ts_ka4v51', BUILD_TS);
-  location.reload(true);
-} else {
-  sessionStorage.setItem('map_ts_ka4v51', BUILD_TS);
-}
-
-// ── MAP ──
-const map = L.map('map',{zoomControl:false}).setView([1.1989067884615385,-77.29875849999998],13);
+const map=L.map('map',{zoomControl:false}).setView([1.1989067884615385,-77.29875849999998],13);
 L.control.zoom({position:'bottomright'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
 
 function makeIcon(order){
-  const n=order||'';
-  const fs=String(n).length>2?8:10;
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42">
-    <path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="${ROUTE_COLOR}" filter="drop-shadow(0 2px 4px rgba(0,0,0,.3))"/>
-    <circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/>
-    <text x="16" y="20.5" text-anchor="middle" font-size="${fs}" font-family="monospace" font-weight="700" fill="#fff">${n}</text>
-  </svg>`;
+  var n=order||'',fs=String(n).length>2?8:10;
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42"><path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="'+ROUTE_COLOR+'" filter="drop-shadow(0 2px 4px rgba(0,0,0,.3))"/><circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/><text x="16" y="20.5" text-anchor="middle" font-size="'+fs+'" font-family="monospace" font-weight="700" fill="#fff">'+n+'</text></svg>';
   return L.divIcon({html:'<div>'+svg+'</div>',iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-42],className:''});
 }
 
-const markers=[];
-DATA.forEach(c=>{
-  const m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
-  m.bindPopup(()=>{
-    const extraRows = c.extras && Object.keys(c.extras).length
-      ? '<div class="lp-extras">'+Object.entries(c.extras).map(([k,v])=>'<div class="lp-extra-row"><span class="lp-extra-label">'+k+'</span><span class="lp-extra-val">'+v+'</span></div>').join('')+'</div>'
-      : '';
-    return `<div class="lp-inner">
-      <div>
-        <span class="lp-badge">Parada ${c.order||'—'}</span>
-        ${c.codigo?'<span class="lp-codigo">COD: '+c.codigo+'</span>':''}
-      </div>
-      <div class="lp-name">${c.name}</div>
-      <div class="lp-addr">${c.addr||''}</div>
-      ${c.horario?'<div class="lp-horario">🕐 '+c.horario+'</div>':''}
-      <div class="lp-actions">
-        <a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
-        ${c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':''}
-      </div>
-      ${c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':''}
-      ${extraRows}
-    </div>`;
+var markers=[];
+DATA.forEach(function(c){
+  var m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
+  m.bindPopup(function(){
+    var extraRows=c.extras&&Object.keys(c.extras).length
+      ?'<div class="lp-extras">'+Object.entries(c.extras).map(function(e){return '<div class="lp-extra-row"><span class="lp-extra-label">'+e[0]+'</span><span class="lp-extra-val">'+e[1]+'</span></div>';}).join('')+'</div>':'';
+    return '<div class="lp-inner">'
+      +'<div><span class="lp-badge">Parada '+(c.order||'—')+'</span>'+(c.codigo?'<span class="lp-codigo">COD: '+c.codigo+'</span>':'')+'</div>'
+      +'<div class="lp-name">'+c.name+'</div>'
+      +'<div class="lp-addr">'+(c.addr||'')+'</div>'
+      +(c.horario?'<div class="lp-horario">🕐 '+c.horario+'</div>':'')
+      +'<div class="lp-actions">'
+      +'<a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">🧭 Navegar</a>'
+      +(c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':'')
+      +'</div>'
+      +(c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':'')
+      +extraRows+'</div>';
   });
   m.addTo(map);
-  markers.push({marker:m,...c});
+  markers.push({marker:m,data:c});
 });
 
-// fit bounds
 if(DATA.length){
-  const lats=DATA.map(c=>c.lat),lngs=DATA.map(c=>c.lng);
-  map.fitBounds([[Math.min(...lats),Math.min(...lngs)],[Math.max(...lats),Math.max(...lngs)]],{padding:[40,40]});
+  var lats=DATA.map(function(c){return c.lat;}),lngs=DATA.map(function(c){return c.lng;});
+  map.fitBounds([[Math.min.apply(null,lats),Math.min.apply(null,lngs)],[Math.max.apply(null,lats),Math.max.apply(null,lngs)]],{padding:[40,40]});
 }
 
-// ── LIST ──
 function renderList(items){
-  document.getElementById('clientList').innerHTML=items.map(c=>`
-    <div class="client-item" onclick="focusMarker(${c.lat},${c.lng})">
-      <div class="client-num">${c.order||'?'}</div>
-      <div style="flex:1;min-width:0">
-        <div class="client-name">${c.name}</div>
-        <div class="client-addr">${c.addr||''}</div>
-        <div class="client-actions">
-          <a class="btn-nav" href="https://maps.google.com/?q=${c.lat},${c.lng}" target="_blank">🧭 Navegar</a>
-          ${c.tel?'<a class="btn-call" href="tel:'+c.tel+'">📞 '+c.tel+'</a>':''}
-        </div>
-        ${c.notas?'<div class="client-notas">📝 '+c.notas+'</div>':''}
-      </div>
-    </div>`).join('');
+  document.getElementById('clientList').innerHTML=items.map(function(c){
+    return '<div class="client-item" onclick="focusMarker('+c.lat+','+c.lng+')">'
+      +'<div class="client-num">'+(c.order||'?')+'</div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div class="client-name">'+c.name+'</div>'
+      +'<div class="client-addr">'+(c.addr||'')+'</div>'
+      +'<div class="client-actions">'
+      +'<a class="btn-nav" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">🧭 Navegar</a>'
+      +(c.tel?'<a class="btn-call" href="tel:'+c.tel+'">📞 '+c.tel+'</a>':'')
+      +'</div>'
+      +(c.notas?'<div class="client-notas">📝 '+c.notas+'</div>':'')
+      +'</div></div>';
+  }).join('');
 }
 renderList(DATA);
 
 function filterList(q){
-  const f=q.toLowerCase().trim();
-  if(!f){ renderList(DATA); return; }
-  renderList(DATA.filter(c=>{
-    // Campos fijos
-    const fixed=[c.name,c.addr,c.order,c.codigo,c.horario,c.tel,c.notas]
-      .map(v=>(v||'').toLowerCase()).join(' ');
-    // Columnas extras del excel
-    const extras=Object.values(c.extras||{}).map(v=>(v||'').toLowerCase()).join(' ');
+  var f=q.toLowerCase().trim();
+  if(!f){renderList(DATA);return;}
+  renderList(DATA.filter(function(c){
+    var fixed=[c.name,c.addr,c.order,c.codigo,c.horario,c.tel,c.notas].map(function(v){return (v||'').toLowerCase();}).join(' ');
+    var extras=Object.values(c.extras||{}).map(function(v){return (v||'').toLowerCase();}).join(' ');
     return (fixed+' '+extras).includes(f);
   }));
 }
@@ -288,86 +239,68 @@ function filterList(q){
 function focusMarker(lat,lng){
   showTab('map');
   map.setView([lat,lng],17);
-  const m=markers.find(x=>x.lat===lat&&x.lng===lng);
-  if(m)m.marker.openPopup();
+  var found=markers.find(function(x){return x.data.lat===lat&&x.data.lng===lng;});
+  if(found)found.marker.openPopup();
 }
 
-// ── ENRUTAR ──
-function openEnrutar(){
-  // Ordenar por campo order, los que no tienen orden van al final
-  const sorted=[...DATA].sort((a,b)=>{
-    const na=parseInt(a.order)||9999, nb=parseInt(b.order)||9999;
-    return na-nb;
-  });
-  const stops=sorted.slice(0,10);
-  const preview=document.getElementById('enrutarPreview');
-  preview.innerHTML=stops.map((c,i)=>
-    '<div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid #eee">'
-    +'<span style="font-family:monospace;font-size:10px;color:#aaa;min-width:18px">'+(i+1)+'.</span>'
-    +'<span style="font-size:12px;font-weight:600">'+c.name+'</span>'
-    +'<span style="font-size:11px;color:#888;flex:1;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+c.addr+'</span>'
-    +'</div>'
-  ).join('')+(DATA.length>10?'<div style="font-size:10px;color:#e05000;margin-top:6px">+ '+(DATA.length-10)+' paradas no incluidas</div>':'');
-  const modal=document.getElementById('modalEnrutar');
-  modal.style.display='flex';
-  modal.addEventListener('click', function handler(e){
-    if(e.target===modal){ closeEnrutar(); modal.removeEventListener('click',handler); }
-  });
-}
-
-function closeEnrutar(){
-  document.getElementById('modalEnrutar').style.display='none';
-}
-
-function launchRoute(){
-  const startOpt=document.querySelector('input[name="startOpt"]:checked').value;
-  const sorted=[...DATA].sort((a,b)=>{
-    const na=parseInt(a.order)||9999, nb=parseInt(b.order)||9999;
-    return na-nb;
-  });
-  // Google Maps waypoints: máx 10 intermedios (12 total con origen y destino)
-  const maxWaypoints=10;
-  const stops=sorted.slice(0,maxWaypoints+1); // +1 para destino final
-  const waypoints=stops.slice(0,-1); // intermedios
-  const destination=stops[stops.length-1];
-
-  const destStr=destination.lat+','+destination.lng;
-  const waypointsStr=waypoints.map(c=>c.lat+','+c.lng).join('|');
-
-  let url;
-  if(startOpt==='gps'){
-    // Origen = ubicación actual del GPS
-    url='https://www.google.com/maps/dir/?api=1'
-      +'&destination='+encodeURIComponent(destStr)
-      +(waypointsStr?'&waypoints='+encodeURIComponent(waypointsStr):'')
-      +'&travelmode=driving';
-  } else {
-    // Origen = primera parada
-    const first=stops[0];
-    const rest=stops.slice(1);
-    const dest2=rest[rest.length-1];
-    const wp2=rest.slice(0,-1).map(c=>c.lat+','+c.lng).join('|');
-    url='https://www.google.com/maps/dir/?api=1'
-      +'&origin='+encodeURIComponent(first.lat+','+first.lng)
-      +'&destination='+encodeURIComponent(dest2.lat+','+dest2.lng)
-      +(wp2?'&waypoints='+encodeURIComponent(wp2):'')
-      +'&travelmode=driving';
-  }
-  window.open(url,'_blank');
-  closeEnrutar();
-}
-
-// ── TABS ──
 function showTab(tab){
-  const isMap=tab==='map';
+  var isMap=tab==='map';
   document.getElementById('map').style.display=isMap?'block':'none';
   document.getElementById('listView').style.display=isMap?'none':'flex';
   document.getElementById('searchWrap').style.display=isMap?'none':'block';
   document.getElementById('tabMap').classList.toggle('active',isMap);
   document.getElementById('tabList').classList.toggle('active',!isMap);
-  if(isMap)setTimeout(()=>map.invalidateSize(),50);
-  else document.getElementById('listView').style.flexDirection='column';
+  if(isMap)setTimeout(function(){map.invalidateSize();},50);
 }
+
+// ENRUTAR
+var BLOCK_SIZE=9;
+function buildBlocks(startOpt){
+  var sorted=DATA.slice().sort(function(a,b){return (parseInt(a.order)||9999)-(parseInt(b.order)||9999);});
+  var blocks=[];
+  for(var i=0;i<sorted.length;i+=BLOCK_SIZE) blocks.push(sorted.slice(i,i+BLOCK_SIZE));
+  return blocks.map(function(chunk,bi){
+    var origin,waypoints,destination;
+    if(bi===0&&startOpt==='gps'){ origin=null; waypoints=chunk.slice(0,-1); destination=chunk[chunk.length-1]; }
+    else if(bi===0&&startOpt==='first'){ origin=chunk[0]; waypoints=chunk.slice(1,-1); destination=chunk[chunk.length-1]; }
+    else { origin=blocks[bi-1][blocks[bi-1].length-1]; waypoints=chunk.slice(0,-1); destination=chunk[chunk.length-1]; }
+    var destCoord=destination.lat+','+destination.lng;
+    var wpCoords=waypoints.map(function(c){return c.lat+','+c.lng;}).join('|');
+    var url='https://www.google.com/maps/dir/?api=1'
+      +(origin?'&origin='+encodeURIComponent(origin.lat+','+origin.lng):'')
+      +'&destination='+encodeURIComponent(destCoord)
+      +(wpCoords?'&waypoints='+encodeURIComponent(wpCoords):'')
+      +'&travelmode=driving';
+    var gs=bi*BLOCK_SIZE+1, ge=Math.min((bi+1)*BLOCK_SIZE,sorted.length);
+    return {url:url,label:'Bloque '+(bi+1),range:'Paradas '+gs+'–'+ge,last:destination};
+  });
+}
+
+function openEnrutar(){
+  var startOpt=document.querySelector('input[name="startOpt"]:checked').value;
+  var blocks=buildBlocks(startOpt);
+  window._routeBlocks=blocks;
+  document.getElementById('enrutarPreview').innerHTML=blocks.map(function(b,i){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0;cursor:pointer" onclick="launchBlock('+i+')">'
+      +'<div style="width:32px;height:32px;border-radius:50%;background:'+ROUTE_COLOR+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:12px;font-weight:700;flex-shrink:0">'+(i+1)+'</div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:13px;font-weight:700">'+b.label+' <span style="font-size:10px;color:#888;font-family:monospace">'+b.range+'</span></div>'
+      +'<div style="font-size:11px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Hasta: '+b.last.name+'</div>'
+      +'</div>'
+      +'<div style="background:'+ROUTE_COLOR+';color:#fff;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;flex-shrink:0">Abrir →</div>'
+      +'</div>';
+  }).join('');
+  var modal=document.getElementById('modalEnrutar');
+  modal.style.display='flex';
+  modal.onclick=function(e){if(e.target===modal)closeEnrutar();};
+}
+
+document.querySelectorAll('input[name="startOpt"]').forEach(function(r){
+  r.addEventListener('change',function(){ if(document.getElementById('modalEnrutar').style.display==='flex') openEnrutar(); });
+});
+
+function closeEnrutar(){ document.getElementById('modalEnrutar').style.display='none'; }
+function launchBlock(idx){ var b=(window._routeBlocks||[])[idx]; if(b)window.open(b.url,'_blank'); }
 </script>
 </body>
 </html>

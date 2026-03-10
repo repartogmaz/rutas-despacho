@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>KA4V56 · 09-03-2026</title>
+<title>KA4V56 · 10-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -81,7 +81,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
   <div class="route-badge">KA4V56</div>
   <div class="topbar-info">
     <h1>Mapa del día</h1>
-    <p>LUNES, 9 DE MARZO DE 2026</p>
+    <p>MARTES, 10 DE MARZO DE 2026</p>
   </div>
   <div class="counter">4<span>clientes</span></div>
 </div>
@@ -102,11 +102,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#023e8a';
-const DATA = [{lat:1.165373,lng:-77.29318,name:"PUNTO DEL AHORRO",addr:"CL PRINCIPAL CATAMBUCO",order:"1",tel:"3102265319",notas:"",horario:"",codigo:"1224461531",extras:{"Preventa":"KA4V04","Reparto Antiguo":"KA4V01"}},
-{lat:1.166705,lng:-77.29981,name:"RESTAURANTE CON 2",addr:"CL 4 5 36",order:"2",tel:"3166263455",notas:"",horario:"",codigo:"1224820739",extras:{"Preventa":"KA4V04","Reparto Antiguo":"KA4V01"}},
-{lat:1.3234,lng:-77.1995,name:"TIENDA TIA MAGOLA",addr:"CA 10 AV PRINCIPAL VILLA MOREN",order:"3",tel:"3234853556",notas:"",horario:"",codigo:"1224377769",extras:{"Preventa":"KA4V03","Reparto Antiguo":"KA4V01"}},
-{lat:1.358627,lng:-77.28258,name:"BAN AGRARIO CHACHAGUI",addr:"CL 3 4 71",order:"4",tel:"3152438149",notas:"",horario:"",codigo:"1224804649",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V56"}}];
-const BUILD_TS = '1773094150494'; // fuerza recarga al cambiar contenido
+const DATA = [{lat:1.165373,lng:-77.29318,name:"PUNTO DEL AHORRO",addr:"CL PRINCIPAL CATAMBUCO",order:"1",tel:"3102265319",notas:"",horario:"",codigo:"1224461531",extras:{"Preventa":"KA4V04","Reparto Antiguo":"KA4V01","Barrio":"CATAMBUCO"}},
+{lat:1.166705,lng:-77.29981,name:"RESTAURANTE CON 2",addr:"CL 4 5 36",order:"2",tel:"3166263455",notas:"",horario:"",codigo:"1224820739",extras:{"Preventa":"KA4V04","Reparto Antiguo":"KA4V01","Barrio":"CATAMBUCO"}},
+{lat:1.3234,lng:-77.1995,name:"TIENDA TIA MAGOLA",addr:"CA 10 AV PRINCIPAL VILLA MOREN",order:"3",tel:"3234853556",notas:"",horario:"",codigo:"1224377769",extras:{"Preventa":"KA4V03","Reparto Antiguo":"KA4V01","Barrio":"OTROS"}},
+{lat:1.358627,lng:-77.28258,name:"BAN AGRARIO CHACHAGUI",addr:"CL 3 4 71",order:"4",tel:"3152438149",notas:"",horario:"",codigo:"1224804649",extras:{"Preventa":"KA4V23","Reparto Antiguo":"KA4V56","Barrio":"CENTRO"}}];
+const BUILD_TS = '1773167732182'; // fuerza recarga al cambiar contenido
 
 // Forzar recarga si el contenido cambió
 const stored = sessionStorage.getItem('map_ts_ka4v56');

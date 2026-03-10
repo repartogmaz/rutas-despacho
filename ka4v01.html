@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>KA4V01 · 09-03-2026</title>
+<title>KA4V01 · 10-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -81,7 +81,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
   <div class="route-badge">KA4V01</div>
   <div class="topbar-info">
     <h1>Mapa del día</h1>
-    <p>LUNES, 9 DE MARZO DE 2026</p>
+    <p>MARTES, 10 DE MARZO DE 2026</p>
   </div>
   <div class="counter">11<span>clientes</span></div>
 </div>
@@ -102,18 +102,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <script>
 const ROUTE_COLOR = '#e63946';
-const DATA = [{lat:1.20928,lng:-77.28981,name:"DOLLARCITY MIJITAYO",addr:"CR 26 241",order:"1",tel:"1234567890",notas:"",horario:"",codigo:"1224090921",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V50"}},
-{lat:1.2062,lng:-77.2859,name:"CAFETERIA EXITO PASTO PANAMERI",addr:"CR 22B 2 57",order:"2",tel:"0",notas:"",horario:"",codigo:"1203704384",extras:{"Preventa":"KA4V01","Reparto Antiguo":"KA4V01"}},
-{lat:1.211175,lng:-77.28303,name:"AUTOSERVICIO TIGRE SANTIAGO",addr:"KR 23 12 25 PARQUE SANTIAGO",order:"3",tel:"0",notas:"",horario:"",codigo:"1210276003",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V11"}},
-{lat:1.2046,lng:-77.2752,name:"SUPERMERCADOS TIGRE DE LA REBA",addr:"CL 18 14 28",order:"4",tel:"3173484177",notas:"",horario:"",codigo:"1224557074",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V12"}},
-{lat:1.2059,lng:-77.265,name:"METRO PASTO UNICO",addr:"CL 22 6 61 C.C UNICO",order:"5",tel:"0",notas:"",horario:"",codigo:"1210425530",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V01"}},
-{lat:1.20567,lng:-77.26051,name:"DOLLARCITY UNICO PASTO",addr:"CL 22 661 CC UNICO",order:"6",tel:"1234567890",notas:"",horario:"",codigo:"1224090920",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V54"}},
-{lat:1.212369,lng:-77.27746,name:"DOLLARCITY PASTO CENTRO",addr:"CL 18 21B 40",order:"7",tel:"1234567890",notas:"",horario:"",codigo:"1224090922",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V11"}},
-{lat:1.216894,lng:-77.27764,name:"LA ECONOMIA DROGUERIA 10232 PA",addr:"CL 20 26 40 LC 1",order:"8",tel:"3173373867",notas:"",horario:"",codigo:"1224820515",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11"}},
-{lat:1.234135,lng:-77.28694,name:"RESTAURANTE MISTER POLLO",addr:"CR 44 B 19 56",order:"9",tel:"3104947167",notas:"",horario:"",codigo:"1200930371",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V56"}},
-{lat:1.2169,lng:-77.2894,name:"JUMBO PASTO UNICENTRO",addr:"AV PANAMERICANA ENTRE CL 11 12",order:"10",tel:"0",notas:"",horario:"",codigo:"1210425523",extras:{"Preventa":"KA4V01","Reparto Antiguo":"KA4V01"}},
-{lat:1.21651,lng:-77.28858,name:"5135 VZ UNIPASTO CUEROS VELEZ",addr:"CL 11 34 78 CC UNICENTRO LC 2",order:"11",tel:"3103653539",notas:"",horario:"",codigo:"1224728543",extras:{"Preventa":"KA4V77","Reparto Antiguo":"KA4V50"}}];
-const BUILD_TS = '1773094150480'; // fuerza recarga al cambiar contenido
+const DATA = [{lat:1.20928,lng:-77.28981,name:"DOLLARCITY MIJITAYO",addr:"CR 26 241",order:"1",tel:"1234567890",notas:"",horario:"",codigo:"1224090921",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V50","Barrio":"CAPUSIGRA"}},
+{lat:1.2062,lng:-77.2859,name:"CAFETERIA EXITO PASTO PANAMERI",addr:"CR 22B 2 57",order:"2",tel:"0",notas:"",horario:"",codigo:"1203704384",extras:{"Preventa":"KA4V01","Reparto Antiguo":"KA4V01","Barrio":"CAPUSIGRA"}},
+{lat:1.211175,lng:-77.28303,name:"AUTOSERVICIO TIGRE SANTIAGO",addr:"KR 23 12 25 PARQUE SANTIAGO",order:"3",tel:"0",notas:"",horario:"",codigo:"1210276003",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V11","Barrio":"SANTIAGO"}},
+{lat:1.2046,lng:-77.2752,name:"SUPERMERCADOS TIGRE DE LA REBA",addr:"CL 18 14 28",order:"4",tel:"3173484177",notas:"",horario:"",codigo:"1224557074",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V12","Barrio":"FATIMA"}},
+{lat:1.2059,lng:-77.265,name:"METRO PASTO UNICO",addr:"CL 22 6 61 C.C UNICO",order:"5",tel:"0",notas:"",horario:"",codigo:"1210425530",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V01","Barrio":"CENTRO"}},
+{lat:1.20567,lng:-77.26051,name:"DOLLARCITY UNICO PASTO",addr:"CL 22 661 CC UNICO",order:"6",tel:"1234567890",notas:"",horario:"",codigo:"1224090920",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V54","Barrio":"VILLAS FLOR"}},
+{lat:1.212369,lng:-77.27746,name:"DOLLARCITY PASTO CENTRO",addr:"CL 18 21B 40",order:"7",tel:"1234567890",notas:"",horario:"",codigo:"1224090922",extras:{"Preventa":"KA4V76","Reparto Antiguo":"KA4V11","Barrio":"CENTRO"}},
+{lat:1.216894,lng:-77.27764,name:"LA ECONOMIA DROGUERIA 10232 PA",addr:"CL 20 26 40 LC 1",order:"8",tel:"3173373867",notas:"",horario:"",codigo:"1224820515",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11","Barrio":"CENTRO"}},
+{lat:1.234135,lng:-77.28694,name:"RESTAURANTE MISTER POLLO",addr:"CR 44 B 19 56",order:"9",tel:"3104947167",notas:"",horario:"",codigo:"1200930371",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V56","Barrio":"PANDIACO"}},
+{lat:1.2169,lng:-77.2894,name:"JUMBO PASTO UNICENTRO",addr:"AV PANAMERICANA ENTRE CL 11 12",order:"10",tel:"0",notas:"",horario:"",codigo:"1210425523",extras:{"Preventa":"KA4V01","Reparto Antiguo":"KA4V01","Barrio":"CENTRO"}},
+{lat:1.21651,lng:-77.28858,name:"5135 VZ UNIPASTO CUEROS VELEZ",addr:"CL 11 34 78 CC UNICENTRO LC 2",order:"11",tel:"3103653539",notas:"",horario:"",codigo:"1224728543",extras:{"Preventa":"KA4V77","Reparto Antiguo":"KA4V50","Barrio":"CENTRO"}}];
+const BUILD_TS = '1773167732167'; // fuerza recarga al cambiar contenido
 
 // Forzar recarga si el contenido cambió
 const stored = sessionStorage.getItem('map_ts_ka4v01');

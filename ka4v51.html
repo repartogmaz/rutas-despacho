@@ -67,6 +67,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 .lp-extra-label{font-family:'Space Mono',monospace;font-size:9px;color:#888;min-width:70px;padding-top:1px;text-transform:uppercase;letter-spacing:.03em}
 .lp-extra-val{font-weight:600;color:#1a1814;flex:1}
 
+/* ENRUTAR BTN */
+.btn-enrutar{background:var(--c);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;letter-spacing:.02em}
+.btn-enrutar:active{opacity:.8}
+
 /* LEAFLET */
 .leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
 .leaflet-popup-content{margin:0!important}
@@ -83,7 +87,43 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
     <h1>Mapa del día</h1>
     <p>MARTES, 10 DE MARZO DE 2026</p>
   </div>
-  <div class="counter">52<span>clientes</span></div>
+  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+    <div class="counter">52<span>clientes</span></div>
+    <button class="btn-enrutar" onclick="openEnrutar()">🗺 Enrutar</button>
+  </div>
+</div>
+
+<!-- MODAL ENRUTAR -->
+<div id="modalEnrutar" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:flex-end;justify-content:center">
+  <div style="background:#fff;width:100%;max-width:480px;border-radius:16px 16px 0 0;padding:20px 20px 32px;max-height:85vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700">Enrutar en Google Maps</div>
+        <div style="font-size:11px;color:#888;margin-top:3px;font-family:'Space Mono',monospace">Navegar de cliente en cliente</div>
+      </div>
+      <button onclick="closeEnrutar()" style="background:#f0f0f0;border:none;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-family:'Space Mono',monospace">Punto de inicio</div>
+      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:2px solid var(--c);border-radius:10px;cursor:pointer;margin-bottom:6px;font-size:13px;font-weight:600;background:#fff8f5">
+        <input type="radio" name="startOpt" value="gps" checked style="accent-color:var(--c);width:16px;height:16px"> 📍 Mi ubicación actual (GPS)
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:2px solid #eee;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600">
+        <input type="radio" name="startOpt" value="first" style="accent-color:var(--c);width:16px;height:16px"> 🏁 Primera parada de la ruta
+      </label>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-family:'Space Mono',monospace">Paradas incluidas</div>
+      <div style="font-size:12px;color:#555;line-height:1.6;background:#f8f8f8;border-radius:8px;padding:10px 12px" id="enrutarPreview">—</div>
+      <div style="font-size:10px;color:#aaa;margin-top:6px;font-family:'Space Mono',monospace">⚠ Google Maps permite máx. 10 paradas. Se tomarán las primeras 10 en orden.</div>
+    </div>
+
+    <button onclick="launchRoute()" style="width:100%;padding:14px;background:var(--c);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.02em">
+      🚀 Abrir en Google Maps
+    </button>
+  </div>
 </div>
 
 <div class="tabs">
@@ -95,7 +135,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 
 <div id="listView">
   <div class="search-wrap" id="searchWrap">
-    <input type="text" id="searchBox" placeholder="Buscar cliente o dirección..." oninput="filterList(this.value)">
+    <input type="text" id="searchBox" placeholder="🔍 Buscar por cualquier campo..." oninput="filterList(this.value)">
   </div>
   <div id="clientList"></div>
 </div>
@@ -154,7 +194,7 @@ const DATA = [{lat:1.20522,lng:-77.29535,name:"DONDE TO�A",addr:"MZ C CA 3",or
 {lat:1.2055,lng:-77.2947,name:"DEPOCITO LUCIO",addr:"MZ A C A6 NIZA",order:"50",tel:"3102319905",notas:"",horario:"",codigo:"1224299563",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V51","Barrio":"OTROS"}},
 {lat:1.205441,lng:-77.2949,name:"DISTRIASOCIADOS SAS LA UNION",addr:"CR 3 21A 64",order:"51",tel:"3147313945",notas:"",horario:"",codigo:"1224754626",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V56","Barrio":"CENTRO"}},
 {lat:1.205376,lng:-77.295335,name:"MINIMARKET LA CAMPI�A DEL ORIE",addr:"CR 33A 20 30",order:"52",tel:"3102320571",notas:"",horario:"",codigo:"1224828001",extras:{"Preventa":"KA4V24","Reparto Antiguo":"KA4V13","Barrio":"AV LOS ESTUDIANTES"}}];
-const BUILD_TS = '1773167732176'; // fuerza recarga al cambiar contenido
+const BUILD_TS = '1773168155879'; // fuerza recarga al cambiar contenido
 
 // Forzar recarga si el contenido cambió
 const stored = sessionStorage.getItem('map_ts_ka4v51');
@@ -233,8 +273,16 @@ function renderList(items){
 renderList(DATA);
 
 function filterList(q){
-  const f=q.toLowerCase();
-  renderList(DATA.filter(c=>(c.name||'').toLowerCase().includes(f)||(c.addr||'').toLowerCase().includes(f)));
+  const f=q.toLowerCase().trim();
+  if(!f){ renderList(DATA); return; }
+  renderList(DATA.filter(c=>{
+    // Campos fijos
+    const fixed=[c.name,c.addr,c.order,c.codigo,c.horario,c.tel,c.notas]
+      .map(v=>(v||'').toLowerCase()).join(' ');
+    // Columnas extras del excel
+    const extras=Object.values(c.extras||{}).map(v=>(v||'').toLowerCase()).join(' ');
+    return (fixed+' '+extras).includes(f);
+  }));
 }
 
 function focusMarker(lat,lng){
@@ -242,6 +290,71 @@ function focusMarker(lat,lng){
   map.setView([lat,lng],17);
   const m=markers.find(x=>x.lat===lat&&x.lng===lng);
   if(m)m.marker.openPopup();
+}
+
+// ── ENRUTAR ──
+function openEnrutar(){
+  // Ordenar por campo order, los que no tienen orden van al final
+  const sorted=[...DATA].sort((a,b)=>{
+    const na=parseInt(a.order)||9999, nb=parseInt(b.order)||9999;
+    return na-nb;
+  });
+  const stops=sorted.slice(0,10);
+  const preview=document.getElementById('enrutarPreview');
+  preview.innerHTML=stops.map((c,i)=>
+    '<div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid #eee">'
+    +'<span style="font-family:monospace;font-size:10px;color:#aaa;min-width:18px">'+(i+1)+'.</span>'
+    +'<span style="font-size:12px;font-weight:600">'+c.name+'</span>'
+    +'<span style="font-size:11px;color:#888;flex:1;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+c.addr+'</span>'
+    +'</div>'
+  ).join('')+(DATA.length>10?'<div style="font-size:10px;color:#e05000;margin-top:6px">+ '+(DATA.length-10)+' paradas no incluidas</div>':'');
+  const modal=document.getElementById('modalEnrutar');
+  modal.style.display='flex';
+  modal.addEventListener('click', function handler(e){
+    if(e.target===modal){ closeEnrutar(); modal.removeEventListener('click',handler); }
+  });
+}
+
+function closeEnrutar(){
+  document.getElementById('modalEnrutar').style.display='none';
+}
+
+function launchRoute(){
+  const startOpt=document.querySelector('input[name="startOpt"]:checked').value;
+  const sorted=[...DATA].sort((a,b)=>{
+    const na=parseInt(a.order)||9999, nb=parseInt(b.order)||9999;
+    return na-nb;
+  });
+  // Google Maps waypoints: máx 10 intermedios (12 total con origen y destino)
+  const maxWaypoints=10;
+  const stops=sorted.slice(0,maxWaypoints+1); // +1 para destino final
+  const waypoints=stops.slice(0,-1); // intermedios
+  const destination=stops[stops.length-1];
+
+  const destStr=destination.lat+','+destination.lng;
+  const waypointsStr=waypoints.map(c=>c.lat+','+c.lng).join('|');
+
+  let url;
+  if(startOpt==='gps'){
+    // Origen = ubicación actual del GPS
+    url='https://www.google.com/maps/dir/?api=1'
+      +'&destination='+encodeURIComponent(destStr)
+      +(waypointsStr?'&waypoints='+encodeURIComponent(waypointsStr):'')
+      +'&travelmode=driving';
+  } else {
+    // Origen = primera parada
+    const first=stops[0];
+    const rest=stops.slice(1);
+    const dest2=rest[rest.length-1];
+    const wp2=rest.slice(0,-1).map(c=>c.lat+','+c.lng).join('|');
+    url='https://www.google.com/maps/dir/?api=1'
+      +'&origin='+encodeURIComponent(first.lat+','+first.lng)
+      +'&destination='+encodeURIComponent(dest2.lat+','+dest2.lng)
+      +(wp2?'&waypoints='+encodeURIComponent(wp2):'')
+      +'&travelmode=driving';
+  }
+  window.open(url,'_blank');
+  closeEnrutar();
 }
 
 // ── TABS ──

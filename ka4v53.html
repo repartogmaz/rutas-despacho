@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <title>KA4V53 · 10-03-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -13,261 +12,240 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--c:#f72585;--bg:#f5f2eb;--ink:#1a1814;--muted:#8c8680;--surface:#fff;--border:#e2ddd5}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.topbar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
-.route-badge{background:var(--c);color:#fff;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
-.topbar-info{flex:1;min-width:0}
-.topbar-info h1{font-family:'Unbounded',sans-serif;font-size:13px;color:#fff;font-weight:700;line-height:1.2}
-.topbar-info p{font-family:'Space Mono',monospace;font-size:9px;color:#888;margin-top:2px}
-.counter{font-family:'Space Mono',monospace;font-size:11px;color:var(--c);text-align:right;white-space:nowrap}
-.counter span{display:block;font-size:9px;color:#666;margin-top:1px}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.bar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
+.badge{background:var(--c);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;white-space:nowrap}
+.bi{flex:1;min-width:0}.bi h1{font-size:13px;color:#fff;font-weight:700}.bi p{font-size:9px;color:#888;margin-top:2px}
+.ctr{font-size:11px;color:var(--c);text-align:right;white-space:nowrap}.ctr span{display:block;font-size:9px;color:#666}
 .tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
-.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
-.tab.active{color:var(--c);border-bottom-color:var(--c)}
+.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent}
+.tab.on{color:var(--c);border-bottom-color:var(--c)}
 #map{flex:1;display:block}
-#listView{flex:1;overflow-y:auto;display:none;flex-direction:column}
-.search-wrap{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:none}
-#searchBox{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)}
-#searchBox:focus{border-color:var(--c)}
-.client-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer}
-.client-item:active{background:#ece9e0}
-.client-num{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.client-name{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}
-.client-addr{font-size:12px;color:var(--muted);line-height:1.4}
-.client-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
-.btn-nav{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;text-decoration:none}
-.btn-call{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
-.client-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
-.lp-inner{padding:14px;min-width:200px;max-width:290px}
-.lp-badge{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;letter-spacing:.04em}
-.lp-codigo{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px}
-.lp-name{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
-.lp-addr{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4}
-.lp-horario{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
-.lp-actions{display:flex;gap:6px;flex-wrap:wrap}
-.lp-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
-.lp-btn-nav{background:#f72585;color:#fff}
-.lp-btn-call{background:#1a1814;color:#fff}
-.lp-notas{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #f72585;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0;line-height:1.4}
-.lp-extras{margin-top:8px;border-top:1px solid #eee;padding-top:8px;display:flex;flex-direction:column;gap:4px}
-.lp-extra-row{display:flex;gap:6px;font-size:11px}
-.lp-extra-label{font-family:'Space Mono',monospace;font-size:9px;color:#888;min-width:70px;text-transform:uppercase}
-.lp-extra-val{font-weight:600;color:#1a1814;flex:1}
+#lv{flex:1;overflow-y:auto;display:none;flex-direction:column}
+#rv{display:none;flex:1;flex-direction:column;overflow-y:auto;background:var(--bg)}
+.sw{padding:10px 16px;background:#fff;border-bottom:1px solid var(--border)}
+#sb{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;outline:none;background:var(--bg)}
+#sb:focus{border-color:var(--c)}
+.ci{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer}
+.ci:active{background:#ece9e0}
+.cn{width:28px;height:28px;border-radius:50%;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-family:monospace}
+.nm{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}.ad{font-size:12px;color:var(--muted);line-height:1.4}
+.ca{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.bn{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
+.bc{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
+.nt{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
+.pi{padding:14px;min-width:200px;max-width:290px}
+.pb{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px}
+.pc{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px}
+.pn{font-size:15px;font-weight:700;margin-bottom:3px}.pa{font-size:12px;color:var(--muted);margin-bottom:8px}
+.ph{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
+.pax{display:flex;gap:6px;flex-wrap:wrap}
+.pbt{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none}
+.pbtn{background:#f72585;color:#fff}.pbc{background:#1a1814;color:#fff}
+.pno{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #f72585;padding:5px 8px;margin-top:8px;border-radius:0 3px 3px 0}
+.px{margin-top:8px;border-top:1px solid #eee;padding-top:8px}
+.pxr{display:flex;gap:6px;font-size:11px;margin-bottom:3px}
+.pxl{font-size:9px;color:#888;min-width:70px;text-transform:uppercase;font-family:monospace}.pxv{font-weight:600;flex:1}
+.est{margin-top:10px;border-top:1px solid #eee;padding-top:10px}
+.estt{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;font-family:monospace}
+.estb{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.eb{flex:1;padding:8px 4px;border:2px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;text-align:center;background:#fff;white-space:nowrap}
+.eb.e{border-color:#22c55e;background:#f0fdf4;color:#15803d}
+.eb.rt{border-color:#ef4444;background:#fef2f2;color:#b91c1c}
+.eb.rp{border-color:#f59e0b;background:#fffbeb;color:#b45309}
+.ea{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:4px}
+.ea.e{background:#dcfce7;color:#15803d}.ea.rt{background:#fee2e2;color:#b91c1c}.ea.rp{background:#fef3c7;color:#b45309}
 .leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.18)!important;padding:0!important}
-.leaflet-popup-content{margin:0!important}
-.leaflet-popup-tip-container{display:none}
-.leaflet-control-zoom a{background:var(--ink)!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important}
+.leaflet-popup-content{margin:0!important}.leaflet-popup-tip-container{display:none}
+.leaflet-control-zoom a{background:#1a1814!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <div class="route-badge">KA4V53</div>
-  <div class="topbar-info">
-    <h1>Mapa del día</h1>
-    <p>MARTES, 10 DE MARZO DE 2026</p>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-    <div class="counter">93<span>clientes</span></div>
-  </div>
+<div class="bar">
+  <div class="badge">KA4V53</div>
+  <div class="bi"><h1>Mapa del día</h1><p>MARTES, 10 DE MARZO DE 2026</p></div>
+  <div class="ctr">93<span>clientes</span></div>
 </div>
-
-<!-- MODAL ENRUTAR -->
-
 <div class="tabs">
-  <div class="tab active" id="tabMap" onclick="showTab('map')">🗺 Mapa</div>
-  <div class="tab" id="tabList" onclick="showTab('list')">📋 Lista</div>
+  <div class="tab on" id="tM" onclick="sw('m')">&#x1F5FA; Mapa</div>
+  <div class="tab" id="tL" onclick="sw('l')">&#x1F4CB; Lista</div>
+  <div class="tab" id="tR" onclick="sw('r')">&#x1F4CA; Reporte</div>
 </div>
 <div id="map"></div>
-<div id="listView">
-  <div class="search-wrap" id="searchWrap">
-    <input type="text" id="searchBox" placeholder="🔍 Buscar por cualquier campo..." oninput="filterList(this.value)">
-  </div>
-  <div id="clientList"></div>
+<div id="lv">
+  <div class="sw"><input type="text" id="sb" placeholder="&#x1F50D; Buscar..." oninput="fl(this.value)"></div>
+  <div id="cl"></div>
 </div>
-
+<div id="rv">
+  <div style="padding:16px">
+    <div id="rs"></div>
+    <div id="rd"></div>
+    <button onclick="dlr()" style="width:100%;margin-top:16px;padding:13px;background:#1a1814;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">&#x2B07; Descargar Reporte CSV</button>
+  </div>
+</div>
 <script>
-const ROUTE_COLOR='#f72585';
-const DATA=[{lat:1.201005,lng:-77.2798,name:"TIENDA TRUJILLANO",addr:"CR 7 18B 36",order:"1",tel:"3112078839",notas:"",horario:"",codigo:"1224341674",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V52","Barrio":"SENDOYA"}},
-{lat:1.1975,lng:-77.2789,name:"RESTAURANTE SANDRA",addr:"CR 8 11 23",order:"2",tel:"3207596720",notas:"",horario:"",codigo:"1224301948",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.197501,lng:-77.279006,name:"PITER PAN2",addr:"CR 8 11 11",order:"3",tel:"0",notas:"",horario:"",codigo:"1224139598",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1968,lng:-77.279,name:"TIENDA MARY",addr:"CR 7 11 10",order:"4",tel:"3146915166",notas:"",horario:"",codigo:"1224298237",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1968,lng:-77.2792,name:"TIENDA MAGALY",addr:"CR 7 11 08",order:"5",tel:"3136073593",notas:"",horario:"",codigo:"1224736564",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.19691,lng:-77.27922,name:"TIENDA CHAPAL",addr:"CR 7 11 39",order:"6",tel:"3186111811",notas:"",horario:"",codigo:"1224702054",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1976,lng:-77.2795,name:"HOTEL YOPAL",addr:"CL 11 7 47",order:"7",tel:"3155756134",notas:"",horario:"",codigo:"1224320951",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.197776,lng:-77.279501,name:"LORY POLLO",addr:"CL 11 8 16",order:"8",tel:"0",notas:"",horario:"",codigo:"1224764054",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.197967,lng:-77.279267,name:"MINIMARKET PATI",addr:"CL 11 8A 24",order:"9",tel:"3127485537",notas:"",horario:"",codigo:"1224603756",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.197987,lng:-77.279511,name:"FRUTAS Y VERDURAS",addr:"MZ A CA 1",order:"10",tel:"3147478261",notas:"",horario:"",codigo:"1224355875",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.197991,lng:-77.279632,name:"FRUVER",addr:"MZ A CA 2 TERRAZAS DE CHAPAL",order:"11",tel:"3216868571",notas:"",horario:"",codigo:"1224791578",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"OTROS"}},
-{lat:1.196609,lng:-77.282629,name:"AUTOSERVICIO SAN SEBASTIAN",addr:"MZ K CA 12",order:"12",tel:"3175302817",notas:"",horario:"",codigo:"1224541583",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V51","Barrio":"GRANADA 4"}},
-{lat:1.199474,lng:-77.2823,name:"POLLO PFK",addr:"CL 5A 13 02",order:"13",tel:"0",notas:"",horario:"",codigo:"1224573426",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"NUEVA COLOMBIA"}},
-{lat:1.195541,lng:-77.27703,name:"DEPOSITO LA GRAN BODEGA",addr:"CR 5A 12D 04",order:"14",tel:"3127376117",notas:"",horario:"",codigo:"1224326853",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V51","Barrio":"EL PILAR"}},
-{lat:1.194519,lng:-77.27728,name:"CAFETERIA SAYURIS",addr:"CL 12B N 4 B 51",order:"15",tel:"0",notas:"",horario:"",codigo:"1224842216",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.194321,lng:-77.277131,name:"TIENDA ALPHA",addr:"CL 12B 4 117",order:"16",tel:"3161112636",notas:"",horario:"",codigo:"1224676920",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.1943,lng:-77.2773,name:"TDA SARAI",addr:"CL 12 B 4 B 12",order:"17",tel:"0",notas:"",horario:"",codigo:"1210747783",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.194,lng:-77.2773,name:"AURA CASTRO",addr:"CL 12B 4B 38",order:"18",tel:"3113963543",notas:"",horario:"",codigo:"1224347889",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.19416,lng:-77.277318,name:"TIENDA DE MARIANA",addr:"CL 12B 4B 58",order:"19",tel:"3168172313",notas:"",horario:"",codigo:"1224701297",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.19278,lng:-77.27792,name:"ORGANIZACION EMPRESARIAL BYM S",addr:"CR 4 12A 13",order:"20",tel:"3148849247",notas:"",horario:"",codigo:"1224795233",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.1928,lng:-77.2783,name:"TDA SANTANDER",addr:"CR 4 12BIS 16",order:"21",tel:"3175440119",notas:"",horario:"",codigo:"1200932124",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.1928,lng:-77.2786,name:"MOVIL SONIA",addr:"CR 4 12 06",order:"22",tel:"3234828883",notas:"",horario:"",codigo:"1224347885",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},
-{lat:1.192985,lng:-77.279955,name:"RESTAURANTE MARIA EUGENIA",addr:"CR 4 11 46",order:"23",tel:"0",notas:"",horario:"",codigo:"1224142997",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1932,lng:-77.2806,name:"TNDA MARIANITTA CULTID",addr:"CL 11B 3 95",order:"24",tel:"3103994781",notas:"",horario:"",codigo:"1200933335",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1935,lng:-77.2804,name:"TIENDA NEIDY",addr:"CL 11B 4 55",order:"25",tel:"3117277298",notas:"",horario:"",codigo:"1224478779",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1945,lng:-77.2804,name:"TIENDA MARILIN",addr:"KR 4 A 11 - 04",order:"26",tel:"3155870099",notas:"",horario:"",codigo:"1205248435",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"PASTO"}},
-{lat:1.1944,lng:-77.2806,name:"TIENDA MIXTA GLADIS DE BARCO",addr:"CL 11 4 - 125",order:"27",tel:"0",notas:"",horario:"",codigo:"1205248420",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"PRADOS DEL SUR"}},
-{lat:1.1946,lng:-77.2803,name:"TIENDA KIARA",addr:"CR 4 A 11 - 31",order:"28",tel:"3157706170",notas:"",horario:"",codigo:"1205248418",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1942,lng:-77.2802,name:"COMIDAS RAPIDAS",addr:"CL 11A 4 72",order:"29",tel:"3128989279",notas:"",horario:"",codigo:"1224292598",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.194908,lng:-77.279841,name:"TIENDA LILIANA",addr:"CL 11A 4B 121",order:"30",tel:"0",notas:"",horario:"",codigo:"1224070687",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.195,lng:-77.2792,name:"CAFETERIA SAN JUAN",addr:"CL 12 4B- 73",order:"31",tel:"0",notas:"",horario:"",codigo:"1210372112",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1934,lng:-77.2793,name:"DATE EL GUSTO",addr:"CL 12 4 48",order:"32",tel:"0",notas:"",horario:"",codigo:"1224633271",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.192364,lng:-77.279442,name:"COFFE",addr:"CL 12 3 44 CHAPA",order:"33",tel:"3113947126",notas:"",horario:"",codigo:"1224323710",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.192305,lng:-77.279393,name:"FUENTE DE SODA SAN PABLO",addr:"CL 12 3A 43",order:"34",tel:"0",notas:"",horario:"",codigo:"1224566114",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1925,lng:-77.2792,name:"PASTEL PAN",addr:"CL 12 4 17",order:"35",tel:"3187447842",notas:"",horario:"",codigo:"1210244244",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1951,lng:-77.2788,name:"CANCHAS DE SAPO LAS DELICIAS",addr:"CR 5 12 53",order:"36",tel:"3187486274",notas:"",horario:"",codigo:"1224320048",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.196455,lng:-77.278838,name:"MASITAS PANADERIA",addr:"CL 12 6 39",order:"37",tel:"3136416349",notas:"",horario:"",codigo:"1224142966",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},
-{lat:1.1993,lng:-77.2715,name:"CANCHA SINTETICA LOS SUPER CAM",addr:"CR 9 16 100",order:"38",tel:"3148895375",notas:"",horario:"",codigo:"1224479423",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"AVENIDA CHILE"}},
-{lat:1.1984,lng:-77.27,name:"TIENDA NATHALY",addr:"CR 7B 31 EMILIO BOTERO",order:"39",tel:"0",notas:"",horario:"",codigo:"1224648408",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"EMILIO BOTERO"}},
-{lat:1.1954,lng:-77.2675,name:"SHALOMN VARIEDADES",addr:"DG 17 1A 32 FRENTE COMFAMILIAR",order:"40",tel:"0",notas:"",horario:"",codigo:"1224338680",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},
-{lat:1.194805,lng:-77.26755,name:"PAOLA ANDREA PAZ MORENO",addr:"DG 16 D 1 52",order:"41",tel:"0",notas:"",horario:"",codigo:"1224826752",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},
-{lat:1.19501,lng:-77.26773,name:"RESTAURANTE  LA TOSCANA 2",addr:"CR 2E 16D 11 MIRAFLORES",order:"42",tel:"3112052411",notas:"",horario:"",codigo:"1224809609",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},
-{lat:1.1944,lng:-77.2673,name:"TIENDA DO�A MILEN",addr:"CR 1A 16 C 23",order:"43",tel:"3003750331",notas:"",horario:"",codigo:"1210701876",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},
-{lat:1.19418,lng:-77.26695,name:"GRANJA DE LA COCHA",addr:"DG 16C 1E 17",order:"44",tel:"3233231166",notas:"",horario:"",codigo:"1224821697",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},
-{lat:1.1946,lng:-77.2678,name:"TIENDA LA ESQUINA",addr:"DG 16C 2 05",order:"45",tel:"3155596439",notas:"",horario:"",codigo:"1224488925",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},
-{lat:1.198424,lng:-77.2724,name:"DEPOSITO DAVID",addr:"CL 15 7B 51",order:"46",tel:"3152686113",notas:"",horario:"",codigo:"1224386914",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V52","Barrio":"EL PROGRESO"}},
-{lat:1.198424,lng:-77.2724,name:"DISTRIBUCIONES ANDRADE",addr:"CR 8 16 37",order:"47",tel:"3102320593",notas:"",horario:"",codigo:"1224423095",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V53","Barrio":"POTRERILLO"}},
-{lat:1.198307,lng:-77.27236,name:"TIENDA IMELDA",addr:"CL 12A 6 E 249",order:"48",tel:"0",notas:"",horario:"",codigo:"1224851970",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"0"}},
-{lat:1.198295,lng:-77.27177,name:"DEPOSITO BASTIDAS",addr:"KR 7B 15 A 19",order:"49",tel:"3206942389",notas:"",horario:"",codigo:"1203704268",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V53","Barrio":"EL PROGRESO"}},
-{lat:1.197981,lng:-77.27138,name:"DEPOSITO MERCADIARIO GUATIARA",addr:"CR 7 16 73 LC 3",order:"50",tel:"3108293724",notas:"",horario:"",codigo:"1224256149",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V53","Barrio":"POTRERILLO"}},
-{lat:1.1988,lng:-77.271,name:"PARQUEADERO LA 9",addr:"CL 16 A 8 25",order:"51",tel:"3108439723",notas:"",horario:"",codigo:"1224373366",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"POTRERILLO"}},
-{lat:1.1985,lng:-77.2689,name:"LAS BRISAS LCAL 140",addr:"TERM TRANSPORTE",order:"52",tel:"3186415404",notas:"",horario:"",codigo:"1224118931",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"MADRIGAL"}},
-{lat:1.1985,lng:-77.2689,name:"XAN JUAN",addr:"TERMINAL TRANSPORTE LC 138",order:"53",tel:"0",notas:"",horario:"",codigo:"1224114212",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"MADRIGAL"}},
-{lat:1.19847,lng:-77.26877,name:"CASINO SUPER STAR",addr:"TER TRASPORTE PASTO LC 220",order:"54",tel:"0",notas:"",horario:"",codigo:"1224462831",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"MADRIGAL"}},
-{lat:1.1983,lng:-77.2691,name:"MISELANEA ANA",addr:"CRA 7 17 LOCAL 146",order:"55",tel:"3194801684",notas:"",horario:"",codigo:"1210713670",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.198287,lng:-77.269262,name:"COFFE STAR",addr:"TERMINAL DE TRANSP",order:"56",tel:"3146597557",notas:"",horario:"",codigo:"1224773266",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1982,lng:-77.2692,name:"VARIEDADES SARITA J1",addr:"LC 139C TERMINAL DE TRANSPORTE",order:"57",tel:"3136385992",notas:"",horario:"",codigo:"1224720296",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},
-{lat:1.1984,lng:-77.2694,name:"XAN JUAN",addr:"TER TRANSPORTES LC 135A",order:"58",tel:"3156013732",notas:"",horario:"",codigo:"1224054281",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1984,lng:-77.2696,name:"CRISTAL CREAM HELADERIA",addr:"LC 154 TER DE TRANSPORTE",order:"59",tel:"3216114914",notas:"",horario:"",codigo:"1224415768",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.198397,lng:-77.26947,name:"TERMINAL LC 120",addr:"CR 6 16D 50",order:"60",tel:"0",notas:"",horario:"",codigo:"1224848446",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"EL TERMINAL"}},
-{lat:1.1983,lng:-77.2693,name:"TENTACIONES",addr:"TER DE TRANSPORTE LC 104",order:"61",tel:"0",notas:"",horario:"",codigo:"1224365350",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"MISCELANEA EXITO",addr:"TER DE TRANSPORTE LC 128",order:"62",tel:"3166818256",notas:"",horario:"",codigo:"1224365328",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"YOLANDA",addr:"TER DE TRASPORTE LC 130",order:"63",tel:"3174977788",notas:"",horario:"",codigo:"1224365327",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"PAN CREMA",addr:"TER DE TRANSPORTES LC 132",order:"64",tel:"3177893646",notas:"",horario:"",codigo:"1224365326",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"CAFETERIA DONAL",addr:"TER DE TRASPORTES LC 153",order:"65",tel:"3137217196",notas:"",horario:"",codigo:"1224365325",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"MISCELANEA CAICEDOS",addr:"TER DE TRANSPORTES LC 145",order:"66",tel:"3235075078",notas:"",horario:"",codigo:"1224365304",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"RESTAURANTE EL RINCONCITO",addr:"TER DE TRANSPORTES LC 1440",order:"67",tel:"3172919361",notas:"",horario:"",codigo:"1224365303",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"TAXI",addr:"TER DE TRANSPORTES LC 143",order:"68",tel:"3166295181",notas:"",horario:"",codigo:"1224365302",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2693,name:"MICELANEA JUAN PABLO SEGUNDO",addr:"LC 127",order:"69",tel:"0",notas:"",horario:"",codigo:"1224292936",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1983,lng:-77.2695,name:"LA SUBASTA",addr:"TERMINAL TRASPORTE LC 134",order:"70",tel:"3156013732",notas:"",horario:"",codigo:"1224327196",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.19826,lng:-77.26931,name:"MECATO PASTUSO",addr:"TERMINAL DE TRANSPORTES LC 107",order:"71",tel:"0",notas:"",horario:"",codigo:"1224753920",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1982,lng:-77.2694,name:"RESTAURANTE UNICENTRO",addr:"TERMINAL DE TRANPORTE LC 233",order:"72",tel:"3218243423",notas:"",horario:"",codigo:"1224337562",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1982,lng:-77.2694,name:"CAFETERIA SIDAMO",addr:"TERM LC 124",order:"73",tel:"3187039754",notas:"",horario:"",codigo:"1224318871",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1987,lng:-77.2692,name:"VARIEDADES SARITA",addr:"LICAL 010 SEC ENCOMIENDAS",order:"74",tel:"3136385992",notas:"",horario:"",codigo:"1224297856",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1985,lng:-77.2692,name:"RESTAURANTE Y CAFETERIA LAURIT",addr:"TERM DE TRANSPORTE LC 133",order:"75",tel:"3145883707",notas:"",horario:"",codigo:"1224340317",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1993,lng:-77.2691,name:"CAFETERIA MIRAMAR",addr:"TERMINAL DE TRANPORTE LC 227",order:"76",tel:"3117917292",notas:"",horario:"",codigo:"1224331524",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.1993,lng:-77.2691,name:"REAL COFFE",addr:"CR 7 TERM DE TRANSPORTE",order:"77",tel:"0",notas:"",horario:"",codigo:"1224245900",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},
-{lat:1.1996,lng:-77.2689,name:"DELEITE CAFETERIA",addr:"LOCAL 106 TERMINAL TRANSPORTE",order:"78",tel:"3136601843",notas:"",horario:"",codigo:"1200935723",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.199325,lng:-77.269497,name:"VARIEDADES NAPOLES",addr:"CR 6A 16D 50 LC 110-111",order:"79",tel:"0",notas:"",horario:"",codigo:"1200935726",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.199312,lng:-77.269478,name:"DELY EXPRESS 1 COMIDAS RAPIDAS",addr:"TER DE TRASNPORTE LC 135",order:"80",tel:"0",notas:"",horario:"",codigo:"1210552531",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"SAN FERNANDO"}},
-{lat:1.1996,lng:-77.2706,name:"EL MIRADOR",addr:"KR 8 NUMERO 16 ESQUINA",order:"81",tel:"3226324309",notas:"",horario:"",codigo:"1210740652",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"VENECIA"}},
-{lat:1.199682,lng:-77.270771,name:"MECATOS SAMY",addr:"TERM MIXTO LC 5",order:"82",tel:"3185354881",notas:"",horario:"",codigo:"1224318879",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},
-{lat:1.2002,lng:-77.2709,name:"RESGAURANTE EL MOTORISTA",addr:"CL 17 8 45",order:"83",tel:"3116983131",notas:"",horario:"",codigo:"1200938744",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},
-{lat:1.2001,lng:-77.2707,name:"TIENDA LA REBANCHA",addr:"CL 17 8 - 38",order:"84",tel:"0",notas:"",horario:"",codigo:"1205248941",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},
-{lat:1.1999,lng:-77.2705,name:"TIENDA ESPANA",addr:"CL 17 8 - 09",order:"85",tel:"0",notas:"",horario:"",codigo:"1205248939",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},
-{lat:1.202274,lng:-77.274588,name:"PANADERIA DE MANTEQUILLA",addr:"CL 16 12 30",order:"86",tel:"3156658203",notas:"",horario:"",codigo:"1224123871",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"FATIMA"}},
-{lat:1.2016,lng:-77.275,name:"COFFEE CRISS",addr:"CL 15 11 - 64",order:"87",tel:"0",notas:"",horario:"",codigo:"1205248962",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS LUNAS 2"}},
-{lat:1.20139,lng:-77.275538,name:"VARIEDADES MABEG",addr:"CR 12 15 21",order:"88",tel:"3103921869",notas:"",horario:"",codigo:"1224741193",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS I II III"}},
-{lat:1.20176,lng:-77.27529,name:"SURTIECONOMICO LAS VIOLETAS",addr:"CL 15 12 13",order:"89",tel:"3104585954",notas:"",horario:"",codigo:"1224814490",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V12","Barrio":"LAS VIOLETAS"}},
-{lat:1.202146,lng:-77.27628,name:"BODEGA LAS VIOLETAS",addr:"CR 13 13B 87",order:"90",tel:"3102319971",notas:"",horario:"",codigo:"1224385932",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS 3"}},
-{lat:1.20181,lng:-77.27726,name:"SUPERTIENDA LAS VIOLETAS",addr:"CR 13 13B 63",order:"91",tel:"3167646649",notas:"",horario:"",codigo:"1224759069",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS 3"}},
-{lat:1.202931,lng:-77.277349,name:"TIENSA JENYS 2",addr:"CR 13C 13A 53",order:"92",tel:"0",notas:"",horario:"",codigo:"1224339694",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS"}},
-{lat:1.2035,lng:-77.2775,name:"LA VINA PANIFICADORA",addr:"CR 14 14 61A",order:"93",tel:"0",notas:"",horario:"",codigo:"1200930683",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V12","Barrio":"AVENIDA CHAMPAGNAT"}}];
-const BUILD_TS='1773175200795';
-const stored=sessionStorage.getItem('map_ts_ka4v53');
-if(stored && stored!==BUILD_TS){ sessionStorage.setItem('map_ts_ka4v53',BUILD_TS); location.reload(true); }
-else{ sessionStorage.setItem('map_ts_ka4v53',BUILD_TS); }
-
-const map=L.map('map',{zoomControl:false}).setView([1.1973863225806458,-77.27398297849462],13);
-L.control.zoom({position:'bottomright'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
-
-function makeIcon(order){
-  var n=order||'',fs=String(n).length>2?8:10;
-  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42"><path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="'+ROUTE_COLOR+'" filter="drop-shadow(0 2px 4px rgba(0,0,0,.3))"/><circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/><text x="16" y="20.5" text-anchor="middle" font-size="'+fs+'" font-family="monospace" font-weight="700" fill="#fff">'+n+'</text></svg>';
-  return L.divIcon({html:'<div>'+svg+'</div>',iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-42],className:''});
+var RC="#f72585";
+var D=[{lat:1.201005,lng:-77.2798,name:"TIENDA TRUJILLANO",addr:"CR 7 18B 36",order:"1",tel:"3112078839",notas:"",horario:"",codigo:"1224341674",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V52","Barrio":"SENDOYA"}},{lat:1.1975,lng:-77.2789,name:"RESTAURANTE SANDRA",addr:"CR 8 11 23",order:"2",tel:"3207596720",notas:"",horario:"",codigo:"1224301948",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.197501,lng:-77.279006,name:"PITER PAN2",addr:"CR 8 11 11",order:"3",tel:"0",notas:"",horario:"",codigo:"1224139598",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1968,lng:-77.279,name:"TIENDA MARY",addr:"CR 7 11 10",order:"4",tel:"3146915166",notas:"",horario:"",codigo:"1224298237",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1968,lng:-77.2792,name:"TIENDA MAGALY",addr:"CR 7 11 08",order:"5",tel:"3136073593",notas:"",horario:"",codigo:"1224736564",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.19691,lng:-77.27922,name:"TIENDA CHAPAL",addr:"CR 7 11 39",order:"6",tel:"3186111811",notas:"",horario:"",codigo:"1224702054",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1976,lng:-77.2795,name:"HOTEL YOPAL",addr:"CL 11 7 47",order:"7",tel:"3155756134",notas:"",horario:"",codigo:"1224320951",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.197776,lng:-77.279501,name:"LORY POLLO",addr:"CL 11 8 16",order:"8",tel:"0",notas:"",horario:"",codigo:"1224764054",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.197967,lng:-77.279267,name:"MINIMARKET PATI",addr:"CL 11 8A 24",order:"9",tel:"3127485537",notas:"",horario:"",codigo:"1224603756",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.197987,lng:-77.279511,name:"FRUTAS Y VERDURAS",addr:"MZ A CA 1",order:"10",tel:"3147478261",notas:"",horario:"",codigo:"1224355875",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.197991,lng:-77.279632,name:"FRUVER",addr:"MZ A CA 2 TERRAZAS DE CHAPAL",order:"11",tel:"3216868571",notas:"",horario:"",codigo:"1224791578",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"OTROS"}},{lat:1.196609,lng:-77.282629,name:"AUTOSERVICIO SAN SEBASTIAN",addr:"MZ K CA 12",order:"12",tel:"3175302817",notas:"",horario:"",codigo:"1224541583",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V51","Barrio":"GRANADA 4"}},{lat:1.199474,lng:-77.2823,name:"POLLO PFK",addr:"CL 5A 13 02",order:"13",tel:"0",notas:"",horario:"",codigo:"1224573426",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"NUEVA COLOMBIA"}},{lat:1.195541,lng:-77.27703,name:"DEPOSITO LA GRAN BODEGA",addr:"CR 5A 12D 04",order:"14",tel:"3127376117",notas:"",horario:"",codigo:"1224326853",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V51","Barrio":"EL PILAR"}},{lat:1.194519,lng:-77.27728,name:"CAFETERIA SAYURIS",addr:"CL 12B N 4 B 51",order:"15",tel:"0",notas:"",horario:"",codigo:"1224842216",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.194321,lng:-77.277131,name:"TIENDA ALPHA",addr:"CL 12B 4 117",order:"16",tel:"3161112636",notas:"",horario:"",codigo:"1224676920",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.1943,lng:-77.2773,name:"TDA SARAI",addr:"CL 12 B 4 B 12",order:"17",tel:"0",notas:"",horario:"",codigo:"1210747783",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.194,lng:-77.2773,name:"AURA CASTRO",addr:"CL 12B 4B 38",order:"18",tel:"3113963543",notas:"",horario:"",codigo:"1224347889",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.19416,lng:-77.277318,name:"TIENDA DE MARIANA",addr:"CL 12B 4B 58",order:"19",tel:"3168172313",notas:"",horario:"",codigo:"1224701297",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.19278,lng:-77.27792,name:"ORGANIZACION EMPRESARIAL BYM S",addr:"CR 4 12A 13",order:"20",tel:"3148849247",notas:"",horario:"",codigo:"1224795233",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.1928,lng:-77.2783,name:"TDA SANTANDER",addr:"CR 4 12BIS 16",order:"21",tel:"3175440119",notas:"",horario:"",codigo:"1200932124",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.1928,lng:-77.2786,name:"MOVIL SONIA",addr:"CR 4 12 06",order:"22",tel:"3234828883",notas:"",horario:"",codigo:"1224347885",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"EL PILAR"}},{lat:1.192985,lng:-77.279955,name:"RESTAURANTE MARIA EUGENIA",addr:"CR 4 11 46",order:"23",tel:"0",notas:"",horario:"",codigo:"1224142997",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1932,lng:-77.2806,name:"TNDA MARIANITTA CULTID",addr:"CL 11B 3 95",order:"24",tel:"3103994781",notas:"",horario:"",codigo:"1200933335",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1935,lng:-77.2804,name:"TIENDA NEIDY",addr:"CL 11B 4 55",order:"25",tel:"3117277298",notas:"",horario:"",codigo:"1224478779",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1945,lng:-77.2804,name:"TIENDA MARILIN",addr:"KR 4 A 11 - 04",order:"26",tel:"3155870099",notas:"",horario:"",codigo:"1205248435",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"PASTO"}},{lat:1.1944,lng:-77.2806,name:"TIENDA MIXTA GLADIS DE BARCO",addr:"CL 11 4 - 125",order:"27",tel:"0",notas:"",horario:"",codigo:"1205248420",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"PRADOS DEL SUR"}},{lat:1.1946,lng:-77.2803,name:"TIENDA KIARA",addr:"CR 4 A 11 - 31",order:"28",tel:"3157706170",notas:"",horario:"",codigo:"1205248418",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1942,lng:-77.2802,name:"COMIDAS RAPIDAS",addr:"CL 11A 4 72",order:"29",tel:"3128989279",notas:"",horario:"",codigo:"1224292598",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.194908,lng:-77.279841,name:"TIENDA LILIANA",addr:"CL 11A 4B 121",order:"30",tel:"0",notas:"",horario:"",codigo:"1224070687",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.195,lng:-77.2792,name:"CAFETERIA SAN JUAN",addr:"CL 12 4B- 73",order:"31",tel:"0",notas:"",horario:"",codigo:"1210372112",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1934,lng:-77.2793,name:"DATE EL GUSTO",addr:"CL 12 4 48",order:"32",tel:"0",notas:"",horario:"",codigo:"1224633271",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.192364,lng:-77.279442,name:"COFFE",addr:"CL 12 3 44 CHAPA",order:"33",tel:"3113947126",notas:"",horario:"",codigo:"1224323710",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.192305,lng:-77.279393,name:"FUENTE DE SODA SAN PABLO",addr:"CL 12 3A 43",order:"34",tel:"0",notas:"",horario:"",codigo:"1224566114",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1925,lng:-77.2792,name:"PASTEL PAN",addr:"CL 12 4 17",order:"35",tel:"3187447842",notas:"",horario:"",codigo:"1210244244",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1951,lng:-77.2788,name:"CANCHAS DE SAPO LAS DELICIAS",addr:"CR 5 12 53",order:"36",tel:"3187486274",notas:"",horario:"",codigo:"1224320048",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.196455,lng:-77.278838,name:"MASITAS PANADERIA",addr:"CL 12 6 39",order:"37",tel:"3136416349",notas:"",horario:"",codigo:"1224142966",extras:{"Preventa":"KA4V27","Reparto Antiguo":"KA4V52","Barrio":"CHAPAL"}},{lat:1.1993,lng:-77.2715,name:"CANCHA SINTETICA LOS SUPER CAM",addr:"CR 9 16 100",order:"38",tel:"3148895375",notas:"",horario:"",codigo:"1224479423",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"AVENIDA CHILE"}},{lat:1.1984,lng:-77.27,name:"TIENDA NATHALY",addr:"CR 7B 31 EMILIO BOTERO",order:"39",tel:"0",notas:"",horario:"",codigo:"1224648408",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"EMILIO BOTERO"}},{lat:1.1954,lng:-77.2675,name:"SHALOMN VARIEDADES",addr:"DG 17 1A 32 FRENTE COMFAMILIAR",order:"40",tel:"0",notas:"",horario:"",codigo:"1224338680",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},{lat:1.194805,lng:-77.26755,name:"PAOLA ANDREA PAZ MORENO",addr:"DG 16 D 1 52",order:"41",tel:"0",notas:"",horario:"",codigo:"1224826752",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},{lat:1.19501,lng:-77.26773,name:"RESTAURANTE  LA TOSCANA 2",addr:"CR 2E 16D 11 MIRAFLORES",order:"42",tel:"3112052411",notas:"",horario:"",codigo:"1224809609",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},{lat:1.1944,lng:-77.2673,name:"TIENDA DO�A MILEN",addr:"CR 1A 16 C 23",order:"43",tel:"3003750331",notas:"",horario:"",codigo:"1210701876",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},{lat:1.19418,lng:-77.26695,name:"GRANJA DE LA COCHA",addr:"DG 16C 1E 17",order:"44",tel:"3233231166",notas:"",horario:"",codigo:"1224821697",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},{lat:1.1946,lng:-77.2678,name:"TIENDA LA ESQUINA",addr:"DG 16C 2 05",order:"45",tel:"3155596439",notas:"",horario:"",codigo:"1224488925",extras:{"Preventa":"KA4V30","Reparto Antiguo":"KA4V53","Barrio":"MIRAFLORES"}},{lat:1.198424,lng:-77.2724,name:"DEPOSITO DAVID",addr:"CL 15 7B 51",order:"46",tel:"3152686113",notas:"",horario:"",codigo:"1224386914",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V52","Barrio":"EL PROGRESO"}},{lat:1.198424,lng:-77.2724,name:"DISTRIBUCIONES ANDRADE",addr:"CR 8 16 37",order:"47",tel:"3102320593",notas:"",horario:"",codigo:"1224423095",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V53","Barrio":"POTRERILLO"}},{lat:1.198307,lng:-77.27236,name:"TIENDA IMELDA",addr:"CL 12A 6 E 249",order:"48",tel:"0",notas:"",horario:"",codigo:"1224851970",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"0"}},{lat:1.198295,lng:-77.27177,name:"DEPOSITO BASTIDAS",addr:"KR 7B 15 A 19",order:"49",tel:"3206942389",notas:"",horario:"",codigo:"1203704268",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V53","Barrio":"EL PROGRESO"}},{lat:1.197981,lng:-77.27138,name:"DEPOSITO MERCADIARIO GUATIARA",addr:"CR 7 16 73 LC 3",order:"50",tel:"3108293724",notas:"",horario:"",codigo:"1224256149",extras:{"Preventa":"KA4V66","Reparto Antiguo":"KA4V53","Barrio":"POTRERILLO"}},{lat:1.1988,lng:-77.271,name:"PARQUEADERO LA 9",addr:"CL 16 A 8 25",order:"51",tel:"3108439723",notas:"",horario:"",codigo:"1224373366",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"POTRERILLO"}},{lat:1.1985,lng:-77.2689,name:"LAS BRISAS LCAL 140",addr:"TERM TRANSPORTE",order:"52",tel:"3186415404",notas:"",horario:"",codigo:"1224118931",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"MADRIGAL"}},{lat:1.1985,lng:-77.2689,name:"XAN JUAN",addr:"TERMINAL TRANSPORTE LC 138",order:"53",tel:"0",notas:"",horario:"",codigo:"1224114212",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"MADRIGAL"}},{lat:1.19847,lng:-77.26877,name:"CASINO SUPER STAR",addr:"TER TRASPORTE PASTO LC 220",order:"54",tel:"0",notas:"",horario:"",codigo:"1224462831",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"MADRIGAL"}},{lat:1.1983,lng:-77.2691,name:"MISELANEA ANA",addr:"CRA 7 17 LOCAL 146",order:"55",tel:"3194801684",notas:"",horario:"",codigo:"1210713670",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.198287,lng:-77.269262,name:"COFFE STAR",addr:"TERMINAL DE TRANSP",order:"56",tel:"3146597557",notas:"",horario:"",codigo:"1224773266",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1982,lng:-77.2692,name:"VARIEDADES SARITA J1",addr:"LC 139C TERMINAL DE TRANSPORTE",order:"57",tel:"3136385992",notas:"",horario:"",codigo:"1224720296",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},{lat:1.1984,lng:-77.2694,name:"XAN JUAN",addr:"TER TRANSPORTES LC 135A",order:"58",tel:"3156013732",notas:"",horario:"",codigo:"1224054281",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1984,lng:-77.2696,name:"CRISTAL CREAM HELADERIA",addr:"LC 154 TER DE TRANSPORTE",order:"59",tel:"3216114914",notas:"",horario:"",codigo:"1224415768",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.198397,lng:-77.26947,name:"TERMINAL LC 120",addr:"CR 6 16D 50",order:"60",tel:"0",notas:"",horario:"",codigo:"1224848446",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"EL TERMINAL"}},{lat:1.1983,lng:-77.2693,name:"TENTACIONES",addr:"TER DE TRANSPORTE LC 104",order:"61",tel:"0",notas:"",horario:"",codigo:"1224365350",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"MISCELANEA EXITO",addr:"TER DE TRANSPORTE LC 128",order:"62",tel:"3166818256",notas:"",horario:"",codigo:"1224365328",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"YOLANDA",addr:"TER DE TRASPORTE LC 130",order:"63",tel:"3174977788",notas:"",horario:"",codigo:"1224365327",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"PAN CREMA",addr:"TER DE TRANSPORTES LC 132",order:"64",tel:"3177893646",notas:"",horario:"",codigo:"1224365326",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"CAFETERIA DONAL",addr:"TER DE TRASPORTES LC 153",order:"65",tel:"3137217196",notas:"",horario:"",codigo:"1224365325",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"MISCELANEA CAICEDOS",addr:"TER DE TRANSPORTES LC 145",order:"66",tel:"3235075078",notas:"",horario:"",codigo:"1224365304",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"RESTAURANTE EL RINCONCITO",addr:"TER DE TRANSPORTES LC 1440",order:"67",tel:"3172919361",notas:"",horario:"",codigo:"1224365303",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"TAXI",addr:"TER DE TRANSPORTES LC 143",order:"68",tel:"3166295181",notas:"",horario:"",codigo:"1224365302",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2693,name:"MICELANEA JUAN PABLO SEGUNDO",addr:"LC 127",order:"69",tel:"0",notas:"",horario:"",codigo:"1224292936",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1983,lng:-77.2695,name:"LA SUBASTA",addr:"TERMINAL TRASPORTE LC 134",order:"70",tel:"3156013732",notas:"",horario:"",codigo:"1224327196",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.19826,lng:-77.26931,name:"MECATO PASTUSO",addr:"TERMINAL DE TRANSPORTES LC 107",order:"71",tel:"0",notas:"",horario:"",codigo:"1224753920",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1982,lng:-77.2694,name:"RESTAURANTE UNICENTRO",addr:"TERMINAL DE TRANPORTE LC 233",order:"72",tel:"3218243423",notas:"",horario:"",codigo:"1224337562",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1982,lng:-77.2694,name:"CAFETERIA SIDAMO",addr:"TERM LC 124",order:"73",tel:"3187039754",notas:"",horario:"",codigo:"1224318871",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1987,lng:-77.2692,name:"VARIEDADES SARITA",addr:"LICAL 010 SEC ENCOMIENDAS",order:"74",tel:"3136385992",notas:"",horario:"",codigo:"1224297856",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1985,lng:-77.2692,name:"RESTAURANTE Y CAFETERIA LAURIT",addr:"TERM DE TRANSPORTE LC 133",order:"75",tel:"3145883707",notas:"",horario:"",codigo:"1224340317",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1993,lng:-77.2691,name:"CAFETERIA MIRAMAR",addr:"TERMINAL DE TRANPORTE LC 227",order:"76",tel:"3117917292",notas:"",horario:"",codigo:"1224331524",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.1993,lng:-77.2691,name:"REAL COFFE",addr:"CR 7 TERM DE TRANSPORTE",order:"77",tel:"0",notas:"",horario:"",codigo:"1224245900",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},{lat:1.1996,lng:-77.2689,name:"DELEITE CAFETERIA",addr:"LOCAL 106 TERMINAL TRANSPORTE",order:"78",tel:"3136601843",notas:"",horario:"",codigo:"1200935723",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.199325,lng:-77.269497,name:"VARIEDADES NAPOLES",addr:"CR 6A 16D 50 LC 110-111",order:"79",tel:"0",notas:"",horario:"",codigo:"1200935726",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.199312,lng:-77.269478,name:"DELY EXPRESS 1 COMIDAS RAPIDAS",addr:"TER DE TRASNPORTE LC 135",order:"80",tel:"0",notas:"",horario:"",codigo:"1210552531",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"SAN FERNANDO"}},{lat:1.1996,lng:-77.2706,name:"EL MIRADOR",addr:"KR 8 NUMERO 16 ESQUINA",order:"81",tel:"3226324309",notas:"",horario:"",codigo:"1210740652",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V52","Barrio":"VENECIA"}},{lat:1.199682,lng:-77.270771,name:"MECATOS SAMY",addr:"TERM MIXTO LC 5",order:"82",tel:"3185354881",notas:"",horario:"",codigo:"1224318879",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"TERMINAL DE TRANSP"}},{lat:1.2002,lng:-77.2709,name:"RESGAURANTE EL MOTORISTA",addr:"CL 17 8 45",order:"83",tel:"3116983131",notas:"",horario:"",codigo:"1200938744",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},{lat:1.2001,lng:-77.2707,name:"TIENDA LA REBANCHA",addr:"CL 17 8 - 38",order:"84",tel:"0",notas:"",horario:"",codigo:"1205248941",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},{lat:1.1999,lng:-77.2705,name:"TIENDA ESPANA",addr:"CL 17 8 - 09",order:"85",tel:"0",notas:"",horario:"",codigo:"1205248939",extras:{"Preventa":"KA4V28","Reparto Antiguo":"KA4V53","Barrio":"VENECIA"}},{lat:1.202274,lng:-77.274588,name:"PANADERIA DE MANTEQUILLA",addr:"CL 16 12 30",order:"86",tel:"3156658203",notas:"",horario:"",codigo:"1224123871",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"FATIMA"}},{lat:1.2016,lng:-77.275,name:"COFFEE CRISS",addr:"CL 15 11 - 64",order:"87",tel:"0",notas:"",horario:"",codigo:"1205248962",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS LUNAS 2"}},{lat:1.20139,lng:-77.275538,name:"VARIEDADES MABEG",addr:"CR 12 15 21",order:"88",tel:"3103921869",notas:"",horario:"",codigo:"1224741193",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS I II III"}},{lat:1.20176,lng:-77.27529,name:"SURTIECONOMICO LAS VIOLETAS",addr:"CL 15 12 13",order:"89",tel:"3104585954",notas:"",horario:"",codigo:"1224814490",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V12","Barrio":"LAS VIOLETAS"}},{lat:1.202146,lng:-77.27628,name:"BODEGA LAS VIOLETAS",addr:"CR 13 13B 87",order:"90",tel:"3102319971",notas:"",horario:"",codigo:"1224385932",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS 3"}},{lat:1.20181,lng:-77.27726,name:"SUPERTIENDA LAS VIOLETAS",addr:"CR 13 13B 63",order:"91",tel:"3167646649",notas:"",horario:"",codigo:"1224759069",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS 3"}},{lat:1.202931,lng:-77.277349,name:"TIENSA JENYS 2",addr:"CR 13C 13A 53",order:"92",tel:"0",notas:"",horario:"",codigo:"1224339694",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V52","Barrio":"LAS VIOLETAS"}},{lat:1.2035,lng:-77.2775,name:"LA VINA PANIFICADORA",addr:"CR 14 14 61A",order:"93",tel:"0",notas:"",horario:"",codigo:"1200930683",extras:{"Preventa":"KA4V22","Reparto Antiguo":"KA4V12","Barrio":"AVENIDA CHAMPAGNAT"}}];
+var BT="1773176589443";
+var _ss=sessionStorage.getItem("t_ka4v53");
+if(_ss&&_ss!==BT){sessionStorage.setItem("t_ka4v53",BT);location.reload(true);}
+else{sessionStorage.setItem("t_ka4v53",BT);}
+var SC={e:"#22c55e",rt:"#ef4444",rp:"#f59e0b"};
+var SK="st_ka4v53";
+var E=JSON.parse(localStorage.getItem(SK)||"{}");
+function sE(){localStorage.setItem(SK,JSON.stringify(E));}
+function ck(c){return c.lat+"_"+c.lng+"_"+(c.order||"");}
+function mi(o,s){
+  var n=o||"",fs=String(n).length>2?8:10;
+  var col=(s&&SC[s])?SC[s]:RC;
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42">'
+    +'<path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="'+col+'"/>'
+    +'<circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/>'
+    +'<text x="16" y="20.5" text-anchor="middle" font-size="'+fs+'" font-family="monospace" font-weight="700" fill="#fff">'+n+'</text></svg>';
+  return L.divIcon({html:"<div>"+svg+"</div>",iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-42],className:""});
 }
-
-var markers=[];
-DATA.forEach(function(c){
-  var m=L.marker([c.lat,c.lng],{icon:makeIcon(c.order)});
+var map=L.map("map",{zoomControl:false}).setView([1.197386,-77.273983],13);
+L.control.zoom({position:"bottomright"}).addTo(map);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{maxZoom:19}).addTo(map);
+var MK=[];
+D.forEach(function(c){
+  var k=ck(c),st=E[k]?E[k].s:null;
+  var m=L.marker([c.lat,c.lng],{icon:mi(c.order,st)});
   m.bindPopup(function(){
-    var extraRows=c.extras&&Object.keys(c.extras).length
-      ?'<div class="lp-extras">'+Object.entries(c.extras).map(function(e){return '<div class="lp-extra-row"><span class="lp-extra-label">'+e[0]+'</span><span class="lp-extra-val">'+e[1]+'</span></div>';}).join('')+'</div>':'';
-    return '<div class="lp-inner">'
-      +'<div><span class="lp-badge">Parada '+(c.order||'—')+'</span>'+(c.codigo?'<span class="lp-codigo">COD: '+c.codigo+'</span>':'')+'</div>'
-      +'<div class="lp-name">'+c.name+'</div>'
-      +'<div class="lp-addr">'+(c.addr||'')+'</div>'
-      +(c.horario?'<div class="lp-horario">🕐 '+c.horario+'</div>':'')
-      +'<div class="lp-actions">'
-      +'<a class="lp-btn lp-btn-nav" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">🧭 Navegar</a>'
-      +(c.tel?'<a class="lp-btn lp-btn-call" href="tel:'+c.tel+'">📞 Llamar</a>':'')
-      +'</div>'
-      +(c.notas?'<div class="lp-notas">📝 '+c.notas+'</div>':'')
-      +extraRows+'</div>';
+    var k2=ck(c),st2=E[k2]?E[k2].s:null;
+    var badge=st2?"<span class='ea "+st2+"'>"+(st2==="e"?"&#x2713; Entregado":st2==="rt"?"&#x2717; Rechazo Total":"&#x26A0; Parcial")+"</span>":"";
+    var ex="";
+    if(c.extras&&Object.keys(c.extras).length){
+      ex="<div class='px'>";
+      Object.entries(c.extras).forEach(function(kv){ex+="<div class='pxr'><span class='pxl'>"+kv[0]+"</span><span class='pxv'>"+kv[1]+"</span></div>";});
+      ex+="</div>";
+    }
+    return "<div class='pi'>"
+      +"<div><span class='pb'>Parada "+(c.order||"-")+"</span>"+(c.codigo?"<span class='pc'>COD: "+c.codigo+"</span>":"")+"</div>"
+      +"<div class='pn'>"+c.name+"</div>"
+      +"<div class='pa'>"+(c.addr||"")+"</div>"
+      +(c.horario?"<div class='ph'>&#x1F550; "+c.horario+"</div>":"")
+      +"<div class='pax'>"
+      +"<a class='pbt pbtn' href='https://maps.google.com/?q="+c.lat+","+c.lng+"' target='_blank'>&#x1F9ED; Navegar</a>"
+      +(c.tel?"<a class='pbt pbc' href='tel:"+c.tel+"'>&#x1F4DE; Llamar</a>":"")
+      +"</div>"
+      +(c.notas?"<div class='pno'>&#x1F4DD; "+c.notas+"</div>":"")
+      +ex
+      +"<div class='est'>"
+      +"<div class='estt'>Resultado de entrega</div>"
+      +badge
+      +"<div class='estb'>"
+      +"<button class='eb e' onclick='sest(&quot;"+k2+"&quot;,&quot;e&quot;)'>&#x2713; Entregado</button>"
+      +"<button class='eb rt' onclick='sest(&quot;"+k2+"&quot;,&quot;rt&quot;)'>&#x2717; Rechazo</button>"
+      +"<button class='eb rp' onclick='sest(&quot;"+k2+"&quot;,&quot;rp&quot;)'>&#x26A0; Parcial</button>"
+      +"</div></div></div>";
   });
   m.addTo(map);
-  markers.push({marker:m,data:c});
+  MK.push({m:m,d:c,k:k});
 });
-
-if(DATA.length){
-  var lats=DATA.map(function(c){return c.lat;}),lngs=DATA.map(function(c){return c.lng;});
-  map.fitBounds([[Math.min.apply(null,lats),Math.min.apply(null,lngs)],[Math.max.apply(null,lats),Math.max.apply(null,lngs)]],{padding:[40,40]});
+if(D.length){
+  var lts=D.map(function(c){return c.lat;}),lns=D.map(function(c){return c.lng;});
+  map.fitBounds([[Math.min.apply(null,lts),Math.min.apply(null,lns)],[Math.max.apply(null,lts),Math.max.apply(null,lns)]],{padding:[40,40]});
 }
-
-function renderList(items){
-  document.getElementById('clientList').innerHTML=items.map(function(c){
-    return '<div class="client-item" onclick="focusMarker('+c.lat+','+c.lng+')">'
-      +'<div class="client-num">'+(c.order||'?')+'</div>'
-      +'<div style="flex:1;min-width:0">'
-      +'<div class="client-name">'+c.name+'</div>'
-      +'<div class="client-addr">'+(c.addr||'')+'</div>'+( c.codigo ? '<div style="font-family:monospace;font-size:10px;color:#888;margin-top:2px">COD: '+c.codigo+'</div>' : '' )
-      +'<div class="client-actions">'
-      +'<a class="btn-nav" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">🧭 Navegar</a>'
-      +(c.tel?'<a class="btn-call" href="tel:'+c.tel+'">📞 '+c.tel+'</a>':'')
-      +'</div>'
-      +(c.notas?'<div class="client-notas">📝 '+c.notas+'</div>':'')
-      +'</div></div>';
-  }).join('');
+function rl(items){
+  document.getElementById("cl").innerHTML=items.map(function(c){
+    var k2=ck(c),st=E[k2]?E[k2].s:null;
+    var slb=st==="e"?"&#x2713; Entregado":st==="rt"?"&#x2717; Rechazo":st==="rp"?"&#x26A0; Parcial":"";
+    var sbg=(st&&SC[st])?SC[st]:RC;
+    return "<div class='ci' onclick='fm("+c.lat+","+c.lng+")'>"
+      +"<div class='cn' style='background:"+sbg+"'>"+(c.order||"?")+"</div>"
+      +"<div style='flex:1;min-width:0'>"
+      +"<div class='nm'>"+c.name+(slb?"<span style='font-size:10px;font-weight:700;margin-left:6px;color:"+sbg+"'>"+slb+"</span>":"")+"</div>"
+      +"<div class='ad'>"+(c.addr||"")+"</div>"
+      +(c.codigo?"<div style='font-family:monospace;font-size:10px;color:#888;margin-top:2px'>COD: "+c.codigo+"</div>":"")
+      +"<div class='ca'>"
+      +"<a class='bn' href='https://maps.google.com/?q="+c.lat+","+c.lng+"' target='_blank'>&#x1F9ED; Navegar</a>"
+      +(c.tel?"<a class='bc' href='tel:"+c.tel+"'>&#x1F4DE; "+c.tel+"</a>":"")
+      +"</div>"
+      +(c.notas?"<div class='nt'>&#x1F4DD; "+c.notas+"</div>":"")
+      +"</div></div>";
+  }).join("");
 }
-renderList(DATA);
-
-function filterList(q){
+rl(D);
+function fl(q){
   var f=q.toLowerCase().trim();
-  if(!f){renderList(DATA);return;}
-  renderList(DATA.filter(function(c){
-    var fixed=[c.name,c.addr,c.order,c.codigo,c.horario,c.tel,c.notas].map(function(v){return (v||'').toLowerCase();}).join(' ');
-    var extras=Object.values(c.extras||{}).map(function(v){return (v||'').toLowerCase();}).join(' ');
-    return (fixed+' '+extras).includes(f);
+  if(!f){rl(D);return;}
+  rl(D.filter(function(c){
+    var t=[c.name,c.addr,c.order,c.codigo,c.horario,c.tel,c.notas].map(function(v){return(v||"").toLowerCase();}).join(" ");
+    var x=Object.values(c.extras||{}).map(function(v){return(v||"").toLowerCase();}).join(" ");
+    return(t+" "+x).includes(f);
   }));
 }
-
-function focusMarker(lat,lng){
-  showTab('map');
-  map.setView([lat,lng],17);
-  var found=markers.find(function(x){return x.data.lat===lat&&x.data.lng===lng;});
-  if(found)found.marker.openPopup();
+function fm(lat,lng){
+  sw("m");map.setView([lat,lng],17);
+  var f=MK.find(function(x){return x.d.lat===lat&&x.d.lng===lng;});
+  if(f)f.m.openPopup();
 }
-
-function showTab(tab){
-  var isMap=tab==='map';
-  document.getElementById('map').style.display=isMap?'block':'none';
-  document.getElementById('listView').style.display=isMap?'none':'flex';
-  document.getElementById('searchWrap').style.display=isMap?'none':'block';
-  document.getElementById('tabMap').classList.toggle('active',isMap);
-  document.getElementById('tabList').classList.toggle('active',!isMap);
-  if(isMap)setTimeout(function(){map.invalidateSize();},50);
+function sw(tab){
+  document.getElementById("map").style.display=tab==="m"?"block":"none";
+  document.getElementById("lv").style.display=tab==="l"?"flex":"none";
+  document.getElementById("rv").style.display=tab==="r"?"flex":"none";
+  document.getElementById("tM").className="tab"+(tab==="m"?" on":"");
+  document.getElementById("tL").className="tab"+(tab==="l"?" on":"");
+  document.getElementById("tR").className="tab"+(tab==="r"?" on":"");
+  if(tab==="m")setTimeout(function(){map.invalidateSize();},50);
+  if(tab==="r")rr();
 }
-
-// ENRUTAR
+function sest(k,s){
+  var now=new Date().toLocaleTimeString("es-CL");
+  E[k]={s:s,h:now};sE();
+  var f=MK.find(function(x){return x.k===k;});
+  if(f){f.m.setIcon(mi(f.d.order,s));f.m.closePopup();setTimeout(function(){f.m.openPopup();},100);}
+  if(document.getElementById("lv").style.display!=="none")rl(D);
+}
+function rr(){
+  var tot=D.length;
+  var ne=D.filter(function(c){var sv=E[ck(c)];return sv&&sv.s==="e";}).length;
+  var nrt=D.filter(function(c){var sv=E[ck(c)];return sv&&sv.s==="rt";}).length;
+  var nrp=D.filter(function(c){var sv=E[ck(c)];return sv&&sv.s==="rp";}).length;
+  var np=tot-ne-nrt-nrp;
+  var pct=Math.round((ne/tot)*100);
+  document.getElementById("rs").innerHTML=
+    '<div style="background:#fff;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid #e2ddd5">'
+    +'<div style="font-size:13px;font-weight:700;margin-bottom:12px">Resumen del d\u00eda</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    +'<div style="background:#f0fdf4;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#15803d">'+ne+'</div><div style="font-size:10px;color:#15803d;font-weight:600">ENTREGADOS</div></div>'
+    +'<div style="background:#fef2f2;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#b91c1c">'+nrt+'</div><div style="font-size:10px;color:#b91c1c;font-weight:600">RECHAZO TOTAL</div></div>'
+    +'<div style="background:#fffbeb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#b45309">'+nrp+'</div><div style="font-size:10px;color:#b45309;font-weight:600">RECHAZO PARCIAL</div></div>'
+    +'<div style="background:#f9fafb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#6b7280">'+np+'</div><div style="font-size:10px;color:#6b7280;font-weight:600">PENDIENTES</div></div>'
+    +'</div>'
+    +'<div style="margin-top:12px;background:#f0f0f0;border-radius:20px;height:8px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:#22c55e;border-radius:20px"></div></div>'
+    +'<div style="font-size:11px;color:#888;text-align:center;margin-top:4px">'+pct+'% ('+tot+' clientes)</div>'
+    +'</div>';
+  var rows=D.map(function(c){
+    var k2=ck(c),sv=E[k2]||{};
+    var st=sv.s||"p";
+    var sl=st==="e"?"Entregado":st==="rt"?"Rechazo Total":st==="rp"?"Rechazo Parcial":"Pendiente";
+    var bg=st==="e"?"#f0fdf4":st==="rt"?"#fef2f2":st==="rp"?"#fffbeb":"#fff";
+    var col=st==="e"?"#15803d":st==="rt"?"#b91c1c":st==="rp"?"#b45309":"#9ca3af";
+    return '<div style="background:'+bg+';border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px">'
+      +'<div style="width:8px;height:8px;border-radius:50%;background:'+col+';flex-shrink:0"></div>'
+      +'<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+c.name+'</div>'
+      +(c.codigo?'<div style="font-size:10px;color:#888;font-family:monospace">COD: '+c.codigo+'</div>':'')+'</div>'
+      +'<div style="font-size:11px;font-weight:700;color:'+col+';text-align:right;flex-shrink:0">'+sl+(sv.h?'<div style="font-size:9px;font-weight:400;color:#aaa">'+sv.h+'</div>':'')+'</div>'
+      +'</div>';
+  }).join("");
+  document.getElementById("rd").innerHTML='<div style="font-size:11px;font-weight:700;color:#8c8680;margin-bottom:8px">DETALLE POR CLIENTE</div>'+rows;
+}
+function dlr(){
+  var lines=["Cliente,Codigo,Direccion,Orden,Estado,Hora"];
+  D.forEach(function(c){
+    var sv=E[ck(c)]||{};
+    var st=sv.s||"";
+    var sl=st==="e"?"Entregado":st==="rt"?"Rechazo Total":st==="rp"?"Rechazo Parcial":"Pendiente";
+    lines.push([c.name,c.codigo||"",c.addr||"",c.order||"",sl,sv.h||""]
+      .map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(","));
+  });
+  var a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,\uFEFF"+encodeURIComponent(lines.join("\n"));
+  a.download="reporte_ka4v53_"+new Date().toLocaleDateString("es-CL").replace(/\//g,"-")+".csv";
+  a.click();
+}
 </script>
 </body>
 </html>

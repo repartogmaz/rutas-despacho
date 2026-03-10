@@ -21,7 +21,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
 .topbar-info p{font-family:'Space Mono',monospace;font-size:9px;color:#888;margin-top:2px}
 .counter{font-family:'Space Mono',monospace;font-size:11px;color:var(--c);text-align:right;white-space:nowrap}
 .counter span{display:block;font-size:9px;color:#666;margin-top:1px}
-.btn-enrutar{background:var(--c);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
 .tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
 .tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
 .tab.active{color:var(--c);border-bottom-color:var(--c)}
@@ -70,36 +69,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);heig
   </div>
   <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
     <div class="counter">73<span>clientes</span></div>
-    <button class="btn-enrutar" onclick="openEnrutar()">🗺 Enrutar</button>
   </div>
 </div>
 
 <!-- MODAL ENRUTAR -->
-<div id="modalEnrutar" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:flex-end;justify-content:center">
-  <div style="background:#fff;width:100%;max-width:480px;border-radius:16px 16px 0 0;padding:20px 20px 32px;max-height:85vh;overflow-y:auto">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div>
-        <div style="font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700">Enrutar en Google Maps</div>
-        <div style="font-size:11px;color:#888;margin-top:3px;font-family:'Space Mono',monospace">Navegar de cliente en cliente</div>
-      </div>
-      <button onclick="closeEnrutar()" style="background:#f0f0f0;border:none;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
-    </div>
-    <div style="margin-bottom:16px">
-      <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-family:'Space Mono',monospace">Punto de inicio</div>
-      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:2px solid var(--c);border-radius:10px;cursor:pointer;margin-bottom:6px;font-size:13px;font-weight:600;background:#fff8f5">
-        <input type="radio" name="startOpt" value="gps" checked style="accent-color:var(--c);width:16px;height:16px"> 📍 Mi ubicación actual (GPS)
-      </label>
-      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:2px solid #eee;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600">
-        <input type="radio" name="startOpt" value="first" style="accent-color:var(--c);width:16px;height:16px"> 🏁 Primera parada de la ruta
-      </label>
-    </div>
-    <div style="margin-bottom:4px">
-      <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-family:'Space Mono',monospace">Bloques de ruta — toca cada uno en orden</div>
-      <div id="enrutarPreview" style="max-height:50vh;overflow-y:auto">—</div>
-      <div style="font-size:10px;color:#aaa;margin-top:8px;font-family:monospace;line-height:1.5">Cada bloque tiene hasta 9 paradas. Termina uno y abre el siguiente.</div>
-    </div>
-  </div>
-</div>
 
 <div class="tabs">
   <div class="tab active" id="tabMap" onclick="showTab('map')">🗺 Mapa</div>
@@ -188,7 +161,7 @@ const DATA=[{lat:1.2154,lng:-77.278,name:"FRUTERA DEL SUR",addr:"KR 25 19 - 45 L
 {lat:1.2182,lng:-77.2785,name:"TIENDA MARCELITA",addr:"CL 20 28 05",order:"71",tel:"3216991906",notas:"",horario:"",codigo:"1224316747",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11","Barrio":"LAS CUADRAS"}},
 {lat:1.218121,lng:-77.278733,name:"RESTAURANTE CAFETERIA JUALIANA",addr:"CR 28 18 64",order:"72",tel:"0",notas:"",horario:"",codigo:"1224487335",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11","Barrio":"CENTRO"}},
 {lat:1.2181,lng:-77.2787,name:"EMPANADITAS LA 28",addr:"CARRERA 28 19-69",order:"73",tel:"3163011420",notas:"",horario:"",codigo:"1210688356",extras:{"Preventa":"KA4V21","Reparto Antiguo":"KA4V11","Barrio":"LAS CUADRAS"}}];
-const BUILD_TS='1773174855249';
+const BUILD_TS='1773175200797';
 const stored=sessionStorage.getItem('map_ts_ka4v55');
 if(stored && stored!==BUILD_TS){ sessionStorage.setItem('map_ts_ka4v55',BUILD_TS); location.reload(true); }
 else{ sessionStorage.setItem('map_ts_ka4v55',BUILD_TS); }
@@ -236,7 +209,7 @@ function renderList(items){
       +'<div class="client-num">'+(c.order||'?')+'</div>'
       +'<div style="flex:1;min-width:0">'
       +'<div class="client-name">'+c.name+'</div>'
-      +'<div class="client-addr">'+(c.addr||'')+'</div>'
+      +'<div class="client-addr">'+(c.addr||'')+'</div>'+( c.codigo ? '<div style="font-family:monospace;font-size:10px;color:#888;margin-top:2px">COD: '+c.codigo+'</div>' : '' )
       +'<div class="client-actions">'
       +'<a class="btn-nav" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">🧭 Navegar</a>'
       +(c.tel?'<a class="btn-call" href="tel:'+c.tel+'">📞 '+c.tel+'</a>':'')
@@ -275,53 +248,6 @@ function showTab(tab){
 }
 
 // ENRUTAR
-var BLOCK_SIZE=9;
-function buildBlocks(startOpt){
-  var sorted=DATA.slice().sort(function(a,b){return (parseInt(a.order)||9999)-(parseInt(b.order)||9999);});
-  var blocks=[];
-  for(var i=0;i<sorted.length;i+=BLOCK_SIZE) blocks.push(sorted.slice(i,i+BLOCK_SIZE));
-  return blocks.map(function(chunk,bi){
-    var origin,waypoints,destination;
-    if(bi===0&&startOpt==='gps'){ origin=null; waypoints=chunk.slice(0,-1); destination=chunk[chunk.length-1]; }
-    else if(bi===0&&startOpt==='first'){ origin=chunk[0]; waypoints=chunk.slice(1,-1); destination=chunk[chunk.length-1]; }
-    else { origin=blocks[bi-1][blocks[bi-1].length-1]; waypoints=chunk.slice(0,-1); destination=chunk[chunk.length-1]; }
-    var destCoord=destination.lat+','+destination.lng;
-    var wpCoords=waypoints.map(function(c){return c.lat+','+c.lng;}).join('|');
-    var url='https://www.google.com/maps/dir/?api=1'
-      +(origin?'&origin='+encodeURIComponent(origin.lat+','+origin.lng):'')
-      +'&destination='+encodeURIComponent(destCoord)
-      +(wpCoords?'&waypoints='+encodeURIComponent(wpCoords):'')
-      +'&travelmode=driving';
-    var gs=bi*BLOCK_SIZE+1, ge=Math.min((bi+1)*BLOCK_SIZE,sorted.length);
-    return {url:url,label:'Bloque '+(bi+1),range:'Paradas '+gs+'–'+ge,last:destination};
-  });
-}
-
-function openEnrutar(){
-  var startOpt=document.querySelector('input[name="startOpt"]:checked').value;
-  var blocks=buildBlocks(startOpt);
-  window._routeBlocks=blocks;
-  document.getElementById('enrutarPreview').innerHTML=blocks.map(function(b,i){
-    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0;cursor:pointer" onclick="launchBlock('+i+')">'
-      +'<div style="width:32px;height:32px;border-radius:50%;background:'+ROUTE_COLOR+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:12px;font-weight:700;flex-shrink:0">'+(i+1)+'</div>'
-      +'<div style="flex:1;min-width:0">'
-      +'<div style="font-size:13px;font-weight:700">'+b.label+' <span style="font-size:10px;color:#888;font-family:monospace">'+b.range+'</span></div>'
-      +'<div style="font-size:11px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Hasta: '+b.last.name+'</div>'
-      +'</div>'
-      +'<div style="background:'+ROUTE_COLOR+';color:#fff;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;flex-shrink:0">Abrir →</div>'
-      +'</div>';
-  }).join('');
-  var modal=document.getElementById('modalEnrutar');
-  modal.style.display='flex';
-  modal.onclick=function(e){if(e.target===modal)closeEnrutar();};
-}
-
-document.querySelectorAll('input[name="startOpt"]').forEach(function(r){
-  r.addEventListener('change',function(){ if(document.getElementById('modalEnrutar').style.display==='flex') openEnrutar(); });
-});
-
-function closeEnrutar(){ document.getElementById('modalEnrutar').style.display='none'; }
-function launchBlock(idx){ var b=(window._routeBlocks||[])[idx]; if(b)window.open(b.url,'_blank'); }
 </script>
 </body>
 </html>

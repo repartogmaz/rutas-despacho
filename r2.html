@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>R2 · 17-03-2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#f4a261;--ink:#1a1814;--bg:#f5f2eb;--surface:#fff;--border:#e2ddd5;--muted:#8c8680}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.bar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
+.badge{background:var(--c);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;white-space:nowrap}
+.bi{flex:1;min-width:0}.bi h1{font-size:13px;color:#fff;font-weight:700}.bi p{font-size:9px;color:#888;margin-top:2px}
+.ctr{font-size:11px;color:var(--c);text-align:right;white-space:nowrap}.ctr span{display:block;font-size:9px;color:#666}
+.tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
+.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;user-select:none}
+.tab.on{color:var(--c);border-bottom-color:var(--c)}
+#pmap{flex:1;display:block}
+#plv{flex:1;overflow-y:auto;display:none;flex-direction:column}
+#prv{display:none;flex:1;flex-direction:column;overflow-y:auto;background:var(--bg)}
+.sw{padding:10px 16px;background:#fff;border-bottom:1px solid var(--border)}
+#sb{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;outline:none;background:var(--bg)}
+#sb:focus{border-color:var(--c)}
+.ci{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer}
+.ci:active{background:#ece9e0}
+.cn{width:28px;height:28px;border-radius:50%;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-family:monospace}
+.nm{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}
+.ad{font-size:12px;color:var(--muted);line-height:1.4}
+.ca{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.bn{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
+.bc{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
+.nt{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
+.stbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px}
+.stbadge.e{background:#dcfce7;color:#15803d}.stbadge.rt{background:#fee2e2;color:#b91c1c}.stbadge.rp{background:#fef3c7;color:#b45309}
+.pi{padding:14px;min-width:200px;max-width:290px}
+.pb{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px}
+.pc{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px}
+.pn{font-size:15px;font-weight:700;margin-bottom:3px}.pa{font-size:12px;color:var(--muted);margin-bottom:8px}
+.ph{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
+.pax{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.pbt{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none}
+.pbtn{background:#f4a261;color:#fff}.pbc{background:#1a1814;color:#fff}
+.pno{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #f4a261;padding:5px 8px;margin-bottom:8px;border-radius:0 3px 3px 0}
+.px{border-top:1px solid #eee;padding-top:8px;margin-top:4px}
+.pxr{display:flex;gap:6px;font-size:11px;margin-bottom:3px}
+.pxl{font-size:9px;color:#888;min-width:70px;text-transform:uppercase;font-family:monospace}.pxv{font-weight:600;flex:1}
+.est{border-top:1px solid #eee;padding-top:10px;margin-top:8px}
+.estt{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;font-family:monospace}
+.pst{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:4px}
+.pst.e{background:#dcfce7;color:#15803d}.pst.rt{background:#fee2e2;color:#b91c1c}.pst.rp{background:#fef3c7;color:#b45309}
+.pmot{font-size:10px;color:#888;margin-bottom:6px}
+.estb{display:flex;gap:6px;flex-wrap:wrap}
+.eb{flex:1;padding:8px 4px;border:2px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;text-align:center;background:#fff;white-space:nowrap;min-width:70px}
+.eb.e{border-color:#22c55e;background:#f0fdf4;color:#15803d}
+.eb.rt{border-color:#ef4444;background:#fef2f2;color:#b91c1c}
+.eb.rp{border-color:#f59e0b;background:#fffbeb;color:#b45309}
+.movl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:flex-end;justify-content:center}
+.movl.open{display:flex}
+.mbox{background:#fff;width:100%;max-width:480px;border-radius:16px 16px 0 0;padding:20px 20px 36px}
+.mbox h2{font-size:16px;font-weight:700;margin-bottom:4px}
+.mbox p{font-size:12px;color:#888;margin-bottom:14px}
+.mopt{display:flex;align-items:center;gap:12px;padding:13px 14px;border:2px solid #eee;border-radius:10px;cursor:pointer;margin-bottom:8px;font-size:13px;font-weight:600;transition:border-color .15s,background .15s}
+.mopt.rt-c:hover,.mopt.rt-c:active{border-color:#ef4444;background:#fef2f2;color:#b91c1c}
+.mopt.rp-c:hover,.mopt.rp-c:active{border-color:#f59e0b;background:#fffbeb;color:#b45309}
+.mico{font-size:20px;flex-shrink:0}
+.mcanc{width:100%;margin-top:6px;padding:12px;background:#f5f2eb;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:#888}
+.leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.2)!important;padding:0!important}
+.leaflet-popup-content{margin:0!important}.leaflet-popup-tip-container{display:none}
+.leaflet-control-zoom a{background:#1a1814!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="badge">R2</div>
+  <div class="bi"><h1>Mapa del día</h1><p>MARTES, 17 DE MARZO DE 2026</p></div>
+  <div class="ctr">192<span>clientes</span></div>
+</div>
+<div class="tabs">
+  <div class="tab on" id="tM" onclick="sw('m')">&#x1F5FA; Mapa</div>
+  <div class="tab" id="tL" onclick="sw('l')">&#x1F4CB; Lista</div>
+  <div class="tab" id="tR" onclick="sw('r')">&#x1F4CA; Reporte</div>
+</div>
+<div id="pmap"></div>
+<div id="plv">
+  <div class="sw"><input type="text" id="sb" placeholder="&#x1F50D; Buscar..." oninput="fl(this.value)"></div>
+  <div id="cl"></div>
+</div>
+<div id="prv">
+  <div style="padding:16px">
+    <div id="rs"></div>
+    <div id="rd"></div>
+    <button onclick="dlr()" style="width:100%;margin-top:16px;padding:13px;background:#1a1814;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">&#x2B07; Descargar Reporte CSV</button>
+  </div>
+</div>
+<div class="movl" id="movl">
+  <div class="mbox">
+    <h2 id="mtit">Motivo de rechazo</h2>
+    <p>Selecciona el motivo:</p>
+    <div id="mopts"></div>
+    <button class="mcanc" onclick="cmot()">Cancelar</button>
+  </div>
+</div>
+<script>
+var C="#f4a261";
+var D=[{"lat":3.474529357,"lng":-76.49478458,"name":"GREEN SAS / EDS BARRANQUILLA","addr":"AV PANAMERICANA 11 50","order":"1","tel":"3217816428","notas":"","horario":"","codigo":"900316197 - 7","extras":{}},{"lat":3.384051445,"lng":-76.54388878,"name":"GREEN SAS / EDS CALLE QUINTA","addr":"AV PANAMERICANA 11 50","order":"1","tel":"3217816428","notas":"","horario":"","codigo":"900316197 - 5","extras":{}},{"lat":3.483844902,"lng":-76.51355132,"name":"ESTACION DE SERVICIO HORIZONTE S.A.S.","addr":"AV 3 59 NORTE 46","order":"2","tel":"6023170049","notas":"","horario":"","codigo":"805014485","extras":{}},{"lat":3.914436563,"lng":-76.30282827,"name":"DISTRACOM S.A. / EDS LA BAS?LICA","addr":"CL 51 64 B 57","order":"2","tel":"2601669","notas":"","horario":"","codigo":"811009788 - 6","extras":{}},{"lat":3.417604354,"lng":-76.53979272,"name":"GRUPO ALMARO S.A.S.","addr":"CL 9 43 09","order":"3","tel":"3104941856","notas":"","horario":"","codigo":"901665860","extras":{}},{"lat":3.453257804,"lng":-76.50629327,"name":"MERCADO RAMIREZ JHON WAYNER","addr":"CR 8 39 150 BRR EL TRONCAL","order":"3","tel":"3147148494","notas":"","horario":"","codigo":"1143936977","extras":{}},{"lat":3.482205084,"lng":-76.60589173,"name":"ALBAN RIASCOS ALEXA","addr":"KM 14 EL SALADITO VIA A BUENAVENTURA","order":"4","tel":"3128700038","notas":"","horario":"","codigo":"1114339672","extras":{}},{"lat":3.264113433,"lng":-76.53924052,"name":"AMORTITECA JAMUNDI S.A.S.","addr":"CL 14 # 11 25 BRR SIMON BOLIVAR","order":"4","tel":"3104079684","notas":"","horario":"","codigo":"901779014","extras":{}},{"lat":3.471211869,"lng":-76.4865388,"name":"BARRERO LABRADOR NOE","addr":"CRA 1F # 70 02 LA RVERA","order":"5","tel":"3148589649","notas":"","horario":"","codigo":"11304793","extras":{}},{"lat":4.166511252,"lng":-76.169498,"name":"BENAVIDES GRANADA JULIO EDUARDO","addr":"CR 5 7 69","order":"5","tel":"3146183733","notas":"","horario":"","codigo":"16360374","extras":{}},{"lat":3.4436942,"lng":-76.4993675,"name":"BURITICA GONZALEZ JAIRO JOSE","addr":"Cl. 52 #15-21, Villacolombia, Comuna 8, Cali, Valle del Cauca, Colombia","order":"6","tel":"3145715308","notas":"","horario":"","codigo":"13509511","extras":{}},{"lat":3.82371592,"lng":-76.52228124,"name":"BUSTOS ERAZO EDWAR / TALLER CASA DE LA GUADANA","addr":"CR 10 14 17 BRR EL CENTRO","order":"6","tel":"3113356579","notas":"","horario":"","codigo":"6422978","extras":{}},{"lat":3.467275243,"lng":-76.52079865,"name":"CENTRAL DE LUBRICANTES EL TERMINAL S.A.S.","addr":"CL 32 NORTE 2 B N 79","order":"7","tel":"3168244783","notas":"","horario":"","codigo":"900702230","extras":{}},{"lat":3.443926229,"lng":-76.52060319,"name":"CENTRAL DE RODILLOS Y BALINERAS S.A.S.","addr":"CL 22 15 17 BRR BELALCAZAR","order":"7","tel":"8800669","notas":"","horario":"","codigo":"900972420","extras":{}},{"lat":3.397303464,"lng":-76.52256723,"name":"CORREA LENIS VICTOR HERNAN","addr":"CR 67 B 25 BIS 15 BRR CUIDAD DOSMIL","order":"8","tel":"3104929009","notas":"","horario":"","codigo":"94449738","extras":{}},{"lat":4.092388558,"lng":-76.18125077,"name":"CRUZ BORBON IVAN DE JESUS / LUBRILLANTAS CRUBOR","addr":"C L 13 38 C 06","order":"8","tel":"3167446438","notas":"","horario":"","codigo":"16361685","extras":{}},{"lat":3.258469498,"lng":-76.53703306,"name":"ESPINOSA CHACON EDGAR","addr":"CL 11 5 03 BRR POPULAR","order":"9","tel":"3106356569","notas":"","horario":"","codigo":"80413858","extras":{}},{"lat":4.076840159,"lng":-76.18938826,"name":"ESTACION DE SERVICIO CORAZON DEL VALLE S.A.S","addr":"CL 32 38 12 BRR MIRAFLORES","order":"9","tel":"3174310168","notas":"","horario":"","codigo":"901075924","extras":{}},{"lat":3.434195295,"lng":-76.52397607,"name":"GALINDEZ MURILLO ANDRES","addr":"CALLE 3 24 B 20","order":"10","tel":"3158295283","notas":"","horario":"","codigo":"16737432","extras":{}},{"lat":3.884783818,"lng":-77.02513441,"name":"GARCIA ORTIZ JAIME","addr":"CL 6 44 30 BRR VELLAVISTA","order":"10","tel":"3154405419","notas":"","horario":"","codigo":"93117200","extras":{}},{"lat":3.430396068,"lng":-76.49826374,"name":"GOMEZ CERON ARCELINA MARGOTH / LUBRICANTES YAGOMEZ","addr":"CL 70 # 27 A 32","order":"11","tel":"3218164276","notas":"","horario":"","codigo":"31831963","extras":{}},{"lat":3.444622009,"lng":-76.50913574,"name":"GONZALES MONTOYA ANGELA MARIA / MAUROLLANTAS #3","addr":"CR 15 33 H 44","order":"11","tel":"3167632765","notas":"","horario":"","codigo":"31308189","extras":{}},{"lat":3.430331476,"lng":-76.50351483,"name":"HERRERA MURILLO SAUL","addr":"CRA 28D # 43A 24 EDUANDO SANTOS","order":"12","tel":"3108264019","notas":"","horario":"","codigo":"16679566","extras":{}},{"lat":3.433639736,"lng":-76.4984002,"name":"INVERSIONES EL PODEROSO S.A.S","addr":"CR 26 P DG 28 C 37 O 45","order":"12","tel":"4432362","notas":"","horario":"","codigo":"805022159","extras":{}},{"lat":3.262983042,"lng":-76.53788332,"name":"LINCE SARRIA LAURA YICETH","addr":"CL 14 # 9 04","order":"13","tel":"3218361558","notas":"","horario":"","codigo":"1005981635","extras":{}},{"lat":3.824073198,"lng":-76.5218883,"name":"LOPEZ HERRERA OSCAR ANDRES","addr":"CL 15 9 26","order":"13","tel":"3169238840","notas":"","horario":"","codigo":"1114391605","extras":{}},{"lat":3.511510215,"lng":-76.5085718,"name":"LUBRIPESADOS DEL VALLE S.A.S.","addr":"CR 32 12 197 SEC ACOPI","order":"14","tel":"3102594767","notas":"","horario":"","codigo":"901640095","extras":{}},{"lat":3.529985204,"lng":-76.27691343,"name":"MARTINEZ DORADO NATHALIA","addr":"CR 1 E 33 D 18 BRR LA PRIMERA","order":"14","tel":"3003291162","notas":"","horario":"","codigo":"1085343410","extras":{}},{"lat":3.271484879,"lng":-76.53572246,"name":"MORALES HEDVER OBDULIO","addr":"CONROBLES 114 UR CIUDAD CAMPESTRE EL CASTILLO","order":"15","tel":"3014178291","notas":"","horario":"","codigo":"700183121","extras":{}},{"lat":3.408841057,"lng":-76.53364643,"name":"MU?OZ SAMBONI LUIS CARLOS / SERVITECA LAS GRANJAS","addr":"CR 56 # 16 20 BRR VILLAS DE GUADALUPE","order":"15","tel":"3157667240","notas":"","horario":"","codigo":"94457771","extras":{}},{"lat":3.933331579,"lng":-76.48369666,"name":"ORTIZ MENESES WILINTON","addr":"CRA 7 # 12 39","order":"16","tel":"3232965229","notas":"","horario":"","codigo":"94266374","extras":{}},{"lat":3.818676549,"lng":-76.52240463,"name":"PARRA PINILLA CLAUDIA LORENA","addr":"KRA 9 5 42","order":"16","tel":"3177513000","notas":"","horario":"","codigo":"66866840","extras":{}},{"lat":3.257399018,"lng":-76.54274784,"name":"RAMIREZ CASTRO ORLANDO STEVEN / PESADOS SR","addr":"CR 4 # 6 90 LC 1","order":"17","tel":"3128843514","notas":"","horario":"","codigo":"1193082676","extras":{}},{"lat":3.263957113,"lng":-76.53942324,"name":"REPUESTOS LISDETH S.A.S","addr":"CR 11 # 12 43 BRR SIMON BOLIVAR","order":"17","tel":"3172865731","notas":"","horario":"","codigo":"901788403","extras":{}},{"lat":3.432171185,"lng":-76.50219418,"name":"RODRIGUEZ TROCHEZ LIBARDO","addr":"CL 44 # 27 78 SINDICAL","order":"18","tel":"3137262935","notas":"","horario":"","codigo":"16728845","extras":{}},{"lat":3.461328273,"lng":-76.51400831,"name":"ROMERO ELIZABETH / LUBRICANTES CERON LA 34","addr":"CL 34 # 2C 55","order":"18","tel":"3137679123","notas":"","horario":"","codigo":"31256537","extras":{}},{"lat":3.995637364,"lng":-76.23162098,"name":"SERVICENTRO AUTOMOTRIZ SAN PEDRO S.A.S","addr":"CL 3 # 8 84","order":"19","tel":"3168569062","notas":"","horario":"","codigo":"901081698","extras":{}},{"lat":3.450351549,"lng":-76.5090432,"name":"TECNI COMPRESORES S.A.S.","addr":"CL 36 10 113 BRR EL TRONCAL","order":"19","tel":"3154925858","notas":"","horario":"","codigo":"800105322","extras":{}},{"lat":3.877208232,"lng":-76.96863301,"name":"TRANSPORTADORES LIENA BUENAVENTURA S.A","addr":"KM 15 VDA CITRONELA","order":"20","tel":"312770047","notas":"","horario":"","codigo":"800174978","extras":{}},{"lat":3.874481981,"lng":-77.00364422,"name":"VALENCIA GONGORA LEONIDAS","addr":"AV SIMON BOLIVAR 59 02 BRR CASCAJAL","order":"20","tel":"3148839089","notas":"","horario":"","codigo":"16484892","extras":{}},{"lat":3.45751376,"lng":-76.48440644,"name":"YONDA IPIA JOHANN ANDRES","addr":"CRA 7L CON CALLE 70 ESQUINA","order":"21","tel":"3217438674","notas":"","horario":"","codigo":"1062276942","extras":{}},{"lat":3.572737824,"lng":-76.64841179,"name":"ZULUAGA CA?ON JOSE ALDEMAR","addr":"KILOMETRO 30 VIA AL CREMAL","order":"21","tel":"3154957093","notas":"","horario":"","codigo":"6138950","extras":{}},{"lat":3.405181627,"lng":-76.52314994,"name":"DISTRIBUIDORA O&amp;V HERMANOS ASOCIADOS Y CIA S.A.S / TEXACO CA?AVERAL","addr":"CL 23 # 50 41","order":"22","tel":"3148857947","notas":"","horario":"","codigo":"901278568 - 2","extras":{}},{"lat":3.393032849,"lng":-76.55635905,"name":"EMPRESA DE TRANSPORTES SANTIAGO DE CALI ALAMEDA S.A.","addr":"CR 70 1 71 BRR LOURDES","order":"22","tel":"3233394","notas":"","horario":"","codigo":"890301295","extras":{}},{"lat":3.930183053,"lng":-76.48321453,"name":"NI?O ALFONSO ELVA YOLANDA / REPUESTOS Y LUJOS CALIMA","addr":"CL 9 4 26","order":"23","tel":"3142624172","notas":"","horario":"","codigo":"66904362","extras":{}},{"lat":3.880706518,"lng":-77.03533385,"name":"QUIROGA NARANJO YEYMY YOHANNA / LUBRICANTES SAN LUIS L.J.","addr":"AV SIMON BOLIVAR 24 32 BRR SAN LUIS","order":"23","tel":"3183256714","notas":"","horario":"","codigo":"1087553788","extras":{}},{"lat":3.409274806,"lng":-76.51781771,"name":"TRUJILLO ESPINOSA FERNANDO ANTONIO / ALMACEN AUTOPARTES LA 36","addr":"CL 36 # 44 A 23 BRR CALIPSO","order":"24","tel":"6023380178","notas":"","horario":"","codigo":"94377009","extras":{}},{"lat":4.082653161,"lng":-76.18728809,"name":"VASQUEZ CASTA?EDA RUBBY / LAVAPRONTO LOS SEMAFOROS","addr":"CL 27 39 15","order":"24","tel":"3164352655","notas":"","horario":"","codigo":"31188980","extras":{}},{"lat":3.242224722,"lng":-76.51687827,"name":"ALZATE BONILLA LUIS ENRIQUE","addr":"CL 20 39 SUR 21 BRR TERRANOVA","order":"25","tel":"0","notas":"","horario":"","codigo":"1062278384","extras":{}},{"lat":3.443000864,"lng":-76.52198184,"name":"AUTOREPUESTOS LA 16 S.A.S.","addr":"CR 16 19 31","order":"25","tel":"3188682283","notas":"","horario":"","codigo":"901476290","extras":{}},{"lat":3.399156624,"lng":-76.38590734,"name":"BOHORQUEZ RUIZ JUAN CARLOS / FILTROS Y LUBRICANTES LAS BRISAS","addr":"CL 16 11 51 CORR VILLA GORGONA","order":"26","tel":"3162856668","notas":"","horario":"","codigo":"10285686","extras":{}},{"lat":3.657277452,"lng":-76.68731086,"name":"BOUZAS CARVAJAL JOAQUIN EDUARDO / ESTACION DE SERVICIO LA BOMBA","addr":"CL 8 A 19 83","order":"26","tel":"3166155898","notas":"","horario":"","codigo":"14576134","extras":{}},{"lat":3.427518525,"lng":-76.24587156,"name":"CARVAJAL LEON MERLY / LAVARIANTES SERVITECA MULTISERVICIOS","addr":"C 2 18 31 BRR SERZUELA","order":"27","tel":"3176957368","notas":"","horario":"","codigo":"1117963386","extras":{}},{"lat":3.43429804,"lng":-76.52535036,"name":"CLAVIJO RAMIREZ ANDRES FELIPE","addr":"DG 23 15 15","order":"27","tel":"3124045106","notas":"","horario":"","codigo":"79980413","extras":{}},{"lat":3.425210593,"lng":-76.55222543,"name":"ERASO BASTIDAS OBEIMAR ANTONIO / BICICLETERIA ERASO","addr":"CL 1 39 05","order":"28","tel":"3122904159","notas":"","horario":"","codigo":"15815655","extras":{}},{"lat":3.603083415,"lng":-76.6462516,"name":"ESCOBAR ZU?IGA ARACELLY / MOTOREPUESTOS S.E.A","addr":"CRR EL PALMAR KM 34","order":"28","tel":"3004924098","notas":"","horario":"","codigo":"66909952","extras":{}},{"lat":3.89503502,"lng":-76.29609827,"name":"GARCIA VALENCIA LUIS CARLOS","addr":"CL 14 7 122","order":"29","tel":"3136519067","notas":"","horario":"","codigo":"14890373","extras":{}},{"lat":3.661387587,"lng":-76.68682572,"name":"GOMEZ DAZA LADY VANESSA","addr":"ENTRADA AL BRR PORVENIR","order":"29","tel":"3239963603","notas":"","horario":"","codigo":"1087753936","extras":{}},{"lat":3.416265299,"lng":-76.55520603,"name":"LOPEZ PE?UELA JESUS ALFONSO","addr":"DG 52 1 25","order":"30","tel":"3147180325","notas":"","horario":"","codigo":"19309471","extras":{}},{"lat":3.900660985,"lng":-76.30539447,"name":"LOSADA ARIAS WILSON / MULTISERVICIOS LA ESTACION","addr":"CL 6 18 1 O","order":"30","tel":"3155648567","notas":"","horario":"","codigo":"14887876","extras":{}},{"lat":3.443342897,"lng":-76.52013414,"name":"MR BATERIAS Y LUBRICANTES S.A.S","addr":"CL 22 16 33","order":"31","tel":"3216445429","notas":"","horario":"","codigo":"901451831","extras":{}},{"lat":3.257230646,"lng":-76.54284474,"name":"MURILLO BUSTOS JUAN CARLOS / VULCANIZADORA JAMUNDI","addr":"CR 4 5 03","order":"31","tel":"3206606707","notas":"","horario":"","codigo":"16456188","extras":{}},{"lat":3.653282734,"lng":-76.68926686,"name":"ORDO?EZ ROSERO POLICARPO","addr":"CR 20 13 40 BRR FATIMA","order":"32","tel":"3116364887","notas":"","horario":"","codigo":"6246598","extras":{}},{"lat":3.419479899,"lng":-76.50828145,"name":"ORTEGA LARA GLADIS MILENA","addr":"CRA 39 # 34 190 CIUDAD MODELO","order":"32","tel":"3117327876","notas":"","horario":"","codigo":"1085254882","extras":{}},{"lat":3.459660639,"lng":-76.5140472,"name":"RAMIREZ TRUJILLO Y CIA SAS","addr":"CR 4 9 63 OF 308","order":"33","tel":"8890501","notas":"","horario":"","codigo":"805003019","extras":{}},{"lat":3.821409334,"lng":-76.52377389,"name":"RENDON DE ARIAS GABRIELA / ALMACEN LOS TORNILLOS","addr":"CR 12 10 08 BRR CENTRO","order":"33","tel":"3113543281","notas":"","horario":"","codigo":"31138849","extras":{}},{"lat":3.407534789,"lng":-76.34379096,"name":"SALCEDO URBANO ELIER LIZANDRO","addr":"CRA 2 # 9 07 BRR SANTA ANA","order":"34","tel":"3155541287","notas":"","horario":"","codigo":"1113525853","extras":{}},{"lat":3.41833496,"lng":-76.48683921,"name":"SERNA SOLARTE FRANCISCO DAVID","addr":"CL 80 26 E 03 BRR MOJICA","order":"34","tel":"3128866230","notas":"","horario":"","codigo":"1144132701","extras":{}},{"lat":4.086795008,"lng":-76.18775848,"name":"SERVICIOS AGRICOLAS LA CABA?A S.A.S","addr":"CL 21 36 A 27","order":"35","tel":"6022320690","notas":"","horario":"","codigo":"901786400","extras":{}},{"lat":3.891543818,"lng":-77.01401364,"name":"SERVIREPUESTOS FYF S.A.S","addr":"CR 48 4 37 BRR ISLA DE LA PAZ VIA  ALTERNA","order":"35","tel":"3177284304","notas":"","horario":"","codigo":"901252873","extras":{}},{"lat":3.229417509,"lng":-76.41880296,"name":"TOBAR AMAYA HERNAN / TALLER HERNAN MOTOS","addr":"CL 16 18 69 CENTRO","order":"36","tel":"8262196","notas":"","horario":"","codigo":"10477634","extras":{}},{"lat":3.458712532,"lng":-76.52377255,"name":"TREJOS GUERRERO DIEGO FERNANDO / EL MUNDO DEL RACOR FERRETERIA","addr":"CR 2 22 103 BRR SAN NICOLAS","order":"36","tel":"3158366262","notas":"","horario":"","codigo":"14836652","extras":{}},{"lat":3.435076492,"lng":-76.51466746,"name":"GIRALDO RAMIREZ LORENA DEL SOCORRO / EDS TEXACO EL PRADO","addr":"TV 25 23 16 BRR PRADOS DE ORIENTE","order":"37","tel":"3155671905","notas":"","horario":"","codigo":"31895140","extras":{}},{"lat":3.445208351,"lng":-76.51539333,"name":"PROMOTORA DE ENERGIAS SUSTENTABLES S.A.S. / EDS TEXACO MARIALUISA","addr":"CR 15 29 30","order":"37","tel":"3165202448","notas":"","horario":"","codigo":"901331341","extras":{}},{"lat":3.412274563,"lng":-76.45529978,"name":"EDWIN HERRERA FIGUEROA","addr":"MANZANA 2 CASA # 74 POBLADO CAMPESTRE","order":"38","tel":"3042477113","notas":"","horario":"","codigo":"1061741134","extras":{}},{"lat":3.418305843,"lng":-76.55445334,"name":"monica julieth herrera orozco","addr":"carrera 50# 1 oeste-56 siloe","order":"38","tel":"3173529069","notas":"","horario":"","codigo":"1144068463","extras":{}},{"lat":3.434056406,"lng":-76.54198978,"name":"DISTRACOM S.A. / EDS MIRAFLORES","addr":"CL 5 27 08","order":"39","tel":"3162807339","notas":"","horario":"","codigo":"811009788 - 14","extras":{}},{"lat":3.434429902,"lng":-76.52270436,"name":"supetautocentro mobil el lido","addr":"diagonal 23#18e120","order":"39","tel":"3128440224","notas":"","horario":"","codigo":"805013891","extras":{}},{"lat":3.441046383,"lng":-76.51923459,"name":"dubiel castrillon agudelo","addr":"carrera 17c#23-30 barrio belarcazar","order":"40","tel":"3157610461","notas":"","horario":"","codigo":"75055860","extras":{}},{"lat":3.39907496,"lng":-76.38590701,"name":"OSORIO ROSCADOS Y REPUESTOS","addr":"Calle 16 # 11-01 Villagorgona","order":"40","tel":"0","notas":"","horario":"","codigo":"901163394","extras":{}},{"lat":3.320779979,"lng":-76.2358401,"name":"Jose Fern�ndo Tellez Potes","addr":"Carrera 17 # 4-73","order":"41","tel":"3170942054","notas":"","horario":"","codigo":"16890814","extras":{}},{"lat":3.321731568,"lng":-76.23522185,"name":"B Y G Asociados del Valle sas","addr":"Carrera 17 # 6-10 Florida Valle","order":"41","tel":"0","notas":"","horario":"","codigo":"900635749","extras":{}},{"lat":3.540375049,"lng":-76.50564585,"name":"Grupo Empresarial Las Palmas","addr":"cra 32 # 23 05","order":"42","tel":"3177416897","notas":"","horario":"","codigo":"900619051","extras":{}},{"lat":3.460161967,"lng":-76.51367337,"name":"mega autos del valle sas","addr":"calle 34 # 4 - 51","order":"42","tel":"3216256571","notas":"","horario":"","codigo":"900477862","extras":{}},{"lat":3.456643628,"lng":-76.52530175,"name":"JAIME ANDRES","addr":"CARRERA 3 # 21 - 02","order":"43","tel":"3244563890","notas":"","horario":"","codigo":"94552080","extras":{}},{"lat":3.430909794,"lng":-76.52519915,"name":"Israel","addr":"carrera 25 # 17 -51","order":"43","tel":"3022220085","notas":"","horario":"","codigo":"16598309","extras":{}},{"lat":3.472686718,"lng":-76.51131839,"name":"HARBY EDUARDO","addr":"CARRERA 5 # 44B - 01","order":"44","tel":"3164957495","notas":"","horario":"","codigo":"1143852926","extras":{}},{"lat":3.539435725,"lng":-76.49057552,"name":"carlos","addr":"cale 15# 3-21","order":"44","tel":"3173795360","notas":"","horario":"","codigo":"34567890","extras":{}},{"lat":3.930955719,"lng":-76.48338888,"name":"MILTON FABIAN","addr":"CL 10 NRO. 3 - 55 DARIEN","order":"45","tel":"3156996043","notas":"","horario":"","codigo":"94281475","extras":{}},{"lat":3.445913166,"lng":-76.51863813,"name":"LAURA DANIELA","addr":"CALLE 25 # 12 - 58","order":"45","tel":"3178421746","notas":"","horario":"","codigo":"1118311450","extras":{}},{"lat":3.175853765,"lng":-76.25896677,"name":"Beatriz","addr":"Carrera 10 # 8-35","order":"46","tel":"3136888078","notas":"","horario":"","codigo":"1107510903","extras":{}},{"lat":3.672783711,"lng":-76.58353955,"name":"jheisson smtih","addr":"carrera 9 # 4-303 corregimientos de pavas (yumbo)","order":"46","tel":"3105142038","notas":"","horario":"","codigo":"1114488182","extras":{}},{"lat":3.175839035,"lng":-76.25892017,"name":"Javier","addr":"Carrera 10 # 3-33 Corinto","order":"47","tel":"3206605457","notas":"","horario":"","codigo":"6248602","extras":{}},{"lat":3.229652834,"lng":-76.51583925,"name":"Amanda","addr":"Calle 42Sur # 10C  - 09 Bonanza Jamundi","order":"47","tel":"7359579","notas":"","horario":"","codigo":"31446949","extras":{}},{"lat":3.844300628,"lng":-76.58155303,"name":"SERVITECA ALTO CALIMA","addr":"Alto calima","order":"48","tel":"3148940773","notas":"","horario":"","codigo":"1114388519","extras":{}},{"lat":4.086584656,"lng":-76.20132241,"name":"MAGIOTA LTDA","addr":"Carrera 20 # 25 - 41","order":"48","tel":"0","notas":"","horario":"","codigo":"900276911","extras":{}},{"lat":3.843770077,"lng":-76.79328326,"name":"JOSE MANUEL","addr":"miscelanea los tubos (buenaventura)","order":"49","tel":"3105321783","notas":"","horario":"","codigo":"78108991","extras":{}},{"lat":3.859205448,"lng":-77.00066697,"name":"JUAN CARLOS","addr":"carrera 66 calle 10 sur buenaventura","order":"49","tel":"0","notas":"","horario":"","codigo":"16503549","extras":{}},{"lat":3.44031044,"lng":-76.53275192,"name":"yesid","addr":"calle 9E 17-39","order":"50","tel":"0","notas":"","horario":"","codigo":"16842785","extras":{}},{"lat":3.541425137,"lng":-76.49107374,"name":"autopesados","addr":"calle 15 # 22-00 eds primax terminan logistico","order":"50","tel":"3126958127","notas":"","horario":"","codigo":"900622490","extras":{}},{"lat":39.842888,"lng":-75.7153205,"name":"DISTRACOM S.A. / EDS CALIMAR","addr":"CALLE 6 # 19 B 68","order":"51","tel":"3146090779","notas":"","horario":"","codigo":"811009788 - 19","extras":{}},{"lat":3.442240156,"lng":-76.53198984,"name":"lucy","addr":"calle 10 #15-05 B/ san bosco","order":"51","tel":"3126958127","notas":"","horario":"","codigo":"31913763","extras":{}},{"lat":3.4772453,"lng":-76.4825948,"name":"FABIAN JAIR","addr":"Cl. 73a # 1D BIS-13, COMUNA 6, Cali, Valle del Cauca, Colombia","order":"52","tel":"0","notas":"","horario":"","codigo":"16458711","extras":{}},{"lat":3.439071819,"lng":-76.52821496,"name":"Jessica alejandra","addr":"calle 13# 19-27 B/ guayaquil","order":"52","tel":"3044317200","notas":"","horario":"","codigo":"1151947542","extras":{}},{"lat":3.601171432,"lng":-76.64648294,"name":"JARVI","addr":"supermercado el palmar km34 v�a dagua","order":"53","tel":"3152846607","notas":"","horario":"","codigo":"76041568","extras":{}},{"lat":3.442146783,"lng":-76.5322651,"name":"mar�a bernarda","addr":"carrera 15 # 9B-02","order":"53","tel":"3017604280","notas":"","horario":"","codigo":"31282743","extras":{}},{"lat":3.684418916,"lng":-76.31378543,"name":"HECTOR FABIO","addr":"Calle 7 # 12 - 87 El Cerrito","order":"54","tel":"0","notas":"","horario":"","codigo":"4456590","extras":{}},{"lat":3.4523216,"lng":-76.4962864,"name":"MEDINA TROMBA GERMAN / LUBRICANTES SERVI YA LA SABE","addr":"Carrera 8 #54-22, Comuna 8, Cali, Valle del Cauca, Colombia","order":"54","tel":"3184266934","notas":"","horario":"","codigo":"19218383","extras":{}},{"lat":3.412974382,"lng":-76.23613045,"name":"Wilfredo","addr":"Calle 6 # 6-61 B/ Misericordia","order":"55","tel":"0","notas":"","horario":"","codigo":"94301293","extras":{}},{"lat":3.550897627,"lng":-76.490888,"name":"SANDRA MILENA","addr":"CRA 20D # 14B - 101 CENCAR","order":"55","tel":"3047629392","notas":"","horario":"","codigo":"67007570","extras":{}},{"lat":3.505041808,"lng":-76.29915867,"name":"DIEGO FELIPE","addr":"Carrera 28 # 5F - 35 Palmira Barrio la Italia","order":"56","tel":"3154927737","notas":"","horario":"","codigo":"1112224005","extras":{}},{"lat":3.427815717,"lng":-76.48350388,"name":"LEIDY JHOANA","addr":"CARRERA 26J # 73 - 03","order":"56","tel":"0","notas":"","horario":"","codigo":"27452471","extras":{}},{"lat":3.508175121,"lng":-76.29644729,"name":"MOTOS JOQUI","addr":"Calle 10 # 24 - 59 Palmira Parques de la Italia","order":"57","tel":"0","notas":"","horario":"","codigo":"16281854","extras":{}},{"lat":4.9019631,"lng":-75.8844402,"name":"INGENIO CARMELITA S.A","addr":"TRONCAL DEL PACIFICO MK 23 MEDIACANOA LA VIRGINIA","order":"57","tel":"0","notas":"","horario":"","codigo":"891900196","extras":{}},{"lat":3.457511082,"lng":-76.52561288,"name":"RECAMPEROS LTDA","addr":"CL 21 2 02","order":"58","tel":"3154332235","notas":"","horario":"","codigo":"800005240","extras":{}},{"lat":3.5497633,"lng":-76.4914896,"name":"INGEMAQ GROUP S.A.S.","addr":"CR 20 F 14 B 83","order":"58","tel":"0","notas":"","horario":"","codigo":"900981037","extras":{}},{"lat":3.256114306,"lng":-76.54537406,"name":"RODRIGUEZ MEDINA MYRIAM","addr":"CR 10 # 1 95 BRR PILOTO","order":"59","tel":"3232954191","notas":"","horario":"","codigo":"31971665","extras":{}},{"lat":38.8941696,"lng":-80.4830211,"name":"PINTO HOLGUIN SAMUEL","addr":"CR 19 10 38","order":"59","tel":"3013156310","notas":"","horario":"","codigo":"16894252","extras":{}},{"lat":3.035920933,"lng":-76.4067357,"name":"ESTACION DE SERVICIO LA Y DEL CAUCA S.A.S","addr":"CL 14 6 69 BRR LA UNION","order":"60","tel":"0","notas":"","horario":"","codigo":"900715028","extras":{}},{"lat":39.0511114,"lng":-81.7085999,"name":"MURCIA ROJAS HECTOR HERNAN / VULCANIZADORA EL CACIQUE","addr":"CR 6 2 45 BRR CENTRO","order":"60","tel":"3217013228","notas":"","horario":"","codigo":"16350324","extras":{}},{"lat":39.4429502,"lng":-80.2792702,"name":"QUINTERO RODRIGUEZ JULIAN ANDRES / JULIAN MOTOS LA 19","addr":"CR 19 34 04","order":"61","tel":"3162886988","notas":"","horario":"","codigo":"14698038","extras":{}},{"lat":3.872631805,"lng":-76.97828528,"name":"SOTO VALLEJO LUIS ALFONSO","addr":"AV SIMON BOLIVAR CON CR 93","order":"61","tel":"3153765180","notas":"","horario":"","codigo":"6284318","extras":{}},{"lat":3.891537128,"lng":-77.01347653,"name":"MU?OZ TANGARIFE BERTHA LUCIA / ALMACEN RANCHO VERDE JL","addr":"CR 48 KM 4 25 VIA ALTERNA INTERNA","order":"62","tel":"3172159161","notas":"","horario":"","codigo":"38796332","extras":{}},{"lat":3.658519,"lng":-76.6908459,"name":"BARBOSA ARON SAMUEL ALBERTO","addr":"KM 29 EL VERGEL DAGUA","order":"62","tel":"0","notas":"","horario":"","codigo":"1115086893","extras":{}},{"lat":3.412913805,"lng":-76.52059078,"name":"CORREDOR HERRERA ANGELICA MARIA","addr":"CR 42 C 26 53 P 3","order":"63","tel":"3117353751","notas":"","horario":"","codigo":"29975417","extras":{}},{"lat":3.4591739,"lng":-76.5503923,"name":"HOLGUIN PEREZ GUSTAVO ADOLFO / MEKAMOTOS","addr":"AV 15 OESTE # 8 OESTE 66","order":"63","tel":"3015581227","notas":"","horario":"","codigo":"1088289929","extras":{}},{"lat":3.232379986,"lng":-76.42154016,"name":"Jes�s Antonio","addr":"Carrera 21 # 20C-06 Pto Tejada","order":"64","tel":"3187416542","notas":"","horario":"","codigo":"10544576","extras":{}},{"lat":3.911468927,"lng":-76.29557356,"name":"MOTO.  REPUESTO LA 21 BUGA","addr":"Calle 21 # 12 - 43 Buga","order":"64","tel":"3117336394","notas":"","horario":"","codigo":"31655833","extras":{}},{"lat":3.908881603,"lng":-76.29299965,"name":"CENTRO AUTOS","addr":"Carrera 9 # 19 - 41 Buga","order":"65","tel":"0","notas":"","horario":"","codigo":"29542433","extras":{}},{"lat":3.901696595,"lng":-76.30468,"name":"CENTRAL DE REPARACI�N SAS","addr":"Carrera 18 # 7 - 20 Buga","order":"65","tel":"3116158226","notas":"","horario":"","codigo":"900663006","extras":{}},{"lat":1.21643,"lng":-77.293546,"name":"Miguel Angel","addr":"carrera 1a # 32 -06","order":"66","tel":"3218001060","notas":"","horario":"","codigo":"14974216","extras":{}},{"lat":1.228554,"lng":-77.29535,"name":"maximotos","addr":"carrera 44 # 19 - 42","order":"66","tel":"3214986274","notas":"","horario":"","codigo":"16935568","extras":{}},{"lat":1.216333,"lng":-77.294312,"name":"PAULA XIMENA","addr":"km7 v�a buga-buenaventura al lado de EDS PRIMAX","order":"67","tel":"3167858689","notas":"","horario":"","codigo":"30358260","extras":{}},{"lat":1.228673,"lng":-77.29489,"name":"Nicxon Alejandro","addr":"CR 14 11 52 BRR SIMON BOLIVAR JAMUNDI","order":"67","tel":"3164822596","notas":"","horario":"","codigo":"1006364872","extras":{}},{"lat":1.214202,"lng":-77.294752,"name":"Estaci�n de Servicio NEIMILI","addr":"Carrera 2 # 5-145 Villarica","order":"68","tel":"3128350558","notas":"","horario":"","codigo":"901403281","extras":{}},{"lat":1.228564,"lng":-77.29462,"name":"CAMILO ANDRES","addr":"carrera 7 # 7-14 EDS CALIMA 1","order":"68","tel":"3126711408","notas":"","horario":"","codigo":"1112878085","extras":{}},{"lat":1.2146,"lng":-77.2948,"name":"Henry","addr":"Carrera 4 # 6-90 Av Circunvalr Jamundi","order":"69","tel":"3192821608","notas":"","horario":"","codigo":"94306910","extras":{}},{"lat":1.228392,"lng":-77.29502,"name":"TODO SUSPENSIONES TULU� SAS","addr":"Calle 26 # 31 - 07 Tulu�","order":"69","tel":"0","notas":"","horario":"","codigo":"901842917","extras":{}},{"lat":1.2149,"lng":-77.2945,"name":"ESTACI�N SAN ANTONIO SAS","addr":"Carrera 30 # 18 - 56 Tulu�","order":"70","tel":"3184483849","notas":"","horario":"","codigo":"901016791","extras":{}},{"lat":1.227345,"lng":-77.295,"name":"AGRICOLA INDUSTRIAL","addr":"AVENIDA 3N # 40N 31","order":"70","tel":"3116719944","notas":"","horario":"","codigo":"901219806","extras":{}},{"lat":1.2153,"lng":-77.2944,"name":"jarvy","addr":"carrera 55 # 12 a 40","order":"71","tel":"0","notas":"","horario":"","codigo":"4760241","extras":{}},{"lat":1.226882,"lng":-77.29471,"name":"MOTOREPUESTOS LOS MONOS","addr":"Carrera 11 # 9-64 Jamundi","order":"71","tel":"3014725960","notas":"","horario":"","codigo":"900567187","extras":{}},{"lat":1.2156,"lng":-77.2942,"name":"Jorge Luis","addr":"Calle 15 # 4-78 Caloto Cauca","order":"72","tel":"3153549167","notas":"","horario":"","codigo":"14577111","extras":{}},{"lat":1.226318,"lng":-77.29543,"name":"ESTACION SERVICIO ALTO PRIMAVERA","addr":"Calle 5 # 4 - 10 Costa Rica","order":"72","tel":"3162339549","notas":"","horario":"","codigo":"1085662935","extras":{}},{"lat":1.21645,"lng":-77.29349,"name":"LUBRI CERON LA AUTOPISTA","addr":"transversal 29 # 23 -37","order":"73","tel":"3166004981","notas":"","horario":"","codigo":"66948512","extras":{}},{"lat":1.226119,"lng":-77.29542,"name":"yency","addr":"manzana 4 casa 52 poblado campestre","order":"73","tel":"3168135538","notas":"","horario":"","codigo":"1144125976","extras":{}},{"lat":1.2166,"lng":-77.2933,"name":"MAYRA ALEJANDRA","addr":"KM 29 VIA AL MAR VEREDA EL VERGEL","order":"74","tel":"3134393052","notas":"","horario":"","codigo":"1112475658","extras":{}},{"lat":1.22611,"lng":-77.29541,"name":"JUAN PABLO","addr":"km30 borrero ayerbe v�a principal","order":"74","tel":"3156696704","notas":"","horario":"","codigo":"94420357","extras":{}},{"lat":1.2165,"lng":-77.293,"name":"JHONNY FABIAN","addr":"VARIANTE FRENTE AL SENA BUGA","order":"75","tel":"0","notas":"","horario":"","codigo":"1114875109","extras":{}},{"lat":1.225466,"lng":-77.2968,"name":"Adriana","addr":"Carrera 28Oeste #,11-192 Mz 3 Casa 16 Ciudad del V","order":"75","tel":"3164822596","notas":"","horario":"","codigo":"38644603","extras":{}},{"lat":1.2167,"lng":-77.2936,"name":"distribuciones obra blanca sas","addr":"cll 94# 8B149 c juanchito","order":"76","tel":"6027351750","notas":"","horario":"","codigo":"9016404426","extras":{}},{"lat":1.225605,"lng":-77.2972,"name":"FERNANDEZ VIDAL MARTA LIGIA","addr":"CR 15 68 N 41 BRR BELLOHORIZONTE","order":"76","tel":"3103123982","notas":"","horario":"","codigo":"34553682","extras":{}},{"lat":1.217,"lng":-77.2939,"name":"FRANCO MU?OZ ALEX WILLIGTON","addr":"CALLE 4 18 107 BRR PANDIGUANDO","order":"77","tel":"3002028587","notas":"","horario":"","codigo":"94433720","extras":{}},{"lat":1.224751,"lng":-77.29966,"name":"ANGELA ROCIO","addr":"CL 7 NO 12 230","order":"77","tel":"3153013333","notas":"","horario":"","codigo":"1061738322","extras":{}},{"lat":1.2171,"lng":-77.2939,"name":"CENTRO DE SERVICIOS SERVICARS SAS","addr":"CL NORTE 73 20 5 30","order":"78","tel":"3105502869","notas":"","horario":"","codigo":"901684172","extras":{}},{"lat":1.2249,"lng":-77.298,"name":"RAFAEL EDUARDO","addr":"CALLE 70 # 2E 03","order":"78","tel":"3054147711","notas":"","horario":"","codigo":"94530016","extras":{}},{"lat":1.2172,"lng":-77.2939,"name":"bicicletas y motos","addr":"Carretera v�a pavas NS 113 caser�o 3 esquina","order":"79","tel":"0","notas":"","horario":"","codigo":"6341773","extras":{}},{"lat":1.224885,"lng":-77.29795,"name":"ADRIANA MILENA","addr":"CARRERA 5 # 58 - 83","order":"79","tel":"3003547130","notas":"","horario":"","codigo":"66916822","extras":{}},{"lat":1.2177,"lng":-77.2942,"name":"GABI MOTOS EL PAISA SAS","addr":"Carrera 19 # 34 - 67 LC 102","order":"80","tel":"3107473438","notas":"","horario":"","codigo":"901237291","extras":{}},{"lat":1.224835,"lng":-77.29811,"name":"JOS� ALEJANDRO","addr":"Carrera 24 # 23 - 08 Palmira","order":"80","tel":"3107064617","notas":"","horario":"","codigo":"16279305","extras":{}},{"lat":1.2177,"lng":-77.2942,"name":"ELECTRO URGENCIAS MARIN","addr":"calle 70 # 28g-54","order":"81","tel":"3177377189","notas":"","horario":"","codigo":"900697456","extras":{}},{"lat":1.226366,"lng":-77.29775,"name":"COMPA�IA DISTRIBUIDORA DE COMBUSTIBLE DEL NORTE SAS","addr":"KM 3 VD RIO BLANCO SALIDA AL NORTE","order":"81","tel":"3165587778","notas":"","horario":"","codigo":"901446630","extras":{}},{"lat":1.2174,"lng":-77.2946,"name":"unirodamientos cali sas","addr":"calle 21# 16-52","order":"82","tel":"3152581099","notas":"","horario":"","codigo":"901629552","extras":{}},{"lat":1.226326,"lng":-77.29775,"name":"BRANDON LEONEL","addr":"CR 15 8 N 124 CA D 4","order":"82","tel":"3116231812","notas":"","horario":"","codigo":"1002777828","extras":{}},{"lat":1.217172,"lng":-77.294412,"name":"EDWAR ANDRES","addr":"CR 21 A 8 73","order":"83","tel":"0","notas":"","horario":"","codigo":"76318261","extras":{}},{"lat":1.225225,"lng":-77.29653,"name":"MARTIN","addr":"LT 63 VTE SUR","order":"83","tel":"3164822596","notas":"","horario":"","codigo":"1061766705","extras":{}},{"lat":1.217203,"lng":-77.294418,"name":"JOSE DANILO","addr":"calle 13 # 31-42","order":"84","tel":"3128482005","notas":"","horario":"","codigo":"1107532049","extras":{}},{"lat":1.225139,"lng":-77.29651,"name":"Luis eduardo","addr":"carrera 19 # 13-40","order":"84","tel":"3188230001","notas":"","horario":"","codigo":"14937408","extras":{}},{"lat":1.217,"lng":-77.2948,"name":"Prueba Paul","addr":"calle","order":"85","tel":"0","notas":"","horario":"","codigo":"123456","extras":{}},{"lat":1.225786,"lng":-77.29547,"name":"WILMER","addr":"CARRERA 6A # 26 - 41","order":"85","tel":"3163206959","notas":"","horario":"","codigo":"94494612","extras":{}},{"lat":1.2162,"lng":-77.2945,"name":"Juan Felipe","addr":"Carrera 13 # 1-56 Quilichao","order":"86","tel":"0","notas":"","horario":"","codigo":"1116269700","extras":{}},{"lat":1.226205,"lng":-77.29476,"name":"SERVIAUTOS LA 29 S.A.S.","addr":"TRANSVERSAL 29 # 17A 75","order":"86","tel":"3178577585","notas":"","horario":"","codigo":"900494111","extras":{}},{"lat":1.2158,"lng":-77.2951,"name":"LUIS YANCARLOS","addr":"CR 5 CL 9 ESQ BRR CENTRO DARIEN","order":"87","tel":"3175001621","notas":"","horario":"","codigo":"1112882120","extras":{}},{"lat":1.226689,"lng":-77.29517,"name":"Jenny","addr":"Calle 7 # 10-12 Jamundi","order":"87","tel":"3113414759","notas":"","horario":"","codigo":"31536713","extras":{}},{"lat":1.2163,"lng":-77.295,"name":"FABIO","addr":"Carrera 22 # 6 - 40 Tulu�","order":"88","tel":"0","notas":"","horario":"","codigo":"79457039","extras":{}},{"lat":1.22666,"lng":-77.29508,"name":"LUBRICENTRO LA 22","addr":"Carrera 22 # 6 - 40 Tulu�","order":"88","tel":"3147894218","notas":"","horario":"","codigo":"1127233400","extras":{}},{"lat":1.216616,"lng":-77.29493,"name":"VICTOR HUGO","addr":"carrera 80 sim�n bol�var esquina matia","order":"89","tel":"3166239103","notas":"","horario":"","codigo":"94470109","extras":{}},{"lat":1.226841,"lng":-77.29454,"name":"Dalila Socorro","addr":"Carrera 7 # 10-01 Miranda","order":"89","tel":"0","notas":"","horario":"","codigo":"29498959","extras":{}},{"lat":1.2172,"lng":-77.2952,"name":"jader","addr":"crac 16# 9-72","order":"90","tel":"3228615748","notas":"","horario":"","codigo":"16930031","extras":{}},{"lat":1.227195,"lng":-77.29432,"name":"servicios comercio y m�s sas","addr":"carrera 15 #19-01","order":"90","tel":"3117896531","notas":"","horario":"","codigo":"900439207","extras":{}},{"lat":1.2169,"lng":-77.2953,"name":"LUZ DERLY","addr":"CALLE 25 # 17D - 03","order":"91","tel":"3148590321","notas":"","horario":"","codigo":"31404887","extras":{}},{"lat":1.22769,"lng":-77.29396,"name":"SERVINYECCION TECNOLOG�A AUTOMOTRIZ  SAS","addr":"Carrera 29 # 19 - 38 Tulu�","order":"91","tel":"3127017547","notas":"","horario":"","codigo":"901111234","extras":{}},{"lat":1.216334,"lng":-77.29743,"name":"DIDIER LERROY","addr":"AVENIDA 2 BN 30N 59","order":"92","tel":"3146706058","notas":"","horario":"","codigo":"87066928","extras":{}},{"lat":1.227508,"lng":-77.29329,"name":"Edwin Ricaurte","addr":"Carrera 16 # 13-35 Villagorgona Candelaria","order":"92","tel":"3173942815","notas":"","horario":"","codigo":"94470891","extras":{}},{"lat":1.2118,"lng":-77.2996,"name":"BRENDA JOHANA","addr":"CALLE 71G # 6N 47","order":"93","tel":"3107146931","notas":"","horario":"","codigo":"1144182090","extras":{}},{"lat":1.228458,"lng":-77.29351,"name":"CARLOS ALBERTO","addr":"CARRERA 7 JBIS 73 - 04","order":"93","tel":"3136282180","notas":"","horario":"","codigo":"16650143","extras":{}},{"lat":1.228407,"lng":-77.29338,"name":"Hermes campos y cia ltda","addr":"cra 15 # 18-45 b/ belalcazar","order":"94","tel":"3165707754","notas":"","horario":"","codigo":"805002283","extras":{}},{"lat":1.228436,"lng":-77.29278,"name":"Jordan felipe","addr":"calle 20 # 14-41","order":"95","tel":"3136956021","notas":"","horario":"","codigo":"1144060505","extras":{}},{"lat":1.228421,"lng":-77.29281,"name":"ABIDAN","addr":"Calle 15 #24-94 dagua","order":"96","tel":"3185071908","notas":"","horario":"","codigo":"1114726815","extras":{}},{"lat":1.227128,"lng":-77.2928,"name":"jefferson","addr":"cra 15#8-86 b/ san bosco","order":"97","tel":"3004652335","notas":"","horario":"","codigo":"16464448","extras":{}},{"lat":1.226452,"lng":-77.29207,"name":"Efren","addr":"Calle 16 # 20 - 52 Pto Tejada","order":"98","tel":"3107376179","notas":"","horario":"","codigo":"1501425","extras":{}},{"lat":1.225859,"lng":-77.28916,"name":"Javier Norberto","addr":"cll 41 # 8-39B/ el troncal","order":"99","tel":"0","notas":"","horario":"","codigo":"98388447","extras":{}}];
+var TS="1773757369600";
+var SK="st_r2";
+var SG="r2";
+var MOTS=["Cliente Cerrado","Cliente Sin Dinero","No hizo pedido","Desabasto Producto"];
+var MICO=["\uD83D\uDD12","\uD83D\uDCB0","\uD83D\uDCCB","\uD83D\uDCE6"];
+var SC={e:"#22c55e",rt:"#ef4444",rp:"#f59e0b"};
+var E={};
+try{E=JSON.parse(localStorage.getItem(SK)||"{}");} catch(x){E={};}
+function sv(){try{localStorage.setItem(SK,JSON.stringify(E));}catch(x){}}
+function ck(c){return c.lat+"_"+c.lng+"_"+(c.order||"");}
+var _t=sessionStorage.getItem("ts_"+SG);
+if(_t&&_t!==TS){sessionStorage.setItem("ts_"+SG,TS);location.reload(true);}
+else{sessionStorage.setItem("ts_"+SG,TS);}
+var map=L.map("pmap",{zoomControl:false}).setView([D[0].lat,D[0].lng],13);
+L.control.zoom({position:"bottomright"}).addTo(map);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{maxZoom:19}).addTo(map);
+function mkIcon(order,st){
+  var n=order||"",fs=String(n).length>2?8:10;
+  var col=(st&&SC[st])?SC[st]:C;
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42">'
+    +'<path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="'+col+'"/>'
+    +'<circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/>'
+    +'<text x="16" y="20.5" text-anchor="middle" font-size="'+fs+'" font-family="monospace" font-weight="700" fill="#fff">'+n+'</text>'
+    +'</svg>';
+  return L.divIcon({html:svg,iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-44],className:""});
+}
+var MK=[];
+D.forEach(function(c){
+  var k=ck(c),st=(E[k]&&E[k].s)?E[k].s:null;
+  var m=L.marker([c.lat,c.lng],{icon:mkIcon(c.order,st)});
+  m.bindPopup(function(){return buildPopup(c);},{maxWidth:300});
+  m.addTo(map);
+  MK.push({m:m,d:c,k:k});
+});
+if(D.length>0){
+  var lts=D.map(function(c){return c.lat;}),lns=D.map(function(c){return c.lng;});
+  map.fitBounds([[Math.min.apply(null,lts),Math.min.apply(null,lns)],[Math.max.apply(null,lts),Math.max.apply(null,lns)]],{padding:[40,40]});
+}
+function buildPopup(c){
+  var k=ck(c),ed=E[k]||{},st=ed.s||null;
+  var stLbl=st==="e"?"\u2713 Entregado":st==="rt"?"\u2717 Rechazo Total":st==="rp"?"\u26A0 Parcial":"";
+  var stH=st?('<div class="pst '+st+'">'+stLbl+'</div>'+(ed.m?'<div class="pmot">\uD83D\uDCCC '+ed.m+'</div>':'')):'';
+  var exH='';
+  if(c.extras&&Object.keys(c.extras).length){
+    exH='<div class="px">';
+    Object.keys(c.extras).forEach(function(ek){exH+='<div class="pxr"><span class="pxl">'+ek+'</span><span class="pxv">'+c.extras[ek]+'</span></div>';});
+    exH+='</div>';
+  }
+  var h='<div class="pi">';
+  h+='<div><span class="pb">Parada '+(c.order||'-')+'</span>'+(c.codigo?'<span class="pc">COD: '+c.codigo+'</span>':'')+'</div>';
+  h+='<div class="pn">'+c.name+'</div>';
+  h+='<div class="pa">'+(c.addr||'')+'</div>';
+  if(c.horario)h+='<div class="ph">\uD83D\uDD50 '+c.horario+'</div>';
+  h+='<div class="pax">';
+  h+='<a class="pbt pbtn" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">\uD83E\uDDED Navegar</a>';
+  if(c.tel)h+='<a class="pbt pbc" href="tel:'+c.tel+'">\uD83D\uDCDE Llamar</a>';
+  h+='</div>';
+  if(c.notas)h+='<div class="pno">\uD83D\uDCDD '+c.notas+'</div>';
+  h+=exH;
+  h+='<div class="est"><div class="estt">Resultado de entrega</div>';
+  h+=stH;
+  h+='<div class="estb">';
+  h+='<button class="eb e" onclick="sest(\''+k+'\',\'e\');">\u2713 Entregado</button>';
+  h+='<button class="eb rt" onclick="pmot(\''+k+'\',\'rt\');">\u2717 Rechazo</button>';
+  h+='<button class="eb rp" onclick="pmot(\''+k+'\',\'rp\');">\u26A0 Parcial</button>';
+  h+='</div></div></div>';
+  return h;
+}
+var _mk=null,_ms=null;
+function pmot(k,s){
+  _mk=k;_ms=s;
+  var isTot=s==="rt";
+  document.getElementById("mtit").textContent=isTot?"Motivo: Rechazo Total":"Motivo: Rechazo Parcial";
+  var cls=isTot?"rt-c":"rp-c";
+  var html='';
+  MOTS.forEach(function(m,i){html+='<div class="mopt '+cls+'" onclick="selm('+i+')"><span class="mico">'+MICO[i]+'</span>'+m+'</div>';});
+  document.getElementById("mopts").innerHTML=html;
+  document.getElementById("movl").classList.add("open");
+}
+function selm(i){
+  document.getElementById("movl").classList.remove("open");
+  if(_mk!==null)sest(_mk,_ms,MOTS[i]);
+  _mk=null;_ms=null;
+}
+function cmot(){
+  document.getElementById("movl").classList.remove("open");
+  _mk=null;_ms=null;
+}
+document.getElementById("movl").addEventListener("click",function(e){if(e.target===this)cmot();});
+function sest(k,s,mot){
+  var now=new Date().toLocaleTimeString("es-CL");
+  E[k]={s:s,h:now,m:mot||""};
+  sv();
+  var f=MK.find(function(x){return x.k===k;});
+  if(f){f.m.setIcon(mkIcon(f.d.order,s));f.m.closePopup();setTimeout(function(){f.m.openPopup();},80);}
+  if(document.getElementById("plv").style.display!=="none")rl(D);
+}
+function sw(tab){
+  document.getElementById("pmap").style.display=tab==="m"?"block":"none";
+  document.getElementById("plv").style.display =tab==="l"?"flex" :"none";
+  document.getElementById("prv").style.display =tab==="r"?"flex" :"none";
+  document.getElementById("tM").className="tab"+(tab==="m"?" on":"");
+  document.getElementById("tL").className="tab"+(tab==="l"?" on":"");
+  document.getElementById("tR").className="tab"+(tab==="r"?" on":"");
+  if(tab==="m")setTimeout(function(){map.invalidateSize();},50);
+  if(tab==="r")rpt();
+}
+function rl(items){
+  document.getElementById("cl").innerHTML=items.map(function(c){
+    var k=ck(c),ed=E[k]||{},st=ed.s||null;
+    var col=(st&&SC[st])?SC[st]:C;
+    var stLbl=st==="e"?"\u2713 Entregado":st==="rt"?"\u2717 Rechazo":st==="rp"?"\u26A0 Parcial":"";
+    var stFull=stLbl+(ed.m?" \u00b7 "+ed.m:"");
+    var h='<div class="ci" onclick="fm('+c.lat+','+c.lng+')">';
+    h+='<div class="cn" style="background:'+col+'">'+(c.order||'?')+'</div>';
+    h+='<div style="flex:1;min-width:0">';
+    h+='<div class="nm">'+c.name+(stFull?'<span class="stbadge '+st+'">'+stFull+'</span>':'')+'</div>';
+    h+='<div class="ad">'+(c.addr||'')+'</div>';
+    if(c.codigo)h+='<div style="font-family:monospace;font-size:10px;color:#888;margin-top:2px">COD: '+c.codigo+'</div>';
+    h+='<div class="ca">';
+    h+='<a class="bn" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">\uD83E\uDDED Navegar</a>';
+    if(c.tel)h+='<a class="bc" href="tel:'+c.tel+'">\uD83D\uDCDE '+c.tel+'</a>';
+    h+='</div>';
+    if(c.notas)h+='<div class="nt">\uD83D\uDCDD '+c.notas+'</div>';
+    h+='</div></div>';
+    return h;
+  }).join('');
+}
+rl(D);
+function fl(q){
+  var f=q.toLowerCase().trim();
+  if(!f){rl(D);return;}
+  rl(D.filter(function(c){
+    var t=[c.name,c.addr,c.order,c.codigo,c.horario,c.tel,c.notas].map(function(v){return(v||"").toLowerCase();}).join(" ");
+    var x=Object.values(c.extras||{}).map(function(v){return(v||"").toLowerCase();}).join(" ");
+    return(t+" "+x).indexOf(f)>=0;
+  }));
+}
+function fm(lat,lng){
+  sw("m");map.setView([lat,lng],17);
+  var f=MK.find(function(x){return x.d.lat===lat&&x.d.lng===lng;});
+  if(f)f.m.openPopup();
+}
+function rpt(){
+  var tot=D.length;
+  var ne =D.filter(function(c){var e=E[ck(c)];return e&&e.s==="e"; }).length;
+  var nrt=D.filter(function(c){var e=E[ck(c)];return e&&e.s==="rt";}).length;
+  var nrp=D.filter(function(c){var e=E[ck(c)];return e&&e.s==="rp";}).length;
+  var np=tot-ne-nrt-nrp,pct=tot>0?Math.round((ne/tot)*100):0;
+  var rs='<div style="background:#fff;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid #e2ddd5">';
+  rs+='<div style="font-size:13px;font-weight:700;margin-bottom:12px">Resumen del d\u00eda</div>';
+  rs+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+  rs+='<div style="background:#f0fdf4;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#15803d">'+ne+'</div><div style="font-size:10px;color:#15803d;font-weight:600">ENTREGADOS</div></div>';
+  rs+='<div style="background:#fef2f2;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#b91c1c">'+nrt+'</div><div style="font-size:10px;color:#b91c1c;font-weight:600">RECHAZO TOTAL</div></div>';
+  rs+='<div style="background:#fffbeb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#b45309">'+nrp+'</div><div style="font-size:10px;color:#b45309;font-weight:600">RECHAZO PARCIAL</div></div>';
+  rs+='<div style="background:#f9fafb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#6b7280">'+np+'</div><div style="font-size:10px;color:#6b7280;font-weight:600">PENDIENTES</div></div>';
+  rs+='</div>';
+  rs+='<div style="margin-top:12px;background:#f0f0f0;border-radius:20px;height:8px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:#22c55e;border-radius:20px"></div></div>';
+  rs+='<div style="font-size:11px;color:#888;text-align:center;margin-top:4px">'+pct+'% ('+tot+' clientes)</div>';
+  rs+='</div>';
+  document.getElementById("rs").innerHTML=rs;
+  var rows=D.map(function(c){
+    var k=ck(c),ed=E[k]||{},st=ed.s||"p";
+    var sl=st==="e"?"Entregado":st==="rt"?"Rechazo Total":st==="rp"?"Rechazo Parcial":"Pendiente";
+    var bg=st==="e"?"#f0fdf4":st==="rt"?"#fef2f2":st==="rp"?"#fffbeb":"#fff";
+    var col=st==="e"?"#15803d":st==="rt"?"#b91c1c":st==="rp"?"#b45309":"#9ca3af";
+    var h='<div style="background:'+bg+';border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px">';
+    h+='<div style="width:8px;height:8px;border-radius:50%;background:'+col+';flex-shrink:0"></div>';
+    h+='<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+c.name+'</div>';
+    if(c.codigo)h+='<div style="font-size:10px;color:#888;font-family:monospace">COD: '+c.codigo+'</div>';
+    if(ed.m)h+='<div style="font-size:10px;color:#999;font-style:italic">\uD83D\uDCCC '+ed.m+'</div>';
+    h+='</div>';
+    h+='<div style="font-size:11px;font-weight:700;color:'+col+';text-align:right;flex-shrink:0">'+sl;
+    if(ed.h)h+='<div style="font-size:9px;font-weight:400;color:#aaa">'+ed.h+'</div>';
+    h+='</div></div>';
+    return h;
+  }).join('');
+  document.getElementById("rd").innerHTML='<div style="font-size:11px;font-weight:700;color:#8c8680;margin-bottom:8px">DETALLE</div>'+rows;
+}
+function dlr(){
+  var lines=["Cliente,Codigo,Direccion,Orden,Estado,Motivo,Hora"];
+  D.forEach(function(c){
+    var ed=E[ck(c)]||{};
+    var st=ed.s||"";
+    var sl=st==="e"?"Entregado":st==="rt"?"Rechazo Total":st==="rp"?"Rechazo Parcial":"Pendiente";
+    function q(v){return '"'+String(v||"").replace(/"/g,'""')+'"';}
+    lines.push([q(c.name),q(c.codigo),q(c.addr),q(c.order),q(sl),q(ed.m),q(ed.h)].join(","));
+  });
+  var a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,\uFEFF"+encodeURIComponent(lines.join("\n"));
+  a.download="reporte_"+SG+".csv";
+  a.click();
+}
+</script>
+</body>
+</html>

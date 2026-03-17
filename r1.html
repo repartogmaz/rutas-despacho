@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>R1 · 17-03-2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#e63946;--ink:#1a1814;--bg:#f5f2eb;--surface:#fff;--border:#e2ddd5;--muted:#8c8680}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.bar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
+.badge{background:var(--c);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;white-space:nowrap}
+.bi{flex:1;min-width:0}.bi h1{font-size:13px;color:#fff;font-weight:700}.bi p{font-size:9px;color:#888;margin-top:2px}
+.ctr{font-size:11px;color:var(--c);text-align:right;white-space:nowrap}.ctr span{display:block;font-size:9px;color:#666}
+.tabs{display:flex;background:var(--ink);flex-shrink:0;border-bottom:1px solid #333}
+.tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;color:#666;cursor:pointer;border-bottom:2px solid transparent;user-select:none}
+.tab.on{color:var(--c);border-bottom-color:var(--c)}
+#pmap{flex:1;display:block}
+#plv{flex:1;overflow-y:auto;display:none;flex-direction:column}
+#prv{display:none;flex:1;flex-direction:column;overflow-y:auto;background:var(--bg)}
+.sw{padding:10px 16px;background:#fff;border-bottom:1px solid var(--border)}
+#sb{width:100%;border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-size:14px;outline:none;background:var(--bg)}
+#sb:focus{border-color:var(--c)}
+.ci{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer}
+.ci:active{background:#ece9e0}
+.cn{width:28px;height:28px;border-radius:50%;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-family:monospace}
+.nm{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:2px}
+.ad{font-size:12px;color:var(--muted);line-height:1.4}
+.ca{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.bn{display:inline-flex;align-items:center;gap:4px;background:var(--c);color:#fff;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
+.bc{background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:4px;border:none;border-radius:3px;padding:5px 10px;font-size:11px;font-weight:600;text-decoration:none}
+.nt{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid var(--c);padding:4px 8px;margin-top:6px;border-radius:0 3px 3px 0}
+.stbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px}
+.stbadge.e{background:#dcfce7;color:#15803d}.stbadge.rt{background:#fee2e2;color:#b91c1c}.stbadge.rp{background:#fef3c7;color:#b45309}
+.pi{padding:14px;min-width:200px;max-width:290px}
+.pb{display:inline-block;background:var(--c);color:#fff;font-size:9px;font-family:monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px}
+.pc{display:inline-block;background:#f0f0f0;color:#555;font-size:9px;font-family:monospace;padding:2px 6px;border-radius:2px;margin-bottom:6px;margin-left:4px}
+.pn{font-size:15px;font-weight:700;margin-bottom:3px}.pa{font-size:12px;color:var(--muted);margin-bottom:8px}
+.ph{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
+.pax{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.pbt{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none}
+.pbtn{background:#e63946;color:#fff}.pbc{background:#1a1814;color:#fff}
+.pno{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #e63946;padding:5px 8px;margin-bottom:8px;border-radius:0 3px 3px 0}
+.px{border-top:1px solid #eee;padding-top:8px;margin-top:4px}
+.pxr{display:flex;gap:6px;font-size:11px;margin-bottom:3px}
+.pxl{font-size:9px;color:#888;min-width:70px;text-transform:uppercase;font-family:monospace}.pxv{font-weight:600;flex:1}
+.est{border-top:1px solid #eee;padding-top:10px;margin-top:8px}
+.estt{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;font-family:monospace}
+.pst{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:4px}
+.pst.e{background:#dcfce7;color:#15803d}.pst.rt{background:#fee2e2;color:#b91c1c}.pst.rp{background:#fef3c7;color:#b45309}
+.pmot{font-size:10px;color:#888;margin-bottom:6px}
+.estb{display:flex;gap:6px;flex-wrap:wrap}
+.eb{flex:1;padding:8px 4px;border:2px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;text-align:center;background:#fff;white-space:nowrap;min-width:70px}
+.eb.e{border-color:#22c55e;background:#f0fdf4;color:#15803d}
+.eb.rt{border-color:#ef4444;background:#fef2f2;color:#b91c1c}
+.eb.rp{border-color:#f59e0b;background:#fffbeb;color:#b45309}
+.movl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:flex-end;justify-content:center}
+.movl.open{display:flex}
+.mbox{background:#fff;width:100%;max-width:480px;border-radius:16px 16px 0 0;padding:20px 20px 36px}
+.mbox h2{font-size:16px;font-weight:700;margin-bottom:4px}
+.mbox p{font-size:12px;color:#888;margin-bottom:14px}
+.mopt{display:flex;align-items:center;gap:12px;padding:13px 14px;border:2px solid #eee;border-radius:10px;cursor:pointer;margin-bottom:8px;font-size:13px;font-weight:600;transition:border-color .15s,background .15s}
+.mopt.rt-c:hover,.mopt.rt-c:active{border-color:#ef4444;background:#fef2f2;color:#b91c1c}
+.mopt.rp-c:hover,.mopt.rp-c:active{border-color:#f59e0b;background:#fffbeb;color:#b45309}
+.mico{font-size:20px;flex-shrink:0}
+.mcanc{width:100%;margin-top:6px;padding:12px;background:#f5f2eb;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:#888}
+.leaflet-popup-content-wrapper{background:#fff!important;border:none!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.2)!important;padding:0!important}
+.leaflet-popup-content{margin:0!important}.leaflet-popup-tip-container{display:none}
+.leaflet-control-zoom a{background:#1a1814!important;color:#fff!important;border:none!important;border-radius:4px!important;margin-bottom:4px!important}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="badge">R1</div>
+  <div class="bi"><h1>Mapa del día</h1><p>MARTES, 17 DE MARZO DE 2026</p></div>
+  <div class="ctr">90<span>clientes</span></div>
+</div>
+<div class="tabs">
+  <div class="tab on" id="tM" onclick="sw('m')">&#x1F5FA; Mapa</div>
+  <div class="tab" id="tL" onclick="sw('l')">&#x1F4CB; Lista</div>
+  <div class="tab" id="tR" onclick="sw('r')">&#x1F4CA; Reporte</div>
+</div>
+<div id="pmap"></div>
+<div id="plv">
+  <div class="sw"><input type="text" id="sb" placeholder="&#x1F50D; Buscar..." oninput="fl(this.value)"></div>
+  <div id="cl"></div>
+</div>
+<div id="prv">
+  <div style="padding:16px">
+    <div id="rs"></div>
+    <div id="rd"></div>
+    <button onclick="dlr()" style="width:100%;margin-top:16px;padding:13px;background:#1a1814;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">&#x2B07; Descargar Reporte CSV</button>
+  </div>
+</div>
+<div class="movl" id="movl">
+  <div class="mbox">
+    <h2 id="mtit">Motivo de rechazo</h2>
+    <p>Selecciona el motivo:</p>
+    <div id="mopts"></div>
+    <button class="mcanc" onclick="cmot()">Cancelar</button>
+  </div>
+</div>
+<script>
+var C="#e63946";
+var D=[{"lat":3.492513471,"lng":-76.50798608,"name":"BRAKO S.A.S","addr":"CR 38 15 137 URB ACOPI","order":"1","tel":"6026652925","notas":"","horario":"","codigo":"890322449","extras":{}},{"lat":3.499959145,"lng":-76.51918028,"name":"DISTRIBUCIONES LA TORRE SAS","addr":"CR 36 10 140 BG 9","order":"1","tel":"6616643","notas":"","horario":"","codigo":"805020843","extras":{}},{"lat":3.525491996,"lng":-76.50478,"name":"TRANSPORTE CENTRO VALLE S.A.","addr":"CR 27 A 12 170","order":"1","tel":"3163807204","notas":"","horario":"","codigo":"890301071","extras":{}},{"lat":3.370303559,"lng":-76.52468149,"name":"GREEN SAS / EDS PORTAL DEL SUR","addr":"AV PANAMERICANA 11 50","order":"2","tel":"3217816428","notas":"","horario":"","codigo":"900316197 - 4","extras":{}},{"lat":3.582146748,"lng":-76.48623168,"name":"PLANEAR INVERSIONES S.A.S. EDS TERPEL YUMBO1","addr":"CL 5 38 D 154","order":"2","tel":"3232303311","notas":"","horario":"","codigo":"901166056 - 2","extras":{}},{"lat":3.423016782,"lng":-76.24630507,"name":"GIRON VALENCIA JAMES","addr":"SEC 1 MZ G CA 2 URB LAS MARGARITAS","order":"2","tel":"3113911806","notas":"","horario":"","codigo":"6406251","extras":{}},{"lat":4.084126638,"lng":-76.19454347,"name":"SIEG S.A / EDS TEXACO 26","addr":"CL 27 30 01","order":"3","tel":"3216368429","notas":"","horario":"","codigo":"900261282","extras":{}},{"lat":3.404764276,"lng":-76.54379055,"name":"DISTRACOM S.A. / EDS CAMINO REAL","addr":"CL 9 62 98","order":"3","tel":"3145161368","notas":"","horario":"","codigo":"811009788 - 2","extras":{}},{"lat":3.574133208,"lng":-76.48546156,"name":"DISTRACOM S.A. / EDS TEXACO 30 YUMBO","addr":"CL 15 11 F 147","order":"3","tel":"3145161368","notas":"","horario":"","codigo":"811009788 - 3","extras":{}},{"lat":4.19280624,"lng":-76.16080899,"name":"AGRICOLA LA TRINIDAD C&amp;C S.A.S","addr":"CR 3 C 21 50 BRR CENTENARIO","order":"4","tel":"3233483077","notas":"","horario":"","codigo":"901564306","extras":{}},{"lat":3.571727592,"lng":-76.64572556,"name":"ARCE BERNAL GLENN DAVE","addr":"CL 10 # 6 07 CORREGIMIENTO BORRERO AYERBE","order":"4","tel":"3168404949","notas":"","horario":"","codigo":"1151941827","extras":{}},{"lat":3.444389747,"lng":-76.52185779,"name":"AUTO PARTS KOREA S.A.S.","addr":"CL 20 14 11","order":"4","tel":"3114457871","notas":"","horario":"","codigo":"900837671","extras":{}},{"lat":4.107744701,"lng":-76.23999484,"name":"B.A.S. INGENIERIA S.A.","addr":"CORR NARI?O KM 2 VIA LA PALMERA","order":"5","tel":"3176688823","notas":"","horario":"","codigo":"821001526","extras":{}},{"lat":3.899074118,"lng":-76.37719788,"name":"BOHORQUEZ RESTREPO VICTOR MANUEL","addr":"KM 18 VIA MEDIA CANOA-BUENAVENTURA","order":"5","tel":"3215715471","notas":"","horario":"","codigo":"6544788","extras":{}},{"lat":3.417994926,"lng":-76.53137997,"name":"BRAVO JAIME EDGAR / J.B. LUBRICANTES","addr":"CL 13 40A 26","order":"6","tel":"3206115600","notas":"","horario":"","codigo":"16720239","extras":{}},{"lat":3.880437239,"lng":-76.94591973,"name":"CAMELO TORRES JAVIER","addr":"KM 17 PRJ EL PACIFICO","order":"6","tel":"3218247579","notas":"","horario":"","codigo":"1070615789","extras":{}},{"lat":3.407516046,"lng":-76.52078323,"name":"CASTA?O MEDINA FRANCIA ELENA","addr":"CR 47 C 25 93 BRR JOSE HOLGUIN GARCES","order":"7","tel":"3148708751","notas":"","horario":"","codigo":"66838643","extras":{}},{"lat":3.264228916,"lng":-76.53888546,"name":"CLINIMOTOS JAMUNDI S.A.S.","addr":"CR 11 13 48 BRR LIBERTADORES","order":"7","tel":"3113503172","notas":"","horario":"","codigo":"900681937","extras":{}},{"lat":3.53711234,"lng":-76.29648149,"name":"CUELLAR PERDOMO HEVERTH ALIRIO","addr":"CR 27 # 41 59 VERSALLES","order":"8","tel":"3163694755","notas":"","horario":"","codigo":"16265804","extras":{}},{"lat":3.408603432,"lng":-76.5190351,"name":"ESCALANTE CONSUELO DE JESUS","addr":"CL 36 46 27","order":"8","tel":"3148536606","notas":"","horario":"","codigo":"29847855","extras":{}},{"lat":3.419068243,"lng":-76.50766756,"name":"ESCOBAR OTERO ORLANDO / MOTOS KEYMAN","addr":"CR 39 # 36 37","order":"9","tel":"3182944178","notas":"","horario":"","codigo":"16702022","extras":{}},{"lat":4.077746793,"lng":-76.19627248,"name":"ESTACION Y SERVITECA LOS PROFESIONALES S.A.S.","addr":"CR 27A # 34 17 BRR AVENIDA CALI","order":"9","tel":"3174286281","notas":"","horario":"","codigo":"900637097","extras":{}},{"lat":3.888832666,"lng":-77.00372804,"name":"FRENOS Y MUELLES ALEXX S.A.S.","addr":"KM 6 MZ EE VIA ALTERNA INTERNA BRR GAMBOA","order":"10","tel":"3113397720","notas":"","horario":"","codigo":"901560548","extras":{}},{"lat":3.477248465,"lng":-76.48762509,"name":"GALLEGO ALVAREZ LEIDER ANTONIO","addr":"CL 70 # 1C 2 09 LA RIVERA","order":"10","tel":"3146520687","notas":"","horario":"","codigo":"16792415","extras":{}},{"lat":3.419591347,"lng":-76.53637189,"name":"GLOBOLLANTAS S.A.S.","addr":"CL 10 # 40 52","order":"11","tel":"3155633327","notas":"","horario":"","codigo":"805000253","extras":{}},{"lat":3.822926764,"lng":-76.52244017,"name":"GOMEZ NIDIA LUCIA","addr":"CR 11 CL 12 ESQ BRR CENTRO","order":"11","tel":"3218136688","notas":"","horario":"","codigo":"27444757","extras":{}},{"lat":3.563403426,"lng":-76.49337005,"name":"LASSO TORRES NELSON ENRIQUE","addr":"CALLE 10 A 18 A 15","order":"12","tel":"3216064761","notas":"","horario":"","codigo":"16462821","extras":{}},{"lat":3.536352713,"lng":-76.30635437,"name":"LUBRICANTES CZ S.A.S.","addr":"CR 35 37 A 73","order":"13","tel":"3185484303","notas":"","horario":"","codigo":"901415278","extras":{}},{"lat":3.490628366,"lng":-76.49705607,"name":"MECHANICS TECNOLOGY OPERATION COMPANY S.A.S.","addr":"CR 4 NORTE 71 I 22","order":"14","tel":"3137898614","notas":"","horario":"","codigo":"901436512","extras":{}},{"lat":3.011732969,"lng":-76.48474339,"name":"NOGUERA SARRIA ANDRES FELIPE","addr":"CL 9 13 36","order":"15","tel":"3215112141","notas":"","horario":"","codigo":"4758905","extras":{}},{"lat":3.441094911,"lng":-76.53481822,"name":"PERLAZA CEDIEL MARINO","addr":"CR 15 # 6 134 BRR SAN JUAN BOSCO","order":"16","tel":"3155038285","notas":"","horario":"","codigo":"16780519","extras":{}},{"lat":3.419760025,"lng":-76.51378602,"name":"RIVERA MAUNA MARCO ANTONIO","addr":"CRA 39 # 31 13","order":"17","tel":"3012899900","notas":"","horario":"","codigo":"16632936","extras":{}},{"lat":3.420863461,"lng":-76.50699299,"name":"SALCEDO FORERO FABIAN ALEXANDER","addr":"CL 36 # 34 06","order":"18","tel":"3137198477","notas":"","horario":"","codigo":"1006459506","extras":{}},{"lat":3.229276247,"lng":-76.41807843,"name":"TINTINAGO PENCUA JEISON ANDRES","addr":"CR 18 15 50","order":"19","tel":"3155633349","notas":"","horario":"","codigo":"1007616440","extras":{}},{"lat":4.081536515,"lng":-76.18689045,"name":"VERA CAMELO FABIO / LUBRICANTES LA 40","addr":"CR 40 # 28 02","order":"20","tel":"3128345990","notas":"","horario":"","codigo":"19292165","extras":{}},{"lat":3.537364322,"lng":-76.29796341,"name":"AVILA CUERVO OSCAR EDUARDO / SINCRO MARCAS - AUTO REPAIR SHOP","addr":"CL 41 28 46","order":"21","tel":"3127251934","notas":"","horario":"","codigo":"14698052","extras":{}},{"lat":3.25748471,"lng":-76.5424528,"name":"GALARZA CARDONA ANDRES FELIPE / SERVITECA GALARZA CAR GC","addr":"CR 6 # 5 85 AV CIRCUNVALAR","order":"22","tel":"3152704969","notas":"","horario":"","codigo":"1006235005","extras":{}},{"lat":3.881780286,"lng":-77.03764424,"name":"RANGEL SANCHEZ WULMAN ALEXYS / ACCESORIOS Y LUBRICANTES WR","addr":"CL 6 A  32 A 66 BRR KENNEY","order":"23","tel":"3214548390","notas":"","horario":"","codigo":"88312718","extras":{}},{"lat":4.060533632,"lng":-76.19859964,"name":"ZAPATA CALLE MARIA ESPERANZA / CENTRO DE LUCRICACION EDS TULUA","addr":"ESTACION DE SERVICIO TERPEL SALIDA SUR KM 1","order":"24","tel":"3216368405","notas":"","horario":"","codigo":"31204431","extras":{}},{"lat":3.428862584,"lng":-76.4979184,"name":"BASANTE HOYOS POALA  ANDREA","addr":"CL 70 28 B 71","order":"25","tel":"3148089657","notas":"","horario":"","codigo":"31566959","extras":{}},{"lat":3.22873664,"lng":-76.41813509,"name":"CAMPO BALANTA LUIS DAVID / LUIS MOTOS","addr":"CR 26 11A 27","order":"26","tel":"3166358203","notas":"","horario":"","codigo":"1130950039","extras":{}},{"lat":3.229465712,"lng":-76.51599314,"name":"CRIOLLO BUITRON OLGA ROCIO / TALLER Y LUBRICANTES SERVICARS","addr":"TALLER Y LUBRICANTES SERVICARS","order":"27","tel":"3177928904","notas":"","horario":"","codigo":"1083882544","extras":{}},{"lat":4.068065731,"lng":-76.19548056,"name":"FERNANDEZ GUARIN OVIDIO / TECNIAUTOS","addr":"CR 28 43 124 BRR LA BASTILLA","order":"28","tel":"3182168707","notas":"","horario":"","codigo":"6498661","extras":{}},{"lat":3.689516945,"lng":-76.31461523,"name":"JAMAUCA GENOY WILSON / LAVADERO Y LUBRICANTES EL ESTADIO","addr":"CR 14 12 52","order":"29","tel":"3117743467","notas":"","horario":"","codigo":"5278080","extras":{}},{"lat":3.657665915,"lng":-76.68859664,"name":"MENESES DELGADO HERNANDO","addr":"CRA 20 # 17 44 BRR RICAURTE","order":"30","tel":"3126535930","notas":"","horario":"","codigo":"94422643","extras":{}},{"lat":3.462842629,"lng":-76.5155603,"name":"NARVAEZ MOLINA NELSON ARMANDO / SERVIAUTOS NARVAEZ","addr":"CL 33 1 A 2 6 BRR SANTANDER","order":"31","tel":"3136013958","notas":"","horario":"","codigo":"94552971","extras":{}},{"lat":3.571755032,"lng":-76.64383158,"name":"PALACIOS PRIETO HERNAN","addr":"KM 30 BORRERO AYERSE BRR KA ZULIA","order":"32","tel":"3187029381","notas":"","horario":"","codigo":"14576103","extras":{}},{"lat":3.414308087,"lng":-76.23888373,"name":"ROJAS MEDINA HUMBERTO / DISTRIBUIDORA DE COMBUSTIBLE EL CASTILLO","addr":"CL 7 3 49 BRR ALTOS DEL CASTILLO","order":"33","tel":"3136625495","notas":"","horario":"","codigo":"2611594","extras":{}},{"lat":3.522248295,"lng":-76.2958733,"name":"SARMIENTO DE RODRIGUEZ MARIA NUBIA / LUBRICANTES Y SERVICIOS LA 24","addr":"CR 24 25 22","order":"34","tel":"3206171152","notas":"","horario":"","codigo":"31155832","extras":{}},{"lat":4.086795008,"lng":-76.18775848,"name":"TAFUR OREJUELA EDUARDO JOSE / PANELA VICTORIA","addr":"Calle 21 # 36A-27, Tulu�, Valle del Cauca, Colombia","order":"35","tel":"6022320690","notas":"","horario":"","codigo":"16360284","extras":{}},{"lat":3.570383738,"lng":-76.64239559,"name":"VELASCO MENESES CARLOS ALBERTO","addr":"KM 30 BORRERO AYERBE CALLE PRINCIPAL","order":"36","tel":"3185397844","notas":"","horario":"","codigo":"94419276","extras":{}},{"lat":3.552393098,"lng":-76.30861815,"name":"ESTACION DE SERVICIO BRISAS DE CORONADO S.A.S/TEXACO BRISAS","addr":"CR 38 62 12","order":"37","tel":"3104686266","notas":"","horario":"","codigo":"901312886 - 1","extras":{}},{"lat":3.435369666,"lng":-76.51919536,"name":"TRIANA MARIA ISABEL / LUBRICANTES SERVI YA","addr":"carrera 24 a 25  05","order":"38","tel":"0","notas":"","horario":"","codigo":"24709129","extras":{}},{"lat":3.309793293,"lng":-76.48468673,"name":"EDS COLPALMA SAS","addr":"Biomax el Hormiguero","order":"39","tel":"0","notas":"","horario":"","codigo":"901297228","extras":{}},{"lat":3.533371086,"lng":-76.30135875,"name":"IMPORTADORA PITS REPUESTOS SAS","addr":"Calle 36 # 31 - 80 Palmira","order":"40","tel":"3014461905","notas":"","horario":"","codigo":"900352835","extras":{}},{"lat":3.414874032,"lng":-76.51773926,"name":"JOSE NERHU CASTRO","addr":"calle 27 # 41b52 cali","order":"41","tel":"3163272398","notas":"","horario":"","codigo":"17666252","extras":{}},{"lat":3.9257571,"lng":-76.28664616,"name":"RUTH ARGENIS RENGIFO","addr":"Calle 12 # 14 - 41","order":"42","tel":"3218071738","notas":"","horario":"","codigo":"38853384","extras":{}},{"lat":3.37657675,"lng":-76.55636206,"name":"Jos� Luis qui�ones montilla","addr":"carrera 94 oeste # 2- 05 alto jordan","order":"43","tel":"0","notas":"","horario":"","codigo":"1006207433","extras":{}},{"lat":3.872377577,"lng":-76.45439655,"name":"LUBRIREPUESTOS CALIMA S.A.S","addr":"KM 21 VIA BUGA A BUENAVENTURA PUENTE TIERRA","order":"44","tel":"3153851541","notas":"","horario":"","codigo":"901767725","extras":{}},{"lat":3.398993631,"lng":-76.38585504,"name":"Diana","addr":"Carrera 12 # 15-30 Villagorgona","order":"45","tel":"0","notas":"","horario":"","codigo":"66706264","extras":{}},{"lat":3.476019596,"lng":-76.52652685,"name":"LAVA AUTOS CHIPICHAPE","addr":"AVENIDA 6 # 37B NORTE 16","order":"46","tel":"3167679943","notas":"","horario":"","codigo":"805010246","extras":{}},{"lat":3.45750874,"lng":-76.48454055,"name":"JHONY ROGER","addr":"calle 70 # 7j -148 los pinos","order":"47","tel":"3154439386","notas":"","horario":"","codigo":"16286320","extras":{}},{"lat":3.258715862,"lng":-76.55860305,"name":"CENTRO DE SERVICIOS LAS MERCEDES SAS","addr":"Lt terreno 1A Sm 1 sc3 Alfagura Petromil","order":"48","tel":"3116686948","notas":"","horario":"","codigo":"900340398","extras":{}},{"lat":3.459211853,"lng":-76.55030329,"name":"GUSTAVO ADOLFO","addr":"AVENIDA 15 OESTE # 8 OESTE 66 ( BAJO AGUACATAL)","order":"49","tel":"3122621356","notas":"","horario":"","codigo":"108828929","extras":{}},{"lat":3.454702897,"lng":-76.57861333,"name":"GUSTAVO ADOLFO","addr":"AVENIDA 6 OESTE # 31 - 27","order":"50","tel":"0","notas":"","horario":"","codigo":"10497720","extras":{}},{"lat":3.464310129,"lng":-76.52463354,"name":"DISTRACOM S.A. / EDS TEXACO TERMINAL CALI","addr":"CL 30 NORTE 2 BN 160","order":"51","tel":"3173541905","notas":"","horario":"","codigo":"811009788 - 10","extras":{}},{"lat":3.434911832,"lng":-76.50606897,"name":"Jhony andrey","addr":"carrera 25 a# 33h43 cali","order":"52","tel":"3154178100","notas":"","horario":"","codigo":"1005865792","extras":{}},{"lat":3.538395004,"lng":-76.30174834,"name":"CERON ZAPATA SAS","addr":"Calle 42 # 31 - 71 Palmira","order":"53","tel":"3187302774","notas":"","horario":"","codigo":"900064454","extras":{}},{"lat":3.452356545,"lng":-76.5011384,"name":"Nora Alicia","addr":"calle 49# 8- 30 barrio villa colombia","order":"54","tel":"3244506016","notas":"","horario":"","codigo":"24467917","extras":{}},{"lat":3.423060625,"lng":-76.50041789,"name":"INVERSIONES DIAMANTINO S.A.S","addr":"CR 29 39 A 35 BRR EL DIAMANTE","order":"55","tel":"3128661010","notas":"","horario":"","codigo":"805018951","extras":{}},{"lat":3.4516467,"lng":-76.5319854,"name":"SANTANDER BRAVO JAVIER ENRIQUE / LUBRICANTES LA CENTRAL","addr":"CR 8 5 06 BRR VILLA NELLY CORR EL PLACER","order":"56","tel":"0","notas":"","horario":"","codigo":"6292689","extras":{}},{"lat":3.460224884,"lng":-76.51912797,"name":"MORALES GONZALES OCTAVIO / ALMACEN LUBRICALI","addr":"CRA 2 27 06 BRR JORGE ISAAC","order":"57","tel":"0","notas":"","horario":"","codigo":"4407154","extras":{}},{"lat":3.44148815,"lng":-76.51517104,"name":"LLANTAS LA 30 S.A.S.","addr":"CR 17 D 29 79","order":"58","tel":"0","notas":"","horario":"","codigo":"901798655","extras":{}},{"lat":39.0694282,"lng":-80.3117828,"name":"VALDERRAMA VASQUEZ SANDRA YOMAIRA / ALMACEN MOTOFULL","addr":"CR 13 1 61","order":"59","tel":"0","notas":"","horario":"","codigo":"40625960","extras":{}},{"lat":4.087991241,"lng":-76.21588781,"name":"COOPERATIVA DE TRANSPORTADORES DE TULUA","addr":"CL 27 1 W 176","order":"60","tel":"3105771726","notas":"","horario":"","codigo":"891900254","extras":{}},{"lat":3.867151166,"lng":-76.99448582,"name":"PAYARES RANGEL RAMIRO","addr":"CL 15 CRA 69 BRR EL CAMBIO","order":"61","tel":"3011279538","notas":"","horario":"","codigo":"12436266","extras":{}},{"lat":3.8830471,"lng":-77.0197212,"name":"CABRERA DELGADO NATHALIA","addr":"VIA LOBOGUERRERO - BUENAVENTURA","order":"62","tel":"3159524488","notas":"","horario":"","codigo":"1193225121","extras":{}},{"lat":3.434136393,"lng":-76.47928309,"name":"IBARGUEN BARRERA LUZ KARINA","addr":"TV 103 26 F 18","order":"63","tel":"3147408158","notas":"","horario":"","codigo":"31566799","extras":{}},{"lat":3.437720076,"lng":-76.48050617,"name":"FERNANDO ADOLFO","addr":"Carrera 26 B2 74-54 cali","order":"64","tel":"0","notas":"","horario":"","codigo":"1130635929","extras":{}},{"lat":1.2048,"lng":-77.278,"name":"DISTRACOM S.A. / COMBUSTIBLES DEL PACIFICO","addr":"Kilometro 17 Cabal Pomo","order":"65","tel":"3186755191","notas":"","horario":"","codigo":"811009788 - 22","extras":{}},{"lat":1.205,"lng":-77.2785,"name":"LUBRICANTES DOBLE CALZADA ANDALUCIA","addr":"KM 4 VIA TULU� - ANDALUCIA EDS LOS ALPES","order":"66","tel":"0","notas":"","horario":"","codigo":"94365365","extras":{}},{"lat":1.2054,"lng":-77.2785,"name":"LUBRICANTES LA PRIMERA","addr":"CARRERA 1 # 7 - 18 HOTEL EL OASIS BUGALAGRANDE","order":"67","tel":"3107189789","notas":"","horario":"","codigo":"14810080","extras":{}},{"lat":1.2055,"lng":-77.2788,"name":"tracto camiones y servicios","addr":"carrera 20 f # 14b63","order":"68","tel":"0","notas":"","horario":"","codigo":"900778248","extras":{}},{"lat":1.2052,"lng":-77.2789,"name":"Sandro","addr":"Calle 10A # 45 Sur- 50 Bonanza Jamundi","order":"69","tel":"0","notas":"","horario":"","codigo":"14636248","extras":{}},{"lat":1.205,"lng":-77.2788,"name":"Javier","addr":"Calle 20 # 40SurF - 17 Barrio Terranova Jamundi","order":"70","tel":"3169746993","notas":"","horario":"","codigo":"83029356","extras":{}},{"lat":1.2041,"lng":-77.2796,"name":"ANDRES","addr":"CARRERA 5 # 41 - 32","order":"71","tel":"3167937617","notas":"","horario":"","codigo":"6342974","extras":{}},{"lat":1.2041,"lng":-77.2797,"name":"Magnolia","addr":"Calle 14 # 3 - 76 Caloto Cauca","order":"72","tel":"0","notas":"","horario":"","codigo":"25385882","extras":{}},{"lat":1.207,"lng":-77.2804,"name":"YERALDIN","addr":"carrera 26 i # 56a54 Nueva Floresta","order":"73","tel":"3162324926","notas":"","horario":"","codigo":"1113649304","extras":{}},{"lat":1.2098,"lng":-77.2826,"name":"LUIS ALBERTO","addr":"calle 9 # 56-186","order":"74","tel":"3187085209","notas":"","horario":"","codigo":"16774794","extras":{}},{"lat":1.2104,"lng":-77.2825,"name":"CARLOS","addr":"CALLE 36 # 4C 31","order":"75","tel":"3133314639","notas":"","horario":"","codigo":"13493654","extras":{}}];
+var TS="1773757369595";
+var SK="st_r1";
+var SG="r1";
+var MOTS=["Cliente Cerrado","Cliente Sin Dinero","No hizo pedido","Desabasto Producto"];
+var MICO=["\uD83D\uDD12","\uD83D\uDCB0","\uD83D\uDCCB","\uD83D\uDCE6"];
+var SC={e:"#22c55e",rt:"#ef4444",rp:"#f59e0b"};
+var E={};
+try{E=JSON.parse(localStorage.getItem(SK)||"{}");} catch(x){E={};}
+function sv(){try{localStorage.setItem(SK,JSON.stringify(E));}catch(x){}}
+function ck(c){return c.lat+"_"+c.lng+"_"+(c.order||"");}
+var _t=sessionStorage.getItem("ts_"+SG);
+if(_t&&_t!==TS){sessionStorage.setItem("ts_"+SG,TS);location.reload(true);}
+else{sessionStorage.setItem("ts_"+SG,TS);}
+var map=L.map("pmap",{zoomControl:false}).setView([D[0].lat,D[0].lng],13);
+L.control.zoom({position:"bottomright"}).addTo(map);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{maxZoom:19}).addTo(map);
+function mkIcon(order,st){
+  var n=order||"",fs=String(n).length>2?8:10;
+  var col=(st&&SC[st])?SC[st]:C;
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 42">'
+    +'<path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 26 16 26S32 28 32 16C32 7.163 24.837 0 16 0z" fill="'+col+'"/>'
+    +'<circle cx="16" cy="16" r="9" fill="rgba(0,0,0,.2)"/>'
+    +'<text x="16" y="20.5" text-anchor="middle" font-size="'+fs+'" font-family="monospace" font-weight="700" fill="#fff">'+n+'</text>'
+    +'</svg>';
+  return L.divIcon({html:svg,iconSize:[32,40],iconAnchor:[16,40],popupAnchor:[0,-44],className:""});
+}
+var MK=[];
+D.forEach(function(c){
+  var k=ck(c),st=(E[k]&&E[k].s)?E[k].s:null;
+  var m=L.marker([c.lat,c.lng],{icon:mkIcon(c.order,st)});
+  m.bindPopup(function(){return buildPopup(c);},{maxWidth:300});
+  m.addTo(map);
+  MK.push({m:m,d:c,k:k});
+});
+if(D.length>0){
+  var lts=D.map(function(c){return c.lat;}),lns=D.map(function(c){return c.lng;});
+  map.fitBounds([[Math.min.apply(null,lts),Math.min.apply(null,lns)],[Math.max.apply(null,lts),Math.max.apply(null,lns)]],{padding:[40,40]});
+}
+function buildPopup(c){
+  var k=ck(c),ed=E[k]||{},st=ed.s||null;
+  var stLbl=st==="e"?"\u2713 Entregado":st==="rt"?"\u2717 Rechazo Total":st==="rp"?"\u26A0 Parcial":"";
+  var stH=st?('<div class="pst '+st+'">'+stLbl+'</div>'+(ed.m?'<div class="pmot">\uD83D\uDCCC '+ed.m+'</div>':'')):'';
+  var exH='';
+  if(c.extras&&Object.keys(c.extras).length){
+    exH='<div class="px">';
+    Object.keys(c.extras).forEach(function(ek){exH+='<div class="pxr"><span class="pxl">'+ek+'</span><span class="pxv">'+c.extras[ek]+'</span></div>';});
+    exH+='</div>';
+  }
+  var h='<div class="pi">';
+  h+='<div><span class="pb">Parada '+(c.order||'-')+'</span>'+(c.codigo?'<span class="pc">COD: '+c.codigo+'</span>':'')+'</div>';
+  h+='<div class="pn">'+c.name+'</div>';
+  h+='<div class="pa">'+(c.addr||'')+'</div>';
+  if(c.horario)h+='<div class="ph">\uD83D\uDD50 '+c.horario+'</div>';
+  h+='<div class="pax">';
+  h+='<a class="pbt pbtn" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">\uD83E\uDDED Navegar</a>';
+  if(c.tel)h+='<a class="pbt pbc" href="tel:'+c.tel+'">\uD83D\uDCDE Llamar</a>';
+  h+='</div>';
+  if(c.notas)h+='<div class="pno">\uD83D\uDCDD '+c.notas+'</div>';
+  h+=exH;
+  h+='<div class="est"><div class="estt">Resultado de entrega</div>';
+  h+=stH;
+  h+='<div class="estb">';
+  h+='<button class="eb e" onclick="sest(\''+k+'\',\'e\');">\u2713 Entregado</button>';
+  h+='<button class="eb rt" onclick="pmot(\''+k+'\',\'rt\');">\u2717 Rechazo</button>';
+  h+='<button class="eb rp" onclick="pmot(\''+k+'\',\'rp\');">\u26A0 Parcial</button>';
+  h+='</div></div></div>';
+  return h;
+}
+var _mk=null,_ms=null;
+function pmot(k,s){
+  _mk=k;_ms=s;
+  var isTot=s==="rt";
+  document.getElementById("mtit").textContent=isTot?"Motivo: Rechazo Total":"Motivo: Rechazo Parcial";
+  var cls=isTot?"rt-c":"rp-c";
+  var html='';
+  MOTS.forEach(function(m,i){html+='<div class="mopt '+cls+'" onclick="selm('+i+')"><span class="mico">'+MICO[i]+'</span>'+m+'</div>';});
+  document.getElementById("mopts").innerHTML=html;
+  document.getElementById("movl").classList.add("open");
+}
+function selm(i){
+  document.getElementById("movl").classList.remove("open");
+  if(_mk!==null)sest(_mk,_ms,MOTS[i]);
+  _mk=null;_ms=null;
+}
+function cmot(){
+  document.getElementById("movl").classList.remove("open");
+  _mk=null;_ms=null;
+}
+document.getElementById("movl").addEventListener("click",function(e){if(e.target===this)cmot();});
+function sest(k,s,mot){
+  var now=new Date().toLocaleTimeString("es-CL");
+  E[k]={s:s,h:now,m:mot||""};
+  sv();
+  var f=MK.find(function(x){return x.k===k;});
+  if(f){f.m.setIcon(mkIcon(f.d.order,s));f.m.closePopup();setTimeout(function(){f.m.openPopup();},80);}
+  if(document.getElementById("plv").style.display!=="none")rl(D);
+}
+function sw(tab){
+  document.getElementById("pmap").style.display=tab==="m"?"block":"none";
+  document.getElementById("plv").style.display =tab==="l"?"flex" :"none";
+  document.getElementById("prv").style.display =tab==="r"?"flex" :"none";
+  document.getElementById("tM").className="tab"+(tab==="m"?" on":"");
+  document.getElementById("tL").className="tab"+(tab==="l"?" on":"");
+  document.getElementById("tR").className="tab"+(tab==="r"?" on":"");
+  if(tab==="m")setTimeout(function(){map.invalidateSize();},50);
+  if(tab==="r")rpt();
+}
+function rl(items){
+  document.getElementById("cl").innerHTML=items.map(function(c){
+    var k=ck(c),ed=E[k]||{},st=ed.s||null;
+    var col=(st&&SC[st])?SC[st]:C;
+    var stLbl=st==="e"?"\u2713 Entregado":st==="rt"?"\u2717 Rechazo":st==="rp"?"\u26A0 Parcial":"";
+    var stFull=stLbl+(ed.m?" \u00b7 "+ed.m:"");
+    var h='<div class="ci" onclick="fm('+c.lat+','+c.lng+')">';
+    h+='<div class="cn" style="background:'+col+'">'+(c.order||'?')+'</div>';
+    h+='<div style="flex:1;min-width:0">';
+    h+='<div class="nm">'+c.name+(stFull?'<span class="stbadge '+st+'">'+stFull+'</span>':'')+'</div>';
+    h+='<div class="ad">'+(c.addr||'')+'</div>';
+    if(c.codigo)h+='<div style="font-family:monospace;font-size:10px;color:#888;margin-top:2px">COD: '+c.codigo+'</div>';
+    h+='<div class="ca">';
+    h+='<a class="bn" href="https://maps.google.com/?q='+c.lat+','+c.lng+'" target="_blank">\uD83E\uDDED Navegar</a>';
+    if(c.tel)h+='<a class="bc" href="tel:'+c.tel+'">\uD83D\uDCDE '+c.tel+'</a>';
+    h+='</div>';
+    if(c.notas)h+='<div class="nt">\uD83D\uDCDD '+c.notas+'</div>';
+    h+='</div></div>';
+    return h;
+  }).join('');
+}
+rl(D);
+function fl(q){
+  var f=q.toLowerCase().trim();
+  if(!f){rl(D);return;}
+  rl(D.filter(function(c){
+    var t=[c.name,c.addr,c.order,c.codigo,c.horario,c.tel,c.notas].map(function(v){return(v||"").toLowerCase();}).join(" ");
+    var x=Object.values(c.extras||{}).map(function(v){return(v||"").toLowerCase();}).join(" ");
+    return(t+" "+x).indexOf(f)>=0;
+  }));
+}
+function fm(lat,lng){
+  sw("m");map.setView([lat,lng],17);
+  var f=MK.find(function(x){return x.d.lat===lat&&x.d.lng===lng;});
+  if(f)f.m.openPopup();
+}
+function rpt(){
+  var tot=D.length;
+  var ne =D.filter(function(c){var e=E[ck(c)];return e&&e.s==="e"; }).length;
+  var nrt=D.filter(function(c){var e=E[ck(c)];return e&&e.s==="rt";}).length;
+  var nrp=D.filter(function(c){var e=E[ck(c)];return e&&e.s==="rp";}).length;
+  var np=tot-ne-nrt-nrp,pct=tot>0?Math.round((ne/tot)*100):0;
+  var rs='<div style="background:#fff;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid #e2ddd5">';
+  rs+='<div style="font-size:13px;font-weight:700;margin-bottom:12px">Resumen del d\u00eda</div>';
+  rs+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+  rs+='<div style="background:#f0fdf4;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#15803d">'+ne+'</div><div style="font-size:10px;color:#15803d;font-weight:600">ENTREGADOS</div></div>';
+  rs+='<div style="background:#fef2f2;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#b91c1c">'+nrt+'</div><div style="font-size:10px;color:#b91c1c;font-weight:600">RECHAZO TOTAL</div></div>';
+  rs+='<div style="background:#fffbeb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#b45309">'+nrp+'</div><div style="font-size:10px;color:#b45309;font-weight:600">RECHAZO PARCIAL</div></div>';
+  rs+='<div style="background:#f9fafb;border-radius:8px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:#6b7280">'+np+'</div><div style="font-size:10px;color:#6b7280;font-weight:600">PENDIENTES</div></div>';
+  rs+='</div>';
+  rs+='<div style="margin-top:12px;background:#f0f0f0;border-radius:20px;height:8px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:#22c55e;border-radius:20px"></div></div>';
+  rs+='<div style="font-size:11px;color:#888;text-align:center;margin-top:4px">'+pct+'% ('+tot+' clientes)</div>';
+  rs+='</div>';
+  document.getElementById("rs").innerHTML=rs;
+  var rows=D.map(function(c){
+    var k=ck(c),ed=E[k]||{},st=ed.s||"p";
+    var sl=st==="e"?"Entregado":st==="rt"?"Rechazo Total":st==="rp"?"Rechazo Parcial":"Pendiente";
+    var bg=st==="e"?"#f0fdf4":st==="rt"?"#fef2f2":st==="rp"?"#fffbeb":"#fff";
+    var col=st==="e"?"#15803d":st==="rt"?"#b91c1c":st==="rp"?"#b45309":"#9ca3af";
+    var h='<div style="background:'+bg+';border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px">';
+    h+='<div style="width:8px;height:8px;border-radius:50%;background:'+col+';flex-shrink:0"></div>';
+    h+='<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+c.name+'</div>';
+    if(c.codigo)h+='<div style="font-size:10px;color:#888;font-family:monospace">COD: '+c.codigo+'</div>';
+    if(ed.m)h+='<div style="font-size:10px;color:#999;font-style:italic">\uD83D\uDCCC '+ed.m+'</div>';
+    h+='</div>';
+    h+='<div style="font-size:11px;font-weight:700;color:'+col+';text-align:right;flex-shrink:0">'+sl;
+    if(ed.h)h+='<div style="font-size:9px;font-weight:400;color:#aaa">'+ed.h+'</div>';
+    h+='</div></div>';
+    return h;
+  }).join('');
+  document.getElementById("rd").innerHTML='<div style="font-size:11px;font-weight:700;color:#8c8680;margin-bottom:8px">DETALLE</div>'+rows;
+}
+function dlr(){
+  var lines=["Cliente,Codigo,Direccion,Orden,Estado,Motivo,Hora"];
+  D.forEach(function(c){
+    var ed=E[ck(c)]||{};
+    var st=ed.s||"";
+    var sl=st==="e"?"Entregado":st==="rt"?"Rechazo Total":st==="rp"?"Rechazo Parcial":"Pendiente";
+    function q(v){return '"'+String(v||"").replace(/"/g,'""')+'"';}
+    lines.push([q(c.name),q(c.codigo),q(c.addr),q(c.order),q(sl),q(ed.m),q(ed.h)].join(","));
+  });
+  var a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,\uFEFF"+encodeURIComponent(lines.join("\n"));
+  a.download="reporte_"+SG+".csv";
+  a.click();
+}
+</script>
+</body>
+</html>

@@ -6,6 +6,7 @@
 <title>Generador de Rutas — Despacho</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#f5f2eb;--surface:#fff;--border:#e2ddd5;--ink:#1a1814;--muted:#8c8680;--accent:#d4500a;--accent2:#2d6a4f;--warn:#e9b44c}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -80,7 +81,7 @@ tr:hover td{background:var(--bg)}
 </div>
 <div class="wrap">
   <div class="steps">
-    <div class="step active" id="s1"><div class="step-n">1</div><div><div class="step-t">Cargar CSV</div><div class="step-s">Datos del día</div></div></div>
+    <div class="step active" id="s1"><div class="step-n">1</div><div><div class="step-t">Cargar archivo</div><div class="step-s">CSV o Excel del día</div></div></div>
     <div class="step" id="s2"><div class="step-n">2</div><div><div class="step-t">Seleccionar rutas</div><div class="step-s">Elige cuáles generar</div></div></div>
     <div class="step" id="s3"><div class="step-n">3</div><div><div class="step-t">Generar HTMLs</div><div class="step-s">Un archivo por ruta</div></div></div>
     <div class="step" id="s4"><div class="step-n">4</div><div><div class="step-t">Subir a GitHub</div><div class="step-s">Links listos</div></div></div>
@@ -89,10 +90,10 @@ tr:hover td{background:var(--bg)}
     <div class="card">
       <div class="card-ttl"><span>1</span> Cargar archivo de clientes</div>
       <label class="ulabel" id="ulabel">
-        <input type="file" id="fi" accept=".csv">
+        <input type="file" id="fi" accept=".csv,.xlsx,.xls">
         <div class="u-ico">&#x1F4C2;</div>
-        <h3>Arrastra tu CSV aquí</h3>
-        <p>o haz clic para seleccionar &middot; Obligatorio: <code>ruta, codigo, cliente, lat, lng</code></p>
+        <h3>Arrastra tu archivo aqu&#237;</h3>
+        <p>o haz clic para seleccionar &middot; Obligatorio: <code>ruta, codigo, cliente, lat, lng</code> &middot; Formatos: CSV &middot; Excel</p>
       </label>
       <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
         <button class="btn btn-g" id="demoBtn" style="font-size:12px;padding:8px 16px">Usar datos de ejemplo</button>
@@ -229,7 +230,28 @@ document.getElementById('backStep3Btn').addEventListener('click',function(){setS
 document.getElementById('restartBtn').addEventListener('click',restart);
 
 function parseCSV(file){
-  Papa.parse(file,{header:true,skipEmptyLines:true,complete:function(r){processData(r.data);}});
+  var ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='xlsx'||ext==='xls'){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        var wb=XLSX.read(e.target.result,{type:'array'});
+        // Usar la primera hoja que no sea BExRepositorySheet ni Hoja1 de índice
+        var sheetName=wb.SheetNames.find(function(n){
+          return n!=='BExRepositorySheet'&&n!=='Hoja1';
+        })||wb.SheetNames[0];
+        var ws=wb.Sheets[sheetName];
+        var rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+        processData(rows);
+      }catch(err){
+        document.getElementById('alertBox').innerHTML='<div class="alert al-w">&#x26A0; Error al leer el Excel: '+err.message+'</div>';
+        document.getElementById('prevCard').classList.remove('hidden');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }else{
+    Papa.parse(file,{header:true,skipEmptyLines:true,complete:function(r){processData(r.data);}});
+  }
 }
 function processData(rows){
   allData=[];

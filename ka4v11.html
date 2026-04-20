@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
-<title>KA4V56 · 20-04-2026</title>
+<title>KA4V11 · 20-04-2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--c:#c77dff;--ink:#1a1814;--bg:#f5f2eb;--surface:#fff;--border:#e2ddd5;--muted:#8c8680}
+:root{--c:#f4a261;--ink:#1a1814;--bg:#f5f2eb;--surface:#fff;--border:#e2ddd5;--muted:#8c8680}
 body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
 .bar{background:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:3px solid var(--c)}
 .badge{background:var(--c);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:2px;white-space:nowrap}
@@ -44,8 +44,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);heig
 .ph{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1a6640;background:#e8f7ee;border-radius:3px;padding:3px 8px;margin-bottom:8px}
 .pax{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .pbt{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:3px;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none}
-.pbtn{background:#c77dff;color:#fff}.pbc{background:#1a1814;color:#fff}
-.pno{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #c77dff;padding:5px 8px;margin-bottom:8px;border-radius:0 3px 3px 0}
+.pbtn{background:#f4a261;color:#fff}.pbc{background:#1a1814;color:#fff}
+.pno{font-size:11px;color:#c05000;background:#fff8f5;border-left:3px solid #f4a261;padding:5px 8px;margin-bottom:8px;border-radius:0 3px 3px 0}
 .px{border-top:1px solid #eee;padding-top:8px;margin-top:4px}
 .pxr{display:flex;gap:6px;font-size:11px;margin-bottom:3px}
 .pxl{font-size:9px;color:#888;min-width:70px;text-transform:uppercase;font-family:monospace}.pxv{font-weight:600;flex:1}
@@ -76,9 +76,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);heig
 </head>
 <body>
 <div class="bar">
-  <div class="badge">KA4V56</div>
+  <div class="badge">KA4V11</div>
   <div class="bi"><h1>Mapa del día</h1><p>LUNES, 20 DE ABRIL DE 2026</p></div>
-  <div class="ctr">1<span>clientes</span></div>
+  <div class="ctr">34<span>clientes</span></div>
 </div>
 <div class="tabs">
   <div class="tab on" id="tM" onclick="sw('m')">&#x1F5FA; Mapa</div>
@@ -106,11 +106,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);heig
   </div>
 </div>
 <script>
-var C="#c77dff";
-var D=[{"lat":1.358627,"lng":-77.28258,"name":"BAN AGRARIO CHACHAGUI","addr":"CL 3 4 71","order":"1","tel":"","notas":"","horario":"","codigo":"1224804649","extras":{"Ciudad":"CHACHAGSI","Municipio":"CENTRO","Cajas":"3"}}];
-var TS="1776724458707";
-var SK="st_ka4v56";
-var SG="ka4v56";
+var C="#f4a261";
+var D=[{"lat":1.202146,"lng":-77.27628,"name":"BODEGA LAS VIOLETAS","addr":"CR 13 13B 87","order":"1","tel":"","notas":"","horario":"","codigo":"1224385932","extras":{"Ciudad":"PASTO","Municipio":"LAS VIOLETAS 3","Cajas":"19"}},{"lat":1.197576,"lng":-77.27141,"name":"BDC 1480 PASTO PLAZA DE MERCAD","addr":"CR 8A 16 95 PLAZA DE MERCADO","order":"2","tel":"","notas":"","horario":"","codigo":"1224672096","extras":{"Ciudad":"PASTO","Municipio":"OTROS","Cajas":"12"}},{"lat":1.197981,"lng":-77.27138,"name":"DEPOSITO MERCADIARIO GUATIARA","addr":"CR 7 16 73 LC 3","order":"3","tel":"","notas":"","horario":"","codigo":"1224256149","extras":{"Ciudad":"PASTO","Municipio":"POTRERILLO","Cajas":"43"}},{"lat":1.198295,"lng":-77.27177,"name":"DEPOSITO BASTIDAS","addr":"KR 7B 15 A 19","order":"4","tel":"","notas":"","horario":"","codigo":"1203704268","extras":{"Ciudad":"PASTO","Municipio":"EL PROGRESO","Cajas":"20"}},{"lat":1.198424,"lng":-77.2724,"name":"DISTRIBUCIONES ANDRADE","addr":"CR 8 16 37","order":"5","tel":"","notas":"","horario":"","codigo":"1224423095","extras":{"Ciudad":"PASTO","Municipio":"POTRERILLO","Cajas":"64"}},{"lat":1.198424,"lng":-77.2724,"name":"DEPOSITO DAVID","addr":"CL 15 7B 51","order":"6","tel":"","notas":"","horario":"","codigo":"1224386914","extras":{"Ciudad":"PASTO","Municipio":"EL PROGRESO","Cajas":"45"}},{"lat":1.2039,"lng":-77.2735,"name":"SANTA MARIA","addr":"CR 13 18 36","order":"7","tel":"","notas":"","horario":"","codigo":"1224487366","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"15"}},{"lat":1.2026,"lng":-77.2713,"name":"TIENDA RUMARS","addr":"CR 11 20 29","order":"8","tel":"","notas":"","horario":"","codigo":"1224215716","extras":{"Ciudad":"PASTO","Municipio":"EL RECUERDO","Cajas":"3,5"}},{"lat":1.2027,"lng":-77.2723,"name":"REST SABOR DEL PACIFICO","addr":"CL 18 A 11 69","order":"9","tel":"","notas":"","horario":"","codigo":"1210750718","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1"}},{"lat":1.20294,"lng":-77.27306,"name":"CAFE SABOR Y SAZON","addr":"CL 18 12 06 FATIMA","order":"10","tel":"","notas":"","horario":"","codigo":"1224809626","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1"}},{"lat":1.2028,"lng":-77.2732,"name":"CAFETERIA BLANCA SOFIA","addr":"CR 12 17 41","order":"11","tel":"","notas":"","horario":"","codigo":"1205249711","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"4"}},{"lat":1.202695,"lng":-77.272735,"name":"RESTAURANTE Y CAFETERA JESUS N","addr":"CR 7A 13 74 SAN MARTN","order":"12","tel":"","notas":"","horario":"","codigo":"1224829371","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"3"}},{"lat":1.2029,"lng":-77.2729,"name":"TIENDA LAUREN","addr":"CR 12 18 10","order":"13","tel":"","notas":"","horario":"","codigo":"1224347116","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"9"}},{"lat":1.2021,"lng":-77.2713,"name":"MEGASURTIDO","addr":"CL 18A 10 57","order":"14","tel":"","notas":"","horario":"","codigo":"1200930264","extras":{"Ciudad":"PASTO","Municipio":"AVENIDA IDEMA","Cajas":"3"}},{"lat":1.2016,"lng":-77.2706,"name":"BARATON","addr":"CL 18A 9 22","order":"15","tel":"","notas":"","horario":"","codigo":"1224273199","extras":{"Ciudad":"PASTO","Municipio":"EL PROGRESO","Cajas":"3"}},{"lat":1.2015,"lng":-77.2705,"name":"MISTER HORNADO","addr":"CL 18A 9 17","order":"16","tel":"","notas":"","horario":"","codigo":"1224189479","extras":{"Ciudad":"PASTO","Municipio":"AVENIDA IDEMA","Cajas":"5,5"}},{"lat":1.2019,"lng":-77.2718,"name":"TDA ANABEL CORAL","addr":"CL 18 10 48","order":"17","tel":"","notas":"","horario":"","codigo":"1200936694","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1"}},{"lat":1.2013,"lng":-77.2715,"name":"TNDA LIMAR","addr":"CR 10 17 52","order":"18","tel":"","notas":"","horario":"","codigo":"1200930259","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1"}},{"lat":1.2024,"lng":-77.2725,"name":"TIENDA LA 18","addr":"CL 18 11 49","order":"19","tel":"","notas":"","horario":"","codigo":"1224246780","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"2"}},{"lat":1.2016,"lng":-77.2714,"name":"MERAKI AUTOSERVICIO","addr":"CL 18 10 02","order":"20","tel":"","notas":"","horario":"","codigo":"1224238824","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"2"}},{"lat":1.2019,"lng":-77.2743,"name":"RESTAURANTE LA ESQUINA","addr":"CL 16 12 02","order":"21","tel":"","notas":"","horario":"","codigo":"1224652327","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"2,5"}},{"lat":1.20038,"lng":-77.27357,"name":"TIENDA AUMARZ","addr":"CL 16 10 35","order":"22","tel":"","notas":"","horario":"","codigo":"1224681075","extras":{"Ciudad":"PASTO","Municipio":"LAS LUNAS","Cajas":"9"}},{"lat":1.20012,"lng":-77.273442,"name":"EL DORADO RESTAURANTE Y CAFETE","addr":"CL 16 9 69","order":"23","tel":"","notas":"","horario":"","codigo":"1200930175","extras":{"Ciudad":"PASTO","Municipio":"LAS LUNAS","Cajas":"3"}},{"lat":1.201879,"lng":-77.2728,"name":"CAFETERIA FATIMA","addr":"CL 17 11 62","order":"24","tel":"","notas":"","horario":"","codigo":"1224357513","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1"}},{"lat":1.2019,"lng":-77.2742,"name":"TIENDA SAMY","addr":"CR 12 16-12","order":"25","tel":"","notas":"","horario":"","codigo":"1210672712","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"7"}},{"lat":1.201,"lng":-77.2723,"name":"HOTEL LOS ANGELES","addr":"CR 10 16 146","order":"26","tel":"","notas":"","horario":"","codigo":"1203704278","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1,67"}},{"lat":1.2013,"lng":-77.2729,"name":"PANADERIA MACRO PAN","addr":"CL 16A 10 62","order":"27","tel":"","notas":"","horario":"","codigo":"1200942074","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"2,5"}},{"lat":1.2012,"lng":-77.2739,"name":"HOTEL BUENAVENTURA","addr":"KR 11 16 - 14","order":"28","tel":"","notas":"","horario":"","codigo":"1205249858","extras":{"Ciudad":"PASTO","Municipio":"SALOMON","Cajas":"7"}},{"lat":1.2013,"lng":-77.2721,"name":"SAZON NARIÑENSE","addr":"CL 17 10 14","order":"29","tel":"","notas":"","horario":"","codigo":"1224221536","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1"}},{"lat":1.2009,"lng":-77.2716,"name":"HOTEL LIBERTAD","addr":"CL 17 9 - 36","order":"30","tel":"","notas":"","horario":"","codigo":"1205249234","extras":{"Ciudad":"PASTO","Municipio":"FATIMA","Cajas":"1"}},{"lat":1.1906,"lng":-77.27082,"name":"ESTANCO POKER 2","addr":"MZ 7 CA 11","order":"31","tel":"","notas":"","horario":"","codigo":"1224811971","extras":{"Ciudad":"PASTO","Municipio":"LA MINGA","Cajas":"147"}},{"lat":1.2001,"lng":-77.2737,"name":"DISTRIBUCIONES A.D","addr":"CR 10 15A 30","order":"32","tel":"","notas":"","horario":"","codigo":"1224547828","extras":{"Ciudad":"PASTO","Municipio":"LAS LUNAS","Cajas":"6"}},{"lat":1.2007,"lng":-77.2742,"name":"KIOSKO MARIA ELENA","addr":"CL 15 A 10 - KIOSKO","order":"33","tel":"","notas":"","horario":"","codigo":"1205248871","extras":{"Ciudad":"PASTO","Municipio":"LAS FERIAS","Cajas":"1"}},{"lat":1.2002,"lng":-77.2735,"name":"PAN DORADO PANADERIA PASTELER","addr":"CL 16 9 85","order":"34","tel":"","notas":"","horario":"","codigo":"1200930172","extras":{"Ciudad":"PASTO","Municipio":"LAS LUNAS","Cajas":"4"}}];
+var TS="1776724458683";
+var SK="st_ka4v11";
+var SG="ka4v11";
 var SB_URL="https://nhaidtonhejdpyyeqakb.supabase.co";
 var SB_KEY="sb_publishable_3ZHsAmIjlAUrJD152-h3Ow_atnXStwh";
 var TODAY="2026-04-20";

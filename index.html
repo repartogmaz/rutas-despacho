@@ -92,7 +92,7 @@ tr:hover td{background:var(--bg)}
         <input type="file" id="fi" accept=".csv">
         <div class="u-ico">&#x1F4C2;</div>
         <h3>Arrastra tu CSV aquí</h3>
-        <p>o haz clic para seleccionar &middot; Formato: <code>ruta, cliente, lat, lng, orden</code></p>
+        <p>o haz clic para seleccionar &middot; Obligatorio: <code>ruta, codigo, cliente, lat, lng</code></p>
       </label>
       <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
         <button class="btn btn-g" id="demoBtn" style="font-size:12px;padding:8px 16px">Usar datos de ejemplo</button>
@@ -233,6 +233,7 @@ function parseCSV(file){
 }
 function processData(rows){
   allData=[];
+  var sinCoordenadas=0, sinCodigo=0;
   for(var i=0;i<rows.length;i++){
     var row=rows[i],n={};
     Object.keys(row).forEach(function(k){n[k.toLowerCase().trim()]=(row[k]||'').toString().trim();});
@@ -245,7 +246,9 @@ function processData(rows){
     });
     var lat=parseFloat(n.lat||n.latitude||n.latitud||0);
     var lng=parseFloat(n.lng||n.lon||n.longitude||n.longitud||0);
-    if(!lat||!lng||isNaN(lat)||isNaN(lng))continue;
+    if(!lat||!lng||isNaN(lat)||isNaN(lng)){sinCoordenadas++;continue;}
+    var codigo=n.codigo||n.codigo_cliente||n.cod_cliente||n.cod||n.code||n.id_cliente||'';
+    if(!codigo){sinCodigo++;continue;}
     allData.push({
       ruta:n.ruta||n.route||n.zona||'SIN RUTA',
       cliente:n.cliente||n.client||n.nombre||n.name||'-',
@@ -255,29 +258,36 @@ function processData(rows){
       telefono:n.telefono||n.phone||n.tel||'',
       notas:n.notas||n.notes||n.observaciones||'',
       horario:n.horario||n.horario_entrega||n.hora||n.hora_entrega||n.ventana||n.ventana_entrega||'',
-      codigo:n.codigo||n.codigo_cliente||n.cod_cliente||n.cod||n.code||n.id_cliente||'',
+      codigo:codigo,
       _extras:extras
     });
   }
   if(!allData.length){
-    document.getElementById('alertBox').innerHTML='<div class="alert al-w">&#x26A0; No se encontraron filas con coordenadas válidas.</div>';
+    var msg='&#x26A0; No se encontraron filas v\u00e1lidas.';
+    if(sinCodigo>0) msg+=' '+sinCodigo+' filas omitidas por falta de c\u00f3digo de cliente.';
+    if(sinCoordenadas>0) msg+=' '+sinCoordenadas+' filas omitidas por falta de coordenadas.';
+    document.getElementById('alertBox').innerHTML='<div class="alert al-w">'+msg+'</div>';
     document.getElementById('prevCard').classList.remove('hidden');
     return;
   }
   routeMap={};
   allData.forEach(function(r){if(!routeMap[r.ruta])routeMap[r.ruta]=[];routeMap[r.ruta].push(r);});
-  showPreview();
+  showPreview(sinCodigo,sinCoordenadas);
 }
-function showPreview(){
+function showPreview(sinCodigo,sinCoordenadas){
   document.getElementById('prevCard').classList.remove('hidden');
   var total=allData.length,sample=allData.slice(0,6);
   var exLabels=[];
   allData.forEach(function(r){Object.keys(r._extras||{}).forEach(function(k){if(exLabels.indexOf(k)<0)exLabels.push(k);});});
-  var cols=['ruta','cliente','direccion','lat','lng','orden'];
-  ['codigo','horario','telefono','notas'].forEach(function(co){if(allData.some(function(r){return r[co];}))cols.push(co);});
+  // codigo siempre obligatorio — siempre aparece en la tabla
+  var cols=['ruta','codigo','cliente','direccion','lat','lng','orden'];
+  ['horario','telefono','notas'].forEach(function(co){if(allData.some(function(r){return r[co];}))cols.push(co);});
   cols=cols.concat(exLabels);
-  var exB=exLabels.length?'<div style="margin-bottom:10px;font-size:11px;color:var(--accent2);font-family:monospace">&#x2726; Columnas extra: <strong>'+exLabels.join(', ')+'</strong></div>':'';
-  document.getElementById('alertBox').innerHTML='<div class="alert al-ok">&#x2713; '+total+' clientes en '+Object.keys(routeMap).length+' rutas.</div>'+exB;
+  var warnings='';
+  if(sinCodigo>0) warnings+='<div class="alert al-w" style="margin-bottom:8px">&#x26A0; '+sinCodigo+' fila(s) omitidas porque no tienen c\u00f3digo de cliente (campo obligatorio para cruzar con Supabase).</div>';
+  if(sinCoordenadas>0) warnings+='<div class="alert al-w" style="margin-bottom:8px">&#x26A0; '+sinCoordenadas+' fila(s) omitidas porque no tienen coordenadas v\u00e1lidas (lat/lng).</div>';
+  var exB=exLabels.length?'<div style="margin-bottom:8px;font-size:11px;color:var(--accent2);font-family:monospace">&#x2726; Columnas extra detectadas: <strong>'+exLabels.join(', ')+'</strong></div>':'';
+  document.getElementById('alertBox').innerHTML=warnings+'<div class="alert al-ok">&#x2713; '+total+' clientes v\u00e1lidos en '+Object.keys(routeMap).length+' rutas.</div>'+exB;
   document.getElementById('prevTable').innerHTML=
     '<thead><tr>'+cols.map(function(c){return '<th>'+c.toUpperCase()+'</th>';}).join('')+'</tr></thead>'+
     '<tbody>'+sample.map(function(row){

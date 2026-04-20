@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GMAZ Reparto — Acceso</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2eb;--ink:#1a1814;--accent:#d4500a;--border:#e2ddd5;--muted:#8c8680;--surface:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.wrap{width:100%;max-width:380px;padding:24px}
+.logo{text-align:center;margin-bottom:40px}
+.logo h1{font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;color:var(--ink);line-height:1}
+.logo p{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:.06em}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:32px}
+.card h2{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;margin-bottom:24px;color:var(--ink)}
+.field{margin-bottom:16px}
+label{display:block;font-size:11px;font-weight:500;color:var(--muted);font-family:'Space Mono',monospace;letter-spacing:.06em;margin-bottom:6px}
+input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);outline:none;transition:border-color .15s}
+input:focus{border-color:var(--accent)}
+.btn{width:100%;padding:12px;background:var(--ink);color:var(--bg);border:none;border-radius:4px;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.04em;margin-top:8px;transition:background .15s}
+.btn:hover{background:var(--accent)}
+.btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
+.err{background:#fce8e8;border:1px solid #f09595;color:#a32d2d;padding:10px 12px;border-radius:4px;font-size:12px;margin-bottom:16px;display:none}
+.err.show{display:block}
+.foot{text-align:center;margin-top:20px;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">
+    <h1>GMAZ</h1>
+    <p>SISTEMA DE REPARTO DINÁMICO</p>
+  </div>
+  <div class="card">
+    <h2>Iniciar sesión</h2>
+    <div class="err" id="err">Usuario o clave incorrectos.</div>
+    <div class="field">
+      <label>USUARIO</label>
+      <input type="text" id="usr" placeholder="tu usuario" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>CONTRASEÑA</label>
+      <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn" id="btn" onclick="login()">Entrar</button>
+  </div>
+  <div class="foot">GMAZ S.A.S. &middot; Pasto, Nariño</div>
+</div>
+<script>
+const SB_URL='https://nhaidtonhejdpyyeqakb.supabase.co';
+const SB_KEY='sb_publishable_3ZHsAmIjlAUrJD152-h3Ow_atnXStwh';
+
+async function sbFetch(path,opts={}){
+  const res=await fetch(SB_URL+'/rest/v1/'+path,{
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...(opts.headers||{})},
+    ...opts
+  });
+  const text=await res.text();
+  if(!res.ok)throw new Error(text);
+  return text?JSON.parse(text):null;
+}
+
+async function sha256hex(str){
+  const buf=new TextEncoder().encode(str);
+  const hash=await crypto.subtle.digest('SHA-256',buf);
+  return Array.from(new Uint8Array(hash)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+
+document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+document.getElementById('usr').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('pwd').focus();});
+
+async function login(){
+  const usr=document.getElementById('usr').value.trim();
+  const pwd=document.getElementById('pwd').value;
+  const btn=document.getElementById('btn');
+  const err=document.getElementById('err');
+  if(!usr||!pwd)return;
+  btn.disabled=true;btn.textContent='Verificando...';err.classList.remove('show');
+  try{
+    const hash=await sha256hex(pwd);
+    const rows=await sbFetch('usuarios?usuario=eq.'+encodeURIComponent(usr)+'&clave_hash=eq.'+hash+'&activo=eq.true&select=id,nombre,rol,empleado_id');
+    if(!rows||rows.length===0){err.classList.add('show');btn.disabled=false;btn.textContent='Entrar';return;}
+    const u=rows[0];
+    sessionStorage.setItem('gmaz_session',JSON.stringify({id:u.id,nombre:u.nombre,rol:u.rol,empleado_id:u.empleado_id}));
+    if(u.rol==='gerencia')window.location.href='gerencia.html';
+    else if(u.rol==='supervisor')window.location.href='supervisor.html';
+    else window.location.href='empleado.html';
+  }catch(e){err.textContent='Error de conexión. Intenta de nuevo.';err.classList.add('show');btn.disabled=false;btn.textContent='Entrar';}
+}
+</script>
+</body>
+</html>

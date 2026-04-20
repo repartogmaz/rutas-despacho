@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1">
+<title>GMAZ — Mi Desempeño</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2eb;--ink:#1a1814;--accent:#d4500a;--border:#e2ddd5;--muted:#8c8680;--surface:#fff;--green:#2d7a3a;--yellow:#b87a10;--red:#a32d2d;--green-bg:#e8f5e9;--yellow-bg:#fff8e1;--red-bg:#fce8e8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.topbar{background:var(--ink);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:3px solid var(--accent)}
+.logo{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:900;color:#fff}
+.role-badge{font-size:10px;padding:3px 8px;border-radius:3px;font-weight:700;font-family:'Space Mono',monospace;background:#4a3a1a;color:#fac775}
+.logout{font-size:11px;color:#666;cursor:pointer;font-family:'Space Mono',monospace;text-decoration:underline}
+.logout:hover{color:#fff}
+.body{padding:16px;max-width:480px;margin:0 auto}
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;font-family:'Space Mono',monospace;flex-shrink:0;background:#e6f1fb;color:#185fa5}
+.profile-name{font-size:16px;font-weight:700}
+.profile-sub{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px}
+.kpi-label{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;letter-spacing:.06em;margin-bottom:6px;text-transform:uppercase}
+.kpi-val{font-size:22px;font-weight:700;font-family:'Unbounded',sans-serif}
+.kpi-green{color:var(--green)}.kpi-yellow{color:var(--yellow)}.kpi-red{color:var(--red)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:14px}
+.panel-title{font-size:9px;font-weight:700;font-family:'Space Mono',monospace;letter-spacing:.06em;color:var(--muted);margin-bottom:12px;text-transform:uppercase}
+.chart-bars{display:flex;align-items:flex-end;gap:3px;height:64px;margin-bottom:8px}
+.bar-day{flex:1;border-radius:2px 2px 0 0;min-width:8px;position:relative;cursor:pointer}
+.bar-day:hover{opacity:.8}
+.bar-day-tip{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:7px;color:var(--muted);white-space:nowrap;font-family:'Space Mono',monospace}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--ink);color:var(--bg);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.06em;padding:6px 10px;text-align:left}
+td{padding:7px 10px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+.badge{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;font-family:'Space Mono',monospace}
+.badge-g{background:var(--green-bg);color:var(--green)}
+.badge-y{background:var(--yellow-bg);color:var(--yellow)}
+.badge-r{background:var(--red-bg);color:var(--red)}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:32px;width:100%;max-width:340px}
+.login-logo{font-family:'Unbounded',sans-serif;font-size:24px;font-weight:900;text-align:center;margin-bottom:6px}
+.login-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);text-align:center;margin-bottom:28px}
+.login-card h2{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:10px;font-weight:700;font-family:'Space Mono',monospace;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}
+.field input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);outline:none}
+.field input:focus{border-color:var(--accent)}
+.btn{width:100%;padding:12px;background:var(--ink);color:var(--bg);border:none;border-radius:4px;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px}
+.btn:hover{background:var(--accent)}
+.btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
+.err{background:var(--red-bg);border:1px solid var(--red);color:var(--red);padding:10px 12px;border-radius:4px;font-size:12px;margin-bottom:14px;display:none}
+.err.show{display:block}
+.rechazos-list{margin-top:8px}
+.rechazo-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.rechazo-item:last-child{border-bottom:none}
+.rechazo-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:4px}
+.rechazo-info{flex:1}
+.rechazo-cliente{font-size:12px;font-weight:500}
+.rechazo-meta{font-size:10px;color:var(--muted);font-family:'Space Mono',monospace}
+</style>
+</head>
+<body>
+
+<!-- LOGIN (visible por defecto) -->
+<div id="loginView">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">GMAZ</div>
+      <div class="login-sub">REPARTO DINÁMICO</div>
+      <h2>Mi desempeño</h2>
+      <div class="err" id="loginErr">Usuario o clave incorrectos.</div>
+      <div class="field"><label>USUARIO</label><input type="text" id="loginUsr" placeholder="tu usuario" autocomplete="username"></div>
+      <div class="field"><label>CONTRASEÑA</label><input type="password" id="loginPwd" placeholder="••••••••" autocomplete="current-password"></div>
+      <button class="btn" id="loginBtn" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERFIL (oculto hasta login) -->
+<div id="profileView" style="display:none">
+  <div class="topbar">
+    <span class="logo">GMAZ</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="role-badge" id="roleBadge">Conductor</span>
+      <span class="logout" onclick="doLogout()">Salir</span>
+    </div>
+  </div>
+  <div class="body">
+    <div class="profile-card">
+      <div class="avatar" id="profileAvatar">JG</div>
+      <div>
+        <div class="profile-name" id="profileName">—</div>
+        <div class="profile-sub" id="profileSub">Conductor</div>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Efectividad mes</div>
+        <div class="kpi-val" id="efMes">—</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">Meta: 97%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Días trabajados</div>
+        <div class="kpi-val" id="diasMes">—</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">este mes</div>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Pedidos entregados</div>
+        <div class="kpi-val" id="pedMes" style="font-size:16px">—</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">peso 40%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">CF entregadas</div>
+        <div class="kpi-val" id="cajMes" style="font-size:16px">—</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">peso 60%</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Efectividad diaria — mes actual</div>
+      <div class="chart-bars" id="chartBars"></div>
+      <div style="margin-top:20px;font-size:10px;color:var(--muted);font-family:'Space Mono',monospace">verde &gt;97% · amarillo 95-97% · rojo &lt;95%</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Historial de rutas</div>
+      <table>
+        <thead><tr><th>Fecha</th><th>Ruta</th><th>Clientes</th><th>Entregados</th><th>Efectividad</th></tr></thead>
+        <tbody id="historialBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Rechazos del mes</div>
+      <div class="rechazos-list" id="rechazosBody"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB_URL='https://nhaidtonhejdpyyeqakb.supabase.co';
+const SB_KEY='sb_publishable_3ZHsAmIjlAUrJD152-h3Ow_atnXStwh';
+let SESSION=null;
+let TODAY=new Date().toISOString().split('T')[0];
+let MES_INICIO=TODAY.slice(0,7)+'-01';
+
+async function sbFetch(path,opts={}){
+  const res=await fetch(SB_URL+'/rest/v1/'+path,{
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...(opts.headers||{})},
+    method:opts.method||'GET',body:opts.body||undefined
+  });
+  const text=await res.text();
+  if(!res.ok)throw new Error(text);
+  return text?JSON.parse(text):null;
+}
+
+async function sha256hex(str){
+  const buf=new TextEncoder().encode(str);
+  const hash=await crypto.subtle.digest('SHA-256',buf);
+  return Array.from(new Uint8Array(hash)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+
+document.getElementById('loginPwd').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('loginUsr').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginPwd').focus();});
+
+async function doLogin(){
+  const usr=document.getElementById('loginUsr').value.trim();
+  const pwd=document.getElementById('loginPwd').value;
+  const btn=document.getElementById('loginBtn');
+  const err=document.getElementById('loginErr');
+  if(!usr||!pwd)return;
+  btn.disabled=true;btn.textContent='Verificando...';err.classList.remove('show');
+  try{
+    const hash=await sha256hex(pwd);
+    const rows=await sbFetch('usuarios?usuario=eq.'+encodeURIComponent(usr)+'&clave_hash=eq.'+hash+'&activo=eq.true&select=id,nombre,rol,empleado_id');
+    if(!rows||rows.length===0){err.classList.add('show');btn.disabled=false;btn.textContent='Entrar';return;}
+    const u=rows[0];
+    if(u.rol==='gerencia'){window.location.href='gerencia.html';return;}
+    if(u.rol==='supervisor'){window.location.href='supervisor.html';return;}
+    SESSION=u;
+    sessionStorage.setItem('gmaz_session',JSON.stringify(u));
+    showProfile();
+  }catch(e){err.textContent='Error de conexión';err.classList.add('show');btn.disabled=false;btn.textContent='Entrar';}
+}
+
+function doLogout(){sessionStorage.removeItem('gmaz_session');document.getElementById('loginView').style.display='';document.getElementById('profileView').style.display='none';}
+
+function efColor(p){return p>=97?'var(--green)':p>=95?'var(--yellow)':'var(--red)';}
+function efClass(p){return p>=97?'kpi-green':p>=95?'kpi-yellow':'kpi-red';}
+function efBadge(p){const c=p>=97?'badge-g':p>=95?'badge-y':'badge-r';return`<span class="badge ${c}">${p.toFixed(1)}%</span>`;}
+
+async function showProfile(){
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('profileView').style.display='block';
+
+  const ini=SESSION.nombre.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('profileAvatar').textContent=ini;
+  document.getElementById('profileName').textContent=SESSION.nombre;
+  document.getElementById('profileSub').textContent=SESSION.rol;
+  document.getElementById('roleBadge').textContent=SESSION.rol.charAt(0).toUpperCase()+SESSION.rol.slice(1);
+
+  if(!SESSION.empleado_id){document.getElementById('efMes').textContent='Sin datos';return;}
+
+  const [asig,gest,prog,carg,liq]=await Promise.all([
+    sbFetch('asignaciones?fecha=gte.'+MES_INICIO+'&empleado_id=eq.'+SESSION.empleado_id+'&select=*'),
+    sbFetch('gestiones?fecha=gte.'+MES_INICIO+'&select=*'),
+    sbFetch('programacion?fecha=gte.'+MES_INICIO+'&select=*'),
+    sbFetch('cargue?fecha=gte.'+MES_INICIO+'&select=*'),
+    sbFetch('liquidacion?fecha=gte.'+MES_INICIO+'&select=*')
+  ]);
+
+  const asigData=asig||[];
+  let totProg=0,totEnt=0,totCfC=0,totCfL=0;
+  const diasData=[];
+
+  for(const a of asigData){
+    const pD=(prog||[]).filter(p=>p.fecha===a.fecha&&p.ruta===a.ruta);
+    const gD=(gest||[]).filter(g=>g.fecha===a.fecha&&g.ruta===a.ruta&&!g.excluida);
+    const entD=gD.filter(g=>g.estado==='e'||g.estado==='rp').length;
+    const rechD=gD.filter(g=>g.estado==='rt').length;
+    const codigos=new Set(pD.map(p=>p.cliente_codigo));
+    const cfC=(carg||[]).filter(c=>codigos.has(c.cliente_codigo)).reduce((s,c)=>s+(c.cf_cargue||0),0);
+    const cfL=(liq||[]).filter(l=>codigos.has(l.cliente_codigo)).reduce((s,l)=>s+(l.cf_liquidado||0),0);
+    const efPed=pD.length>0?entD/pD.length*100:0;
+    const efCaj=cfC>0?Math.min(cfL/cfC*100,100):0;
+    const efTot=efPed*0.4+efCaj*0.6;
+    totProg+=pD.length;totEnt+=entD;totCfC+=cfC;totCfL+=cfL;
+    diasData.push({fecha:a.fecha,ruta:a.ruta,prog:pD.length,ent:entD,rech:rechD,cfC,cfL,efPed,efCaj,efTot});
+  }
+
+  const efPG=totProg>0?totEnt/totProg*100:0;
+  const efCG=totCfC>0?Math.min(totCfL/totCfC*100,100):0;
+  const efT=efPG*0.4+efCG*0.6;
+
+  document.getElementById('efMes').textContent=totProg>0?efT.toFixed(1)+'%':'—';
+  document.getElementById('efMes').className='kpi-val '+(totProg>0?efClass(efT):'');
+  document.getElementById('diasMes').textContent=asigData.length;
+  document.getElementById('pedMes').textContent=totEnt+'/'+totProg;
+  document.getElementById('cajMes').textContent=totCfL.toFixed(0)+'/'+totCfC.toFixed(0)+' CF';
+
+  // Barras diarias
+  const dias=diasData.sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const maxH=60;
+  document.getElementById('chartBars').innerHTML=dias.map(d=>{
+    const h=d.prog>0?Math.max((d.efTot/100*maxH),3).toFixed(0):4;
+    const col=efColor(d.efTot);const dd=d.fecha.slice(8);
+    return`<div class="bar-day" style="height:${h}px;background:${col}"><span class="bar-day-tip">${dd}</span></div>`;
+  }).join('')||'<span style="font-size:11px;color:var(--muted)">Sin datos</span>';
+
+  // Historial
+  document.getElementById('historialBody').innerHTML=dias.slice().reverse().map(d=>`<tr>
+    <td style="font-family:'Space Mono',monospace;font-size:10px">${d.fecha}</td>
+    <td style="font-family:'Space Mono',monospace;font-size:10px">${d.ruta}</td>
+    <td>${d.prog}</td><td>${d.ent}</td><td>${efBadge(d.efTot)}</td>
+  </tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px">Sin historial este mes</td></tr>';
+
+  // Rechazos
+  const rechazos=(gest||[]).filter(g=>g.estado==='rt'&&!g.excluida&&asigData.some(a=>a.fecha===g.fecha&&a.ruta===g.ruta));
+  document.getElementById('rechazosBody').innerHTML=rechazos.length===0?
+    '<p style="font-size:12px;color:var(--muted)">Sin rechazos este mes ✓</p>':
+    rechazos.sort((a,b)=>b.fecha.localeCompare(a.fecha)).map(r=>`<div class="rechazo-item">
+      <div class="rechazo-dot"></div>
+      <div class="rechazo-info">
+        <div class="rechazo-cliente">${r.cliente_nombre}</div>
+        <div class="rechazo-meta">${r.fecha} · ${r.ruta} · ${r.motivo||'—'}</div>
+      </div>
+    </div>`).join('');
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  try{SESSION=JSON.parse(sessionStorage.getItem('gmaz_session'));}catch{}
+  if(SESSION&&SESSION.rol==='empleado'&&SESSION.empleado_id){showProfile();}
+  else if(SESSION&&SESSION.rol==='gerencia'){window.location.href='gerencia.html';}
+  else if(SESSION&&SESSION.rol==='supervisor'){window.location.href='supervisor.html';}
+});
+</script>
+</body>
+</html>
